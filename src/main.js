@@ -2,7 +2,8 @@
 import { loadAll } from './data.js';
 import { scenario } from './model.js';
 import { store } from './state.js';
-import { initShell, syncControls, renderReadouts, showDetail, downloadBrief, buildBrief } from './ui.js';
+import { initShell, syncControls, renderReadouts, showDetail } from './ui.js';
+import { downloadBrief, buildBrief } from './brief.js';
 import { initInsights } from './insights.js';
 import { renderMethodology } from './methodology.js';
 import { showIntro, shouldShowIntro } from './intro.js';

@@ -28,6 +28,46 @@
     font-variant-numeric: tabular-nums;
   }
 
+  /* ── Multi-page structure ── */
+  .pb-page { page-break-after: always; }
+  .pb-page.pb-last { page-break-after: auto; }
+
+  .pb-head {
+    background: #06121F; color: #9FB3C8;
+    padding: 0.17in 0.55in;
+    display: flex; justify-content: space-between; align-items: baseline; gap: 16px;
+    font-size: 8.6px; letter-spacing: 0.1em; text-transform: uppercase;
+  }
+  .pb-head .wm { font-family: ui-monospace, Menlo, monospace; font-weight: 700; letter-spacing: 0.26em; color: #E6EEF6; font-size: 11px; }
+  .pb-head .sec { color: #38E1D6; letter-spacing: 0.22em; font-weight: 600; }
+  .pb-head .pg { text-transform: none; letter-spacing: 0.02em; }
+
+  .pb-h2 {
+    font-size: 12.5px; font-weight: 700; margin: 0 0 5px;
+    border-bottom: 1.5px solid #101820; padding-bottom: 3px;
+  }
+  .pb-lede { font-size: 9px; color: #5A6B7A; margin: 0 0 8px; }
+  .pb-note-h {
+    font-size: 8px; letter-spacing: 0.14em; text-transform: uppercase;
+    color: #5A6B7A; margin: 0 0 6px; border-bottom: 1.5px solid #101820; padding-bottom: 3px;
+  }
+
+  .pb-badge {
+    font-size: 6.2px; letter-spacing: 0.06em; text-transform: uppercase;
+    border: 0.7px solid; border-radius: 2px; padding: 0 3px; margin-left: 4px; vertical-align: 1px;
+  }
+  .s-verified { color: #1E8C7C; }
+  .s-reported { color: #0E7C8C; }
+  .s-estimate, .s-illustrative { color: #B97A14; }
+  .s-brief-baseline, .s-pending { color: #5A6B7A; }
+
+  .pb-minirow { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  .pb-minirow .v { font-family: ui-monospace, Menlo, monospace; font-size: 15px; font-weight: 700; white-space: nowrap; }
+  .pb-minirow .l { font-size: 7.4px; letter-spacing: 0.1em; text-transform: uppercase; color: #5A6B7A; margin-top: 2px; line-height: 1.4; }
+
+  .cp-hl td { background: #FBEFEA; }
+  .pb-ladder td { padding: 6px 8px 6px 0; }
+
   /* ── Masthead: full-bleed navy band ── */
   .pb-mast {
     background: #06121F;
