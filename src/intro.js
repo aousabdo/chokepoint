@@ -83,6 +83,8 @@ export function showIntro(onEnter) {
 
   const svg = el.querySelector('svg');
   const steps = [...el.querySelectorAll('.narrows-step')];
+  svg.dataset.step = '0';
+  steps[0].classList.add('active');
   const io = new IntersectionObserver((entries) => {
     for (const entry of entries) {
       if (entry.isIntersecting) {

@@ -37,13 +37,14 @@ export function initMap(container, data, { onFeature } = {}) {
   const map = new maplibregl.Map({
     container,
     style: STYLE_URL,
-    center: [53.6, 26.0],
-    zoom: 5.1,
+    bounds: [[45.5, 22.0], [61.5, 30.5]],
+    fitBoundsOptions: { padding: 30 },
     minZoom: 3.5,
     maxZoom: 10,
     attributionControl: { compact: true },
   });
   map.addControl(new maplibregl.NavigationControl({ showCompass: false }), 'bottom-right');
+  if (typeof window !== 'undefined') window.__chokepointMap = map; // dev console access
 
   // Incidents come from the escalation ladder — only entries with coordinates.
   const incidents = {
@@ -59,7 +60,10 @@ export function initMap(container, data, { onFeature } = {}) {
 
   let dashTimer = null;
 
-  map.on('load', () => {
+  // Don't gate on the 'load' event: it waits for sprite/glyph fetches which can
+  // hang behind strict proxies. Layers only need the parsed style — set up as
+  // soon as that exists and retry on the next styledata tick if it doesn't yet.
+  const setupLayers = () => {
     map.addSource('flows', { type: 'geojson', data: data.geo.flows });
     map.addSource('pipelines', { type: 'geojson', data: data.geo.pipelines });
     map.addSource('strait', { type: 'geojson', data: data.geo.strait });
@@ -184,14 +188,21 @@ export function initMap(container, data, { onFeature } = {}) {
       },
     });
 
-    // Everything clickable reveals a sourced detail card
-    for (const layer of ['terminals', 'pipelines', 'incidents', 'pinch-core', 'pinch-pool', 'shadow-zones']) {
-      map.on('click', layer, (e) => {
-        if (onFeature && e.features?.[0]) onFeature(e.features[0].properties, layer);
-      });
-      map.on('mouseenter', layer, () => { map.getCanvas().style.cursor = 'pointer'; });
-      map.on('mouseleave', layer, () => { map.getCanvas().style.cursor = ''; });
-    }
+    // Everything clickable reveals a sourced detail card. One handler with an
+    // explicit priority so overlapping features (incidents inside the stranded
+    // pool) resolve to the most specific card, not the last-registered one.
+    const CLICK_PRIORITY = ['incidents', 'terminals', 'pipelines', 'pinch-core', 'pinch-pool', 'shadow-zones'];
+    map.on('click', (e) => {
+      const feats = map.queryRenderedFeatures(e.point, { layers: CLICK_PRIORITY.filter((l) => map.getLayer(l)) });
+      if (!feats.length || !onFeature) return;
+      feats.sort((a, b) => CLICK_PRIORITY.indexOf(a.layer.id) - CLICK_PRIORITY.indexOf(b.layer.id));
+      const hit = feats[0];
+      onFeature(hit.properties, hit.layer.id === 'pinch-core' ? 'pinch-pool' : hit.layer.id);
+    });
+    map.on('mousemove', (e) => {
+      const feats = map.queryRenderedFeatures(e.point, { layers: CLICK_PRIORITY.filter((l) => map.getLayer(l)) });
+      map.getCanvas().style.cursor = feats.length ? 'pointer' : '';
+    });
 
     // Animate flow dashes — thin moving pulses along the routes
     if (!reducedMotion()) {
@@ -213,7 +224,14 @@ export function initMap(container, data, { onFeature } = {}) {
     if (api._pending) { api.updateScenario(api._pending); api._pending = null; }
     if (api._pendingYear != null) { api.setYear(api._pendingYear); api._pendingYear = null; }
     if (api._pendingLayers) { api.setLayers(api._pendingLayers); api._pendingLayers = null; }
-  });
+  };
+
+  const trySetup = () => {
+    if (api.ready) return;
+    try { setupLayers(); } catch { map.once('styledata', trySetup); }
+  };
+  map.once('styledata', trySetup);
+  map.on('load', trySetup);
 
   const api = {
     map,
