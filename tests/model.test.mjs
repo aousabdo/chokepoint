@@ -7,6 +7,7 @@ import { dirname, join } from 'node:path';
 import {
   stranded, strandedShare, shockBand, sprDays, producerExposure, bypassUse, scenario,
   importerExposure, impliedLossOdds, sprRealism, lngShock, voyageEconomics, floatingStorage,
+  pricePath, macroPassThrough,
 } from '../src/model.js';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
@@ -184,6 +185,45 @@ test('floating storage: ships × cargo against world demand', () => {
   const fs = floatingStorage(150, 1.0, 103);
   assert.equal(fs.mbbl, 150);
   assert.ok(fs.daysGlobal > 1.4 && fs.daysGlobal < 1.5);
+});
+
+test('price path: starts at the shock band, decays monotonically, converges to the siege premium', () => {
+  const share = 0.178; // ≈ full closure
+  const opts = { epsLo: 0.08, epsHi: 0.15, epsLong: 0.35, tauMonths: 6, cap: 3.0, months: 24, step: 0.5 };
+  const pts = pricePath(share, opts);
+  // t=0 equals the static shock band
+  assert.ok(Math.abs(pts[0].hi - share / 0.08) < 1e-9);
+  assert.ok(Math.abs(pts[0].lo - share / 0.15) < 1e-9);
+  // monotone decreasing, band ordered
+  for (let i = 1; i < pts.length; i += 1) {
+    assert.ok(pts[i].hi <= pts[i - 1].hi + 1e-12);
+    assert.ok(pts[i].lo <= pts[i].hi);
+  }
+  // converges toward share/eps_longrun
+  const last = pts[pts.length - 1];
+  const asym = share / 0.35;
+  assert.ok(Math.abs(last.hi - asym) / asym < 0.06);
+  assert.ok(Math.abs(last.lo - asym) / asym < 0.06);
+});
+
+test('price path: cap engages at extreme shares', () => {
+  const pts = pricePath(0.5, { epsLo: 0.08, epsHi: 0.15, cap: 3.0 });
+  assert.equal(pts[0].hi, 3.0);
+});
+
+test('macro pass-through: +10% oil coefficients applied to the band ends', () => {
+  const m = macroPassThrough({ lo: 0.78, hi: 1.46 }, { cpi: [0.2, 0.4], gdp: [0.1, 0.2] });
+  assert.ok(Math.abs(m.cpi.lo - 1.56) < 1e-9);
+  assert.ok(Math.abs(m.cpi.hi - 5.84) < 1e-9);
+  assert.ok(Math.abs(m.gdp.lo - 0.78) < 1e-9);
+  assert.ok(Math.abs(m.gdp.hi - 2.92) < 1e-9);
+});
+
+test('chokepoints data: Hormuz is uniquely sea-trapped', () => {
+  const cp = JSON.parse(readFileSync(join(root, 'data/chokepoints.json'), 'utf8')).chokepoints;
+  const noAlt = cp.filter((c) => c.sea_alternative == null);
+  assert.equal(noAlt.length, 1);
+  assert.equal(noAlt[0].id, 'hormuz');
 });
 
 test('SPR realism: the tap binds, not the tank', () => {

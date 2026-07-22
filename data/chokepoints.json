@@ -1,0 +1,43 @@
+{
+  "as_of": "2026-07-22",
+  "source": "EIA — World Oil Transit Chokepoints (volumes are pre-crisis reference values, 2023–H1 2025)",
+  "url": "https://www.eia.gov/international/analysis/special-topics/World_Oil_Transit_Chokepoints",
+  "notes": "The site's thesis as a table: every major oil chokepoint has an escape — another sea lane, a parallel pipeline, or both — except Hormuz. The validator enforces that exactly one chokepoint has no sea alternative, and that it is Hormuz.",
+  "chokepoints": [
+    {
+      "id": "hormuz", "name": "Strait of Hormuz", "oil_mbd": 20.9,
+      "sea_alternative": null,
+      "bypass_mbd": 2.6, "bypass_note": "Petroline + ADCOP spare (the whole escape valve)",
+      "closure_record": "Never fully closed through 45 years of threats — until 2026. The first actual closure is the current crisis.",
+      "status": "brief-baseline"
+    },
+    {
+      "id": "malacca", "name": "Strait of Malacca", "oil_mbd": 23.7,
+      "sea_alternative": { "label": "Sunda / Lombok straits", "delay_days": "1–3" },
+      "bypass_mbd": 0.4, "bypass_note": "Myanmar–China crude pipeline",
+      "closure_record": "Never closed; piracy-era harassment at worst. Rerouting costs days, not barrels.",
+      "status": "brief-baseline"
+    },
+    {
+      "id": "suez", "name": "Suez Canal + SUMED", "oil_mbd": 9.2,
+      "sea_alternative": { "label": "Cape of Good Hope", "delay_days": "10–14" },
+      "bypass_mbd": 2.5, "bypass_note": "SUMED pipeline (Ain Sokhna → Sidi Kerir)",
+      "closure_record": "Closed 1956–57 and 1967–1975 (eight years); Ever Given 2021 (six days). The world rerouted and lived.",
+      "status": "brief-baseline"
+    },
+    {
+      "id": "bab", "name": "Bab el-Mandeb", "oil_mbd": 8.6,
+      "sea_alternative": { "label": "Cape of Good Hope", "delay_days": "10–14" },
+      "bypass_mbd": 0, "bypass_note": "SUMED helps northbound crude only",
+      "closure_record": "2023–25 Houthi campaign roughly halved transits — traffic diverted, cargoes still arrived.",
+      "status": "brief-baseline"
+    },
+    {
+      "id": "panama", "name": "Panama Canal", "oil_mbd": 0.9,
+      "sea_alternative": { "label": "Cape Horn / Suez routings", "delay_days": "5–13" },
+      "bypass_mbd": 0, "bypass_note": "Trans-Panama pipeline idle/limited",
+      "closure_record": "2023–24 drought cut transits ~30% — products rerouted at a freight cost.",
+      "status": "brief-baseline"
+    }
+  ]
+}

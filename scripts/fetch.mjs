@@ -41,7 +41,7 @@ function validate() {
     if (!fig.source) fail(`config.figures.${key}: missing source`);
     if (!fig.retrieved) fail(`config.figures.${key}: missing retrieved date`);
     if (!fig.status) fail(`config.figures.${key}: missing status`);
-    if (!fig.url && !['shock_cap', 'eps_short_run'].includes(key)) fail(`config.figures.${key}: missing url`);
+    if (!fig.url && !['shock_cap', 'eps_short_run', 'tau_months'].includes(key)) fail(`config.figures.${key}: missing url`);
   }
   ok(`config.json — ${Object.keys(config.figures).length} figures sourced`);
 
@@ -117,6 +117,16 @@ function validate() {
     }
   }
   ok('voyage.json — calculator defaults sourced');
+
+  const cp = read('data/chokepoints.json');
+  for (const c of cp.chokepoints) {
+    if (c.oil_mbd == null || !c.closure_record || !c.status || c.bypass_note == null) fail(`chokepoints: ${c.id} incomplete`);
+  }
+  const noAlt = cp.chokepoints.filter((c) => c.sea_alternative == null);
+  if (noAlt.length !== 1 || noAlt[0].id !== 'hormuz') {
+    fail('chokepoints: exactly one chokepoint may lack a sea alternative, and it must be Hormuz — that is the thesis');
+  }
+  ok(`chokepoints.json — ${cp.chokepoints.length} chokepoints; Hormuz uniquely has no sea alternative`);
 
   const brent = read('data/brent_events.json');
   for (const e of brent.events) {

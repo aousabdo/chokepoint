@@ -1,7 +1,7 @@
 /** Insights dashboard: exposure boards (producer + importer), price-shock backtest + model,
  *  insurance ledger with implied odds, reopening runway, escalation ladder. */
 import { fmt, statusBadge, sourceLine } from './format.js';
-import { impliedLossOdds, lngShock, voyageEconomics, floatingStorage } from './model.js';
+import { impliedLossOdds, lngShock, voyageEconomics, floatingStorage, pricePath, macroPassThrough } from './model.js';
 import { store } from './state.js';
 
 function exposureBoard(sc) {
@@ -80,6 +80,55 @@ function reopeningPanel(reopening) {
         `<li>${a.text} — ${sourceLine(a.source, a.url)} ${statusBadge(a.status)}</li>`).join('')}</ul>
     </div>`).join('') +
     `<div class="reop-scale"><span>ceasefire</span><span>1 month</span><span>6 months</span><span>18 months →</span></div>`;
+}
+
+function pricePathChart(pts, share, epsLong) {
+  const W = 640, H = 250, L = 46, R = 14, T = 16, B = 28;
+  const yMax = Math.max(0.4, pts[0].hi * 1.12);
+  const x = (t) => L + (t / pts[pts.length - 1].t) * (W - L - R);
+  const y = (v) => T + (1 - v / yMax) * (H - T - B);
+  const asym = Math.min(share / epsLong, yMax);
+
+  const grid = [0.25, 0.5, 1, 1.5, 2, 2.5, 3].filter((v) => v < yMax).map((v) =>
+    `<line x1="${L}" x2="${W - R}" y1="${y(v)}" y2="${y(v)}" stroke="var(--line)"/>
+     <text x="${L - 6}" y="${y(v) + 3}" text-anchor="end" class="ax">+${(v * 100).toFixed(0)}%</text>`).join('');
+  const months = [0, 6, 12, 18, 24].map((m) =>
+    `<text x="${x(m)}" y="${H - 8}" text-anchor="middle" class="ax">${m}mo</text>`).join('');
+
+  const line = (key) => pts.map((p, i) => `${i ? 'L' : 'M'}${x(p.t).toFixed(1)},${y(p[key]).toFixed(1)}`).join('');
+  const band = `${line('hi')} ${[...pts].reverse().map((p) => `L${x(p.t).toFixed(1)},${y(p.lo).toFixed(1)}`).join(' ')} Z`;
+
+  return `<svg viewBox="0 0 ${W} ${H}" role="img" style="min-width:520px;width:100%"
+    aria-label="Modeled Brent premium over ${pts[pts.length - 1].t} months: the initial spike decays toward a persistent premium of about ${(asym * 100).toFixed(0)} percent while barrels stay missing">
+    <style>.ax{fill:var(--ink-dim);font:10px var(--font-mono)}.ann{fill:var(--ink-dim);font:10px var(--font-ui)}</style>
+    ${grid}${months}
+    <path d="${band}" fill="rgba(242,169,59,0.14)"/>
+    <path d="${line('hi')}" fill="none" stroke="var(--stranded-crim)" stroke-width="2"/>
+    <path d="${line('lo')}" fill="none" stroke="var(--exposed-amber)" stroke-width="1.6"/>
+    <line x1="${L}" x2="${W - R}" y1="${y(asym)}" y2="${y(asym)}" stroke="var(--data-cyan)" stroke-width="1" stroke-dasharray="4 4" opacity="0.7"/>
+    <text x="${W - R - 4}" y="${y(asym) - 6}" text-anchor="end" class="ann" style="fill:var(--data-cyan)">siege premium ≈ +${(asym * 100).toFixed(0)}% while barrels stay missing</text>
+  </svg>`;
+}
+
+function chokepointTable(doc, globalMbd) {
+  const maxFlow = Math.max(...doc.chokepoints.map((c) => c.oil_mbd));
+  const rows = doc.chokepoints.map((c) => {
+    const alt = c.sea_alternative
+      ? `${c.sea_alternative.label}<br><span class="num" style="color:var(--ink-dim)">+${c.sea_alternative.delay_days} days</span>`
+      : '<span class="cp-none">NONE — no way out by sea</span>';
+    return `<tr class="${c.id === 'hormuz' ? 'cp-hormuz' : ''}">
+      <td><strong>${c.name}</strong></td>
+      <td><span class="num">${fmt(c.oil_mbd)}</span> <span style="color:var(--ink-dim)">M b/d · ${fmt((c.oil_mbd / globalMbd) * 100, 0)}%</span>
+        <div class="cp-bar" style="width:${(c.oil_mbd / maxFlow) * 100}%"></div></td>
+      <td>${alt}</td>
+      <td>${c.bypass_mbd > 0 ? `<span class="num">${fmt(c.bypass_mbd)}</span> M b/d` : '<span style="color:var(--ink-dim)">—</span>'}<br>
+        <span style="color:var(--ink-dim);font-size:11px">${c.bypass_note}</span></td>
+      <td style="font-size:12px;color:var(--ink-dim)">${c.closure_record}</td>
+    </tr>`;
+  }).join('');
+  return `<div class="chart-wrap"><table class="src-table cp-table">
+    <thead><tr><th>Chokepoint</th><th>Oil flow (share of world)</th><th>Sea alternative</th><th>Overland bypass</th><th>Closure record</th></tr></thead>
+    <tbody>${rows}</tbody></table></div>`;
 }
 
 function eventStudy(brentEvents) {
@@ -210,6 +259,29 @@ export function initInsights(root, data) {
       </div>
     </div>
 
+    <div class="grid-2 grid-wide-left">
+      <div class="panel">
+        <h2>Dynamic price path — the spike decays; the siege premium stays (at <span id="pp-d" class="num" style="color:var(--data-cyan)">0</span>%)</h2>
+        <p class="chart-note" style="margin:0 0 8px">Short-run inelasticity sets the spike; substitution and demand
+        destruction raise elasticity over the following months. The band narrows — but converges to a
+        <b style="color:var(--ink)">persistent premium, not to zero</b>, for as long as the barrels stay missing.</p>
+        <div id="price-path" class="chart-wrap"></div>
+        <p class="chart-note">ε(t) = ε₀ + (ε∞−ε₀)(1−e<sup>−t/τ</sup>), ε∞ = ${data.config.figures.eps_longrun.value},
+        τ = ${data.config.figures.tau_months.value} months <span class="status illustrative">illustrative</span> —
+        assumes the disruption persists across the horizon; expectations, SPR releases and GDP feedback excluded.
+        ${sourceLine(data.config.figures.eps_longrun.source, data.config.figures.eps_longrun.url)}</p>
+      </div>
+      <div class="panel">
+        <h2>Macro pass-through <span class="status illustrative">illustrative</span></h2>
+        <p class="chart-note" style="margin:0 0 8px">Public rules of thumb: +10% oil ≈
+        +${data.config.figures.cpi_per_10pct.value.join('–')} pp on CPI and
+        −${data.config.figures.gdp_per_10pct.value.join('–')} pp on global GDP over a year, applied to the current shock band.</p>
+        <div id="macro-out"></div>
+        <p class="chart-note">${sourceLine(data.config.figures.cpi_per_10pct.source, data.config.figures.cpi_per_10pct.url, data.config.as_of)} —
+        linear rules of thumb break down at extreme shocks; treat the upper ends as directional.</p>
+      </div>
+    </div>
+
     <div class="panel">
       <h2>LNG shock — the cargo with no escape (at <span id="lng-d" class="num" style="color:var(--accent-gold)">0</span>% disruption)</h2>
       <p class="chart-note" style="margin:0 0 10px">Oil has Petroline; gas has nothing. A fifth of the world's LNG exits
@@ -287,6 +359,17 @@ export function initInsights(root, data) {
           </div>
         </div>
       </div>
+    </div>
+
+    <div class="panel">
+      <h2>Chokepoint anatomy — why Hormuz is different</h2>
+      <p class="chart-note" style="margin:0 0 8px">Every other major oil chokepoint has an escape — another sea lane,
+      a parallel pipeline, or both. Suez closed for <b style="color:var(--ink)">eight years</b> and the world rerouted.
+      Hormuz is the only one where the ships have <b style="color:var(--ink)">nowhere else to go</b> — which is why its
+      first real closure is a different kind of event.</p>
+      ${chokepointTable(data.chokepointsDoc, data.config.figures.global_liquids_mbd.value)}
+      <p class="chart-note">${sourceLine(data.chokepointsDoc.source, data.chokepointsDoc.url, data.chokepointsDoc.as_of)}
+      ${statusBadge('brief-baseline')} — volumes are pre-crisis reference values; shares of world liquids supply.</p>
     </div>
 
     <div class="panel">
@@ -390,6 +473,36 @@ export function initInsights(root, data) {
     document.getElementById('board').innerHTML = exposureBoard(sc);
     document.getElementById('imp-d').textContent = s.d;
     document.getElementById('imp-board').innerHTML = importerBoard(sc);
+
+    // Dynamic price path + macro pass-through recompute with the shock band
+    document.getElementById('pp-d').textContent = s.d;
+    const [epsLo, epsHi] = data.config.figures.eps_short_run.value;
+    document.getElementById('price-path').innerHTML = sc.share > 0.001
+      ? pricePathChart(
+        pricePath(sc.share, {
+          epsLo, epsHi,
+          epsLong: data.config.figures.eps_longrun.value,
+          tauMonths: data.config.figures.tau_months.value,
+          cap: data.config.figures.shock_cap.value,
+        }),
+        sc.share,
+        data.config.figures.eps_longrun.value,
+      )
+      : '<p class="chart-note" style="padding:30px 0">No stranded barrels at this disruption level — no shock to trace. Drag the slider.</p>';
+    const macro = macroPassThrough(sc.shock, {
+      cpi: data.config.figures.cpi_per_10pct.value,
+      gdp: data.config.figures.gdp_per_10pct.value,
+    });
+    document.getElementById('macro-out').innerHTML = `
+      <div class="readout amber">
+        <div class="label">Consumer prices, one-year horizon</div>
+        <div class="value num">+${fmt(macro.cpi.lo)}–${fmt(macro.cpi.hi)} <span style="font-size:13px">pp CPI</span></div>
+      </div>
+      <div class="readout crit" style="margin-top:8px">
+        <div class="label">Global growth, sustained shock</div>
+        <div class="value num">−${fmt(macro.gdp.lo)}–${fmt(macro.gdp.hi)} <span style="font-size:13px">pp GDP</span></div>
+        <div class="sub">for context: a 2-pp global drag ≈ a typical recession's demand loss</div>
+      </div>`;
 
     // LNG shock recomputes with the same slider — gas gets no bypass
     const g = lngShock(sc.d, data.lng);

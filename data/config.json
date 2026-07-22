@@ -78,6 +78,38 @@
       "retrieved": "2026-07-22",
       "status": "reported"
     },
+    "eps_longrun": {
+      "value": 0.35,
+      "unit": "long-run oil demand elasticity (≈1–2 years: substitution + demand destruction)",
+      "source": "Literature meta-analyses of oil demand elasticity; IMF WEO analytical chapters",
+      "url": "https://www.imf.org/en/Publications/WEO",
+      "retrieved": "2026-07-22",
+      "status": "illustrative"
+    },
+    "tau_months": {
+      "value": 6,
+      "unit": "months — adjustment time constant for elasticity ramp ε(t)",
+      "source": "Model assumption — see Methodology",
+      "url": "",
+      "retrieved": "2026-07-22",
+      "status": "illustrative"
+    },
+    "cpi_per_10pct": {
+      "value": [0.2, 0.4],
+      "unit": "pp added to CPI per +10% oil price, one-year horizon",
+      "source": "IMF WEO analyses; Federal Reserve staff rules of thumb",
+      "url": "https://www.imf.org/en/Publications/WEO",
+      "retrieved": "2026-07-22",
+      "status": "illustrative"
+    },
+    "gdp_per_10pct": {
+      "value": [0.1, 0.2],
+      "unit": "pp global GDP drag per +10% oil price, sustained",
+      "source": "IMF WEO analyses; OECD interlink rules of thumb",
+      "url": "https://www.imf.org/en/Publications/WEO",
+      "retrieved": "2026-07-22",
+      "status": "illustrative"
+    },
     "shock_cap": {
       "value": 3.0,
       "unit": "multiple (max modeled ΔP/P)",

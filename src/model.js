@@ -157,6 +157,38 @@ export function floatingStorage(ships, avgCargoMbbl, globalMbd) {
   return { mbbl, daysGlobal: globalMbd > 0 ? mbbl / globalMbd : 0 };
 }
 
+/**
+ * Dynamic price path: the spike decays as elasticity rises with substitution
+ * and demand destruction — ε(t) = ε₀ + (ε∞ − ε₀)(1 − e^(−t/τ)). The upper
+ * curve starts from the tight short-run elasticity, the lower from the loose
+ * one; both converge toward share/ε∞ — the persistent siege premium that
+ * remains as long as barrels stay missing.
+ */
+export function pricePath(share, { epsLo = 0.08, epsHi = 0.15, epsLong = 0.35, tauMonths = 6, cap = 3.0, months = 24, step = 0.5 } = {}) {
+  const pts = [];
+  for (let t = 0; t <= months + 1e-9; t += step) {
+    const ramp = 1 - Math.exp(-t / tauMonths);
+    const eTight = epsLo + (epsLong - epsLo) * ramp;
+    const eLoose = epsHi + (epsLong - epsHi) * ramp;
+    pts.push({ t, hi: Math.min(share / eTight, cap), lo: Math.min(share / eLoose, cap) });
+  }
+  return pts;
+}
+
+/**
+ * Macro pass-through, rule-of-thumb tier: +10% oil ≈ +[0.2,0.4] pp CPI and
+ * −[0.1,0.2] pp GDP over a year (IMF/Fed staff ranges). Applied to the shock
+ * band's ends; illustrative by construction.
+ */
+export function macroPassThrough(shock, { cpi, gdp }) {
+  const per10lo = (shock.lo * 100) / 10;
+  const per10hi = (shock.hi * 100) / 10;
+  return {
+    cpi: { lo: per10lo * cpi[0], hi: per10hi * cpi[1] },
+    gdp: { lo: per10lo * gdp[0], hi: per10hi * gdp[1] },
+  };
+}
+
 /** Bypass utilisation per pipeline at disruption d, for the map's escape-route animation. */
 export function bypassUse(d, totals, perPipelineSpare) {
   const { bypass } = stranded(d, totals);
