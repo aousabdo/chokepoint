@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Chokepoint OG card — render at 1200×630 and screenshot to og.png</title>
+<link rel="stylesheet" href="css/tokens.css">
+<style>
+  body { margin: 0; width: 1200px; height: 630px; overflow: hidden;
+         background: var(--bg-abyss); color: var(--ink); font-family: var(--font-ui);
+         display: flex; flex-direction: column; justify-content: space-between; }
+  .top { padding: 56px 64px 0; }
+  .mark { font-family: var(--font-mono); font-weight: 700; font-size: 30px; letter-spacing: 0.3em; }
+  .mark small { display: block; font-size: 13px; letter-spacing: 0.2em; color: var(--ink-dim); margin-top: 6px; }
+  .headline { font-size: 44px; font-weight: 600; max-width: 20ch; margin: 36px 0 0; line-height: 1.2; }
+  .dial { padding: 0 64px 56px; }
+  .row { display: flex; gap: 56px; margin-bottom: 34px; }
+  .stat .v { font-family: var(--font-mono); font-size: 56px; font-weight: 700; }
+  .stat .l { font-size: 14px; text-transform: uppercase; letter-spacing: 0.14em; color: var(--ink-dim); }
+  .crim { color: var(--stranded-crim); } .teal { color: var(--safe-teal); } .amber { color: var(--exposed-amber); }
+  .track { height: 14px; border-radius: 7px; position: relative;
+           background: linear-gradient(90deg, var(--safe-teal), var(--exposed-amber) 55%, var(--stranded-crim)); }
+  .thumb { position: absolute; left: 70%; top: -7px; width: 28px; height: 28px; border-radius: 50%;
+           background: var(--ink); border: 3px solid var(--data-cyan); box-shadow: 0 0 22px rgba(56,225,214,0.8); }
+  .cap { display: flex; justify-content: space-between; font-family: var(--font-mono);
+         font-size: 14px; color: var(--ink-dim); margin-top: 12px; }
+  .cap b { color: var(--data-cyan); }
+</style>
+</head>
+<body>
+  <div class="top">
+    <div class="mark">CHOKEPOINT<small>ANALYTICA DSS · STRAIT OF HORMUZ · 100% PUBLIC DATA</small></div>
+    <h1 class="headline">What happens to the world's oil when the strait closes?</h1>
+  </div>
+  <div class="dial">
+    <div class="row">
+      <div class="stat"><div class="v crim">12.0</div><div class="l">M b/d stranded</div></div>
+      <div class="stat"><div class="v teal">2.6</div><div class="l">Escaping overland</div></div>
+      <div class="stat"><div class="v amber">+78–146%</div><div class="l">Brent shock band</div></div>
+      <div class="stat"><div class="v" style="color:var(--data-cyan)">100</div><div class="l">Days of reserves</div></div>
+    </div>
+    <div class="track"><div class="thumb"></div></div>
+    <div class="cap"><span>HORMUZ DISRUPTION</span><b>70% — current reported</b><span>FULL CLOSURE</span></div>
+  </div>
+</body>
+</html>

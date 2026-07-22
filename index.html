@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Chokepoint — The Strait of Hormuz consequence engine</title>
+  <meta name="description" content="What happens to the world's oil when the Strait of Hormuz is disrupted: stranded barrels, overland bypass, producer exposure, the modeled price shock, and what history says happens next. 100% public data.">
+  <link rel="canonical" href="https://chokepoint.analyticadss.com/">
+  <meta name="theme-color" content="#06121F">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Chokepoint · Analytica DSS">
+  <meta property="og:title" content="Chokepoint — The Strait of Hormuz consequence engine">
+  <meta property="og:description" content="Not another tanker map. A public-data model of stranded barrels, overland bypass, producer exposure, and the price shock — with the scenario slider that recomputes it all live.">
+  <meta property="og:url" content="https://chokepoint.analyticadss.com/">
+  <meta property="og:image" content="https://chokepoint.analyticadss.com/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Chokepoint — The Strait of Hormuz consequence engine">
+  <meta name="twitter:description" content="Stranded barrels, bypass capacity, producer exposure, and the modeled Brent shock — recomputed live from 100% public data.">
+  <meta name="twitter:image" content="https://chokepoint.analyticadss.com/og.png">
+
+  <link rel="preconnect" href="https://basemaps.cartocdn.com" crossorigin>
+  <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css">
+  <link rel="stylesheet" href="css/tokens.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/print.css">
+</head>
+<body>
+<div id="app">
+  <header id="topbar">
+    <div class="wordmark">CHOKEPOINT<span class="by">ANALYTICA DSS · STRAIT OF HORMUZ</span></div>
+    <nav id="views" aria-label="Surfaces">
+      <button data-view="map" aria-current="true">Map</button>
+      <button data-view="insights">Insights</button>
+      <button data-view="methodology">Methodology</button>
+    </nav>
+    <div class="top-right">
+      <span id="asof" class="chip" title="Every figure carries its own source and retrieval date">DATA AS OF —</span>
+      <button id="share" title="Copy a deep link to this exact view">Copy link</button>
+      <button id="brief-btn" title="One-page PDF of the current scenario">Download brief</button>
+    </div>
+  </header>
+
+  <main>
+    <section id="view-map" aria-label="Operator map">
+      <div id="map" role="application" aria-label="Map of the Persian Gulf, Strait of Hormuz, bypass pipelines and incidents"></div>
+
+      <aside id="rail-left" class="rail" aria-label="Layers and time">
+        <div class="panel">
+          <h2>Layers</h2>
+          <div id="layer-toggles"></div>
+        </div>
+        <div class="panel">
+          <h2>Time sweep <span class="num" style="color:var(--ink-dim)">1980→2026</span></h2>
+          <div class="scrubber-row">
+            <button id="scrub-play" aria-label="Play time sweep">▶</button>
+            <input type="range" id="scrub-year" min="1980" max="2026" step="1" value="2026" aria-label="Year">
+            <span class="year" id="scrub-label">2026</span>
+          </div>
+          <p class="chart-note">Sweeps the incident record. Incident markers show events up to the selected year.</p>
+        </div>
+      </aside>
+
+      <aside id="rail-right" class="rail" aria-label="Live readouts">
+        <div class="panel" aria-live="polite" aria-atomic="false">
+          <h2>Scenario readout</h2>
+          <div class="readout crit">
+            <div class="label">Stranded oil</div>
+            <div class="value"><span id="r-stranded" class="num">0.0</span> <span style="font-size:13px">M b/d</span></div>
+            <div class="sub"><span id="r-share" class="num">0.0</span>% of global liquids supply</div>
+          </div>
+          <div class="readout dim">
+            <div class="label">Gross disrupted (the headline number)</div>
+            <div class="value"><span id="r-gross" class="num">0.0</span> M b/d</div>
+          </div>
+          <div class="readout safe">
+            <div class="label">Bypass absorbing</div>
+            <div class="value"><span id="r-bypass" class="num">0.0</span> <span style="font-size:13px">/ <span id="r-bypass-max">2.6</span> M b/d</span></div>
+            <div class="sub">Overland escape via Petroline · Fujairah · Jask</div>
+          </div>
+          <div class="readout amber">
+            <div class="label">Brent shock band <span class="status illustrative">illustrative</span></div>
+            <div class="value"><span id="r-shock" class="num">+0–0</span><span style="font-size:13px">%</span></div>
+            <div class="sub">Short-run elasticity ε 0.08–0.15 · capped</div>
+          </div>
+          <div class="readout cyan">
+            <div class="label">Strategic-reserve runway</div>
+            <div class="value"><span id="r-spr" class="num">∞</span> <span style="font-size:13px">days</span></div>
+            <div class="sub">IEA-member public stocks ÷ stranded rate</div>
+          </div>
+        </div>
+        <div class="panel">
+          <h2>Most exposed</h2>
+          <div id="r-exposed" class="chips"></div>
+        </div>
+      </aside>
+
+      <div id="detail-card" hidden></div>
+      <button id="rail-left-toggle" class="panel" style="position:absolute;left:12px;top:12px;z-index:19;display:none">Layers</button>
+    </section>
+
+    <section id="view-insights" class="page" hidden aria-label="Insights dashboard">
+      <div class="page-inner" id="insights-root"></div>
+    </section>
+
+    <section id="view-methodology" class="page" hidden aria-label="Methodology and sources">
+      <div class="page-inner method" id="methodology-root"></div>
+    </section>
+  </main>
+
+  <footer id="scenario-rail" aria-label="Scenario controls">
+    <div class="slider-block">
+      <div class="slider-head">
+        <span class="label">Hormuz disruption</span>
+        <span class="value"><span id="d-label" class="num">0</span>%</span>
+      </div>
+      <input type="range" id="disruption" min="0" max="100" step="1" value="0"
+             aria-label="Hormuz disruption percentage" aria-describedby="d-desc">
+      <span id="d-desc" class="sr-only">Share of Strait of Hormuz throughput disrupted. Readouts, exposure board and map recompute live.</span>
+    </div>
+    <div>
+      <div class="presets" role="group" aria-label="Scenario presets">
+        <button data-d="0">Open</button>
+        <button data-d="15">Harassment</button>
+        <button data-d="40">Partial closure</button>
+        <button data-d="70" title="Tanker transits reported down ~70% in the current crisis">Current reported</button>
+        <button data-d="100">Full closure</button>
+      </div>
+      <label class="assumption" for="bypass-assume" style="margin-top:6px">
+        Bypass assumption
+        <select id="bypass-assume">
+          <option value="eia">Conservative — EIA 2.6 M b/d spare</option>
+          <option value="expanded">Expanded — post-2025 Petroline, 5.5 M b/d</option>
+        </select>
+      </label>
+    </div>
+  </footer>
+</div>
+
+<div id="intro" hidden></div>
+<div id="print-brief"></div>
+
+<script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js" defer></script>
+<script type="module" src="src/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,26 @@
+/* Chokepoint design tokens — sibling of Watchstander / Skywatch (build brief §3) */
+:root {
+  --bg-abyss:      #06121F;
+  --bg-hull:       #0B1F3A;
+  --bg-panel:      #10263F;
+  --ink:           #E6EEF6;
+  --ink-dim:       #9FB3C8;
+  --line:          rgba(30, 58, 82, 0.55);
+  --data-cyan:     #38E1D6;
+  --exposed-amber: #F2A93B;
+  --stranded-crim: #E4572E;
+  --safe-teal:     #2FB6A3;
+  --accent-gold:   #D9B24A;
+
+  --font-ui: "Inter", "IBM Plex Sans", -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "IBM Plex Mono", "Space Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+  --panel-glass: rgba(16, 38, 63, 0.78);
+  --panel-blur: 14px;
+  --radius: 10px;
+  --shadow-glow: 0 0 0 1px var(--line), 0 8px 30px rgba(0, 0, 0, 0.45),
+                 inset 0 0 24px rgba(56, 225, 214, 0.03);
+  --rail-w: 262px;
+  --topbar-h: 52px;
+  --scenario-h: 96px;
+}

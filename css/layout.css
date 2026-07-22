@@ -1,0 +1,135 @@
+#app { display: flex; flex-direction: column; height: 100vh; height: 100dvh; }
+
+/* ── Top bar ─────────────────────────────────────────────── */
+#topbar {
+  height: var(--topbar-h);
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 0 16px;
+  background: var(--bg-hull);
+  border-bottom: 1px solid var(--line);
+  z-index: 40;
+}
+.wordmark {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 17px;
+  letter-spacing: 0.22em;
+  color: var(--ink);
+  white-space: nowrap;
+}
+.wordmark .by {
+  display: block;
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  color: var(--ink-dim);
+  font-weight: 400;
+}
+#views { display: flex; gap: 4px; }
+#views button {
+  background: none;
+  border: 1px solid transparent;
+  color: var(--ink-dim);
+  padding: 6px 14px;
+  border-radius: 6px;
+  letter-spacing: 0.04em;
+}
+#views button[aria-current="true"] {
+  color: var(--data-cyan);
+  border-color: var(--line);
+  background: var(--bg-panel);
+}
+.top-right { margin-left: auto; display: flex; align-items: center; gap: 8px; }
+.chip {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--ink-dim);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 3px 10px;
+  white-space: nowrap;
+}
+
+/* ── Main surfaces ───────────────────────────────────────── */
+main { position: relative; flex: 1 1 auto; min-height: 0; }
+main > section { position: absolute; inset: 0; }
+main > section[hidden] { display: none; }
+
+#view-map { overflow: hidden; }
+#map { position: absolute; inset: 0; background: var(--bg-abyss); }
+
+/* Floating glass rails over the map */
+.rail {
+  position: absolute;
+  top: 12px;
+  width: var(--rail-w);
+  max-height: calc(100% - 24px);
+  overflow-y: auto;
+  z-index: 20;
+}
+#rail-left { left: 12px; }
+#rail-right { right: 12px; }
+
+.panel {
+  background: var(--panel-glass);
+  backdrop-filter: blur(var(--panel-blur));
+  -webkit-backdrop-filter: blur(var(--panel-blur));
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-glow);
+  padding: 12px 14px;
+  margin-bottom: 10px;
+}
+.panel h2 {
+  margin: 0 0 8px;
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+}
+
+/* Scrollable pages (Insights, Methodology) */
+.page {
+  overflow-y: auto;
+  height: 100%;
+  padding: 20px 20px calc(var(--scenario-h) + 32px);
+}
+.page-inner { max-width: 1060px; margin: 0 auto; }
+.page h1 { font-size: 22px; margin: 6px 0 2px; }
+.page .lede { color: var(--ink-dim); margin: 0 0 18px; max-width: 70ch; }
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; align-items: start; }
+
+/* ── Scenario rail (bottom) ──────────────────────────────── */
+#scenario-rail {
+  flex: 0 0 auto;
+  min-height: var(--scenario-h);
+  background: var(--panel-glass);
+  backdrop-filter: blur(var(--panel-blur));
+  -webkit-backdrop-filter: blur(var(--panel-blur));
+  border-top: 1px solid var(--line);
+  padding: 10px 18px 12px;
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  z-index: 40;
+}
+
+/* ── Responsive: collapse rails into sheets ──────────────── */
+@media (max-width: 860px) {
+  :root { --rail-w: auto; }
+  .rail {
+    position: absolute;
+    top: auto; left: 8px !important; right: 8px !important;
+    max-height: 42vh;
+  }
+  #rail-left { bottom: 8px; display: none; }
+  #rail-left.open { display: block; }
+  #rail-right { bottom: 8px; }
+  #rail-right .panel { margin-bottom: 6px; }
+  #scenario-rail { flex-wrap: wrap; gap: 10px; padding: 10px 12px; }
+  .grid-2 { grid-template-columns: 1fr; }
+  #views button { padding: 6px 9px; font-size: 13px; }
+  .top-right .chip { display: none; }
+}

@@ -1,0 +1,45 @@
+{
+  "type": "FeatureCollection",
+  "note": "Shadow-fleet pattern zones — a focused Gulf overlay extending Watchstander's detection concepts (AIS gaps, spoofing, ship-to-ship transfers). Pattern-level areas from public reporting; deliberately NOT vessel-specific. Full MDA engine: watchstander.analyticadss.com.",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "sts-fujairah", "name": "STS transfer zone — off Fujairah/Khor Fakkan",
+        "pattern": "Ship-to-ship transfers",
+        "detail": "Long-standing dark-fleet STS area east of the strait: cargo swaps between sanctioned and clean tonnage, AIS often off or spoofed.",
+        "source": "Public reporting (UANI ghost-fleet tracking; Windward analyses)",
+        "url": "https://www.unitedagainstnucleariran.com/tanker-tracker", "status": "estimate"
+      },
+      "geometry": { "type": "Polygon", "coordinates": [[
+        [56.6, 24.7], [57.4, 24.9], [57.6, 25.5], [57.0, 25.7], [56.5, 25.3], [56.6, 24.7]
+      ]] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "ais-gap-corridor", "name": "AIS-gap corridor — Iranian coastal waters",
+        "pattern": "AIS dark transits",
+        "detail": "Sanctioned-oil movements hugging the Iranian coast routinely run dark between Kharg and the strait; spoofed positions cluster here.",
+        "source": "Public reporting (UANI; Lloyd's List Intelligence commentary)",
+        "url": "https://www.unitedagainstnucleariran.com/tanker-tracker", "status": "estimate"
+      },
+      "geometry": { "type": "Polygon", "coordinates": [[
+        [50.8, 28.8], [52.5, 27.9], [54.5, 27.1], [56.2, 26.8], [56.4, 27.3], [54.6, 27.7], [52.8, 28.5], [51.1, 29.3], [50.8, 28.8]
+      ]] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "kharg-dark", "name": "Kharg Island dark-loading zone",
+        "pattern": "Spoofing & dark loading",
+        "detail": "Export loadings with AIS disabled or spoofed to other positions; the origin of most dark-fleet voyages in the Gulf.",
+        "source": "Public reporting (UANI tanker tracking)",
+        "url": "https://www.unitedagainstnucleariran.com/tanker-tracker", "status": "estimate"
+      },
+      "geometry": { "type": "Polygon", "coordinates": [[
+        [49.9, 28.9], [50.7, 28.9], [50.8, 29.5], [50.0, 29.5], [49.9, 28.9]
+      ]] }
+    }
+  ]
+}

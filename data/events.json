@@ -1,0 +1,172 @@
+{
+  "as_of": "2026-07-22",
+  "notes": "Escalation ladder, 1980 → present. Incident coordinates are approximate (pattern-level, historical/reported — never a live targeting aid; see Methodology, Intended use). status: verified = long-settled historical record; reported = current-crisis public reporting; estimate = approximate figure.",
+  "eras": [
+    { "id": "tanker-war", "label": "Tanker War 1980–88" },
+    { "id": "sanctions", "label": "Sanctions era 2011–18" },
+    { "id": "y2019", "label": "2019 spiral" },
+    { "id": "y2020s", "label": "2020–24" },
+    { "id": "y2025", "label": "2025 twelve-day war" },
+    { "id": "y2026", "label": "2026 crisis" }
+  ],
+  "events": [
+    {
+      "date": "1980-09-22", "era": "tanker-war", "title": "Iran–Iraq War begins",
+      "summary": "Iraq invades Iran. Gulf oil infrastructure becomes a target set; tanker traffic continues under rising risk.",
+      "flows": "Combined Iran+Iraq exports fall ~4 M b/d over 1980–81", "price": "Second oil shock already underway; crude roughly doubles 1979–80",
+      "source": "CRS R45281 — Iran Conflict and the Strait of Hormuz", "url": "https://www.congress.gov/crs-product/R45281", "status": "verified"
+    },
+    {
+      "date": "1984-04-18", "era": "tanker-war", "title": "The Tanker War phase opens",
+      "summary": "Iraq attacks tankers serving Kharg Island; Iran retaliates against Gulf shipping. 70+ ships attacked in 1984 alone; 451 ships damaged across the war.",
+      "flows": "Strait never closes; worst-year transit dip ~25% (estimate)", "price": "Prices firm briefly, then resume the mid-80s glut slide",
+      "lat": 27.7, "lng": 50.3,
+      "source": "CRS R45281", "url": "https://www.congress.gov/crs-product/R45281", "status": "verified"
+    },
+    {
+      "date": "1987-05-17", "era": "tanker-war", "title": "USS Stark hit by Iraqi Exocets",
+      "summary": "37 US sailors killed. Escalates US involvement in convoy protection.",
+      "flows": "None direct", "price": "Muted",
+      "lat": 27.57, "lng": 51.2,
+      "source": "US Navy — DANFS", "url": "https://www.history.navy.mil/", "status": "verified"
+    },
+    {
+      "date": "1987-07-22", "era": "tanker-war", "title": "Operation Earnest Will",
+      "summary": "US reflags 11 Kuwaiti tankers and begins the largest naval convoy operation since WWII.",
+      "flows": "Kuwaiti exports protected", "price": "War-risk premiums ease under escort",
+      "source": "US Navy — Earnest Will histories", "url": "https://www.history.navy.mil/", "status": "verified"
+    },
+    {
+      "date": "1987-07-24", "era": "tanker-war", "title": "SS Bridgeton strikes a mine",
+      "summary": "The first Earnest Will convoy hits an Iranian mine near Farsi Island — the supertanker leads the convoy anyway as a minesweep-by-hull.",
+      "flows": "Convoys continue", "price": "Brief firming (estimate)",
+      "lat": 27.8, "lng": 50.2,
+      "source": "US Navy — Earnest Will histories", "url": "https://www.history.navy.mil/", "status": "verified"
+    },
+    {
+      "date": "1988-04-18", "era": "tanker-war", "title": "Operation Praying Mantis",
+      "summary": "After USS Samuel B. Roberts strikes a mine (14 Apr), the US sinks or damages half of Iran's operational navy in one day — the largest US surface engagement since WWII.",
+      "flows": "Strait stays open throughout", "price": "Crude FALLS — the glut dominates the war premium",
+      "lat": 25.6, "lng": 53.0,
+      "source": "US Navy — Praying Mantis histories", "url": "https://www.history.navy.mil/", "status": "verified"
+    },
+    {
+      "date": "1988-08-20", "era": "tanker-war", "title": "Ceasefire ends the Tanker War",
+      "summary": "Eight years of war; hundreds of ships attacked; the strait never fully closed. The founding data point for every Hormuz risk model since.",
+      "flows": "Full restoration", "price": "No lasting war premium",
+      "source": "CRS R45281", "url": "https://www.congress.gov/crs-product/R45281", "status": "verified"
+    },
+    {
+      "date": "2011-12-27", "era": "sanctions", "title": "Iran threatens closure over oil sanctions",
+      "summary": "VP Rahimi: 'not a drop of oil will pass' if sanctions bite. US Fifth Fleet says it will not tolerate disruption.",
+      "flows": "None", "price": "Brent +~2% over the following days (estimate)",
+      "source": "Reuters coverage, Dec 2011", "url": "https://www.reuters.com/", "status": "verified"
+    },
+    {
+      "date": "2015-04-28", "era": "sanctions", "title": "IRGC seizes Maersk Tigris",
+      "summary": "Container ship seized in the strait over a court judgment; released after 10 days. US begins accompanying US-flag ships.",
+      "flows": "None lasting", "price": "Muted",
+      "lat": 26.55, "lng": 56.4,
+      "source": "US Navy / press coverage", "url": "https://www.history.navy.mil/", "status": "verified"
+    },
+    {
+      "date": "2018-07-04", "era": "sanctions", "title": "After US exits JCPOA, closure rhetoric returns",
+      "summary": "President Rouhani hints Iran could disrupt regional oil exports if its own are blocked; IRGC amplifies.",
+      "flows": "None", "price": "Modest firming into sanctions snapback",
+      "source": "CRS R45281", "url": "https://www.congress.gov/crs-product/R45281", "status": "verified"
+    },
+    {
+      "date": "2019-05-12", "era": "y2019", "title": "Fujairah limpet-mine sabotage",
+      "summary": "Four tankers attacked at anchor off Fujairah — outside the strait, at the bypass pipeline's own terminal. The message: no anchorage is safe.",
+      "flows": "None lasting", "price": "Brent +~1.5% day one (estimate)",
+      "lat": 25.3, "lng": 56.45,
+      "source": "UNSC reporting / JMIC-era advisories", "url": "https://www.congress.gov/crs-product/R45281", "status": "verified"
+    },
+    {
+      "date": "2019-06-13", "era": "y2019", "title": "Gulf of Oman tanker attacks",
+      "summary": "Front Altair and Kokuka Courageous hit east of the strait. War-risk premiums for Gulf transits jump roughly tenfold within weeks.",
+      "flows": "Transits continue under higher cost", "price": "Brent +4.5% intraday, fades within weeks",
+      "lat": 25.4, "lng": 57.2,
+      "source": "CENTCOM; Lloyd's List coverage", "url": "https://www.congress.gov/crs-product/R45281", "status": "verified"
+    },
+    {
+      "date": "2019-07-19", "era": "y2019", "title": "Stena Impero seized",
+      "summary": "IRGC seizes the UK-flag tanker in the strait after the UK detains Grace 1 off Gibraltar. Tit-for-tat hostage shipping.",
+      "flows": "UK-flag transits pause", "price": "Muted — market had priced the pattern",
+      "lat": 26.6, "lng": 56.25,
+      "source": "UK government statements; press", "url": "https://www.gov.uk/", "status": "verified"
+    },
+    {
+      "date": "2019-09-14", "era": "y2019", "title": "Abqaiq–Khurais strike",
+      "summary": "Drones and cruise missiles knock out 5.7 M b/d of Saudi processing — the largest single supply disruption in oil-market history, bigger than 1973 or 1979.",
+      "flows": "−5.7 M b/d, ~5% of world supply, mostly restored in weeks", "price": "Brent +14.6% next session — largest one-day jump since 1991 — then fully mean-reverts within a month",
+      "lat": 25.94, "lng": 49.67,
+      "source": "Saudi Aramco disclosures; EIA; press", "url": "https://www.eia.gov/todayinenergy/detail.php?id=41413", "status": "verified"
+    },
+    {
+      "date": "2020-01-03", "era": "y2020s", "title": "Soleimani killed; Iran strikes Al Asad",
+      "summary": "US kills IRGC Quds commander in Baghdad; Iran answers with ballistic missiles on US bases. Markets brace for Hormuz — and nothing happens to flows.",
+      "flows": "None", "price": "Brent +~3.6% day one, round-trips within two weeks",
+      "source": "Press; EIA Brent series", "url": "https://www.eia.gov/dnav/pet/hist/RBRTED.htm", "status": "verified"
+    },
+    {
+      "date": "2021-07-29", "era": "y2020s", "title": "Mercer Street drone attack",
+      "summary": "Crewed tanker hit off Oman; two killed. Attributed to Iran by US/UK/Israel.",
+      "flows": "None lasting", "price": "Muted",
+      "lat": 22.0, "lng": 60.0,
+      "source": "CENTCOM statement", "url": "https://www.centcom.mil/", "status": "verified"
+    },
+    {
+      "date": "2023-04-27", "era": "y2020s", "title": "Seizure season: Advantage Sweet, Niovi",
+      "summary": "Two tankers seized in a week; US reinforces the strait with A-10s, F-16s, destroyers. Seizures as sanctions leverage becomes routine.",
+      "flows": "None lasting", "price": "Muted",
+      "lat": 26.2, "lng": 56.6,
+      "source": "US 5th Fleet statements", "url": "https://www.cusnc.navy.mil/", "status": "verified"
+    },
+    {
+      "date": "2024-04-13", "era": "y2020s", "title": "MSC Aries seized; Iran–Israel go direct",
+      "summary": "IRGC commandos fast-rope onto a container ship near the strait hours before Iran's first direct strike on Israel. October brings a second exchange. Hormuz flows never stop.",
+      "flows": "None", "price": "Brent barely moves — then slides on demand",
+      "lat": 26.1, "lng": 56.5,
+      "source": "Press; EIA Brent series", "url": "https://www.eia.gov/dnav/pet/hist/RBRTED.htm", "status": "verified"
+    },
+    {
+      "date": "2025-06-13", "era": "y2025", "title": "Israel strikes Iran — the twelve-day war",
+      "summary": "Strikes on nuclear and military targets; Iran answers with missile barrages. Tankers begin GPS-jammed, zig-zag transits.",
+      "flows": "Transits continue; loadings dip", "price": "Brent +~7% day one",
+      "source": "Press; EIA Brent series", "url": "https://www.eia.gov/dnav/pet/hist/RBRTED.htm", "status": "verified"
+    },
+    {
+      "date": "2025-06-22", "era": "y2025", "title": "US strikes Fordow; Majlis votes to close the strait",
+      "summary": "B-2s hit Fordow, Natanz, Isfahan. Iran's parliament votes (non-binding) to close Hormuz — the decision rests with the SNSC, which doesn't act. The strait stays open.",
+      "flows": "Self-deterrence: Iran's own exports transit the same water", "price": "Brent touches ~$81 then collapses −7% on ceasefire news (24 Jun)",
+      "source": "Press; EIA Brent series", "url": "https://www.eia.gov/dnav/pet/hist/RBRTED.htm", "status": "verified"
+    },
+    {
+      "date": "2026-02-28", "era": "y2026", "title": "The 2026 crisis begins",
+      "summary": "US and Israeli strikes on Iranian leadership and military targets. Iran's response makes 45 years of closure threats operational for the first time.",
+      "flows": "Immediate transit hesitancy; insurers pause quotes", "price": "Sharp spike (verify against EIA daily series via fetch pipeline)",
+      "source": "Wikipedia — 2026 Strait of Hormuz crisis (and sources therein)", "url": "https://en.wikipedia.org/wiki/2026_Strait_of_Hormuz_crisis", "status": "reported"
+    },
+    {
+      "date": "2026-03-02", "era": "y2026", "title": "IRGC declares the strait closed",
+      "summary": "VHF broadcasts warn 'no ship is allowed to pass'; transit permitted only for Iran-approved vessels. Mining of the central corridor and attacks on transiting ships follow.",
+      "flows": "Tanker transits collapse toward −70%", "price": "War-risk quotes move from 0.25% to 1–3% of hull within a week",
+      "lat": 26.5, "lng": 56.4,
+      "source": "Wikipedia — 2026 crisis; S&P Global; Fairway ETA insurance commentary", "url": "https://en.wikipedia.org/wiki/2026_Strait_of_Hormuz_crisis", "status": "reported"
+    },
+    {
+      "date": "2026-04-11", "era": "y2026", "title": "US mine-clearing operations begin",
+      "summary": "Two destroyers transit to 'set conditions' for de-mining; blockade operations against Iranian naval logistics run April–May.",
+      "flows": "Escorted convoys only; ~150+ vessels damaged or on fire to date (reported)", "price": "High-risk hull quotes reach 7.5–10%",
+      "lat": 26.45, "lng": 56.5,
+      "source": "Wikipedia — 2026 Strait of Hormuz campaign; Lloyd's List", "url": "https://en.wikipedia.org/wiki/2026_Strait_of_Hormuz_campaign", "status": "reported"
+    },
+    {
+      "date": "2026-06-15", "era": "y2026", "title": "Persian Gulf Strait Authority stands up",
+      "summary": "Multinational escort-and-transit authority begins organizing convoys through swept corridors. ~80 mines still reported in the central corridor as of mid-July.",
+      "flows": "Partial, escorted resumption; ~70% of normal transits still missing", "price": "Premiums stay 4×–30× pre-crisis",
+      "source": "2026 crisis reporting (date approximate)", "url": "https://en.wikipedia.org/wiki/2026_Strait_of_Hormuz_crisis", "status": "estimate"
+    }
+  ]
+}

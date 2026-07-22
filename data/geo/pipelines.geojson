@@ -1,0 +1,27 @@
+{
+  "type": "FeatureCollection",
+  "note": "Bypass pipelines, schematic routes. Capacities and status in data/config.json (pipelines).",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": { "id": "petroline", "name": "Petroline (East–West)", "outlet": "Yanbu — Red Sea" },
+      "geometry": { "type": "LineString", "coordinates": [
+        [49.67, 25.94], [47.9, 25.1], [46.2, 24.7], [44.0, 24.45], [41.8, 24.25], [39.6, 24.1], [38.06, 24.08]
+      ] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": "adcop", "name": "Habshan–Fujairah (ADCOP)", "outlet": "Fujairah — Gulf of Oman" },
+      "geometry": { "type": "LineString", "coordinates": [
+        [53.61, 23.75], [54.5, 24.25], [55.4, 24.75], [55.95, 25.0], [56.35, 25.17]
+      ] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": "jask", "name": "Goreh–Jask", "outlet": "Jask — Gulf of Oman" },
+      "geometry": { "type": "LineString", "coordinates": [
+        [50.53, 29.58], [52.2, 28.9], [53.9, 28.05], [55.6, 27.2], [57.0, 26.35], [57.6, 25.85], [57.77, 25.64]
+      ] }
+    }
+  ]
+}

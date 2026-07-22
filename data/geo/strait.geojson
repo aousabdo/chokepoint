@@ -1,0 +1,28 @@
+{
+  "type": "FeatureCollection",
+  "note": "Schematic of the IMO traffic separation scheme through the Strait of Hormuz — two 2-nm lanes with a 2-nm buffer inside a ~21-nm-wide narrows. Illustrative geometry, NOT for navigation.",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": { "id": "tss-in", "name": "Inbound lane (schematic)", "kind": "lane" },
+      "geometry": { "type": "LineString", "coordinates": [
+        [57.05, 25.98], [56.78, 26.22], [56.52, 26.46], [56.22, 26.62], [55.88, 26.76], [55.5, 26.85]
+      ] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": "tss-out", "name": "Outbound lane (schematic)", "kind": "lane" },
+      "geometry": { "type": "LineString", "coordinates": [
+        [55.46, 26.78], [55.84, 26.68], [56.16, 26.54], [56.46, 26.38], [56.72, 26.14], [57.0, 25.9]
+      ] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": "pinch", "name": "The narrows", "kind": "pinch",
+        "detail": "≈21 nautical miles wide at its narrowest, between Iran and Oman's Musandam Peninsula. Shipping uses two 2-mile lanes.",
+        "source": "EIA — World Oil Transit Chokepoints",
+        "url": "https://www.eia.gov/international/analysis/special-topics/World_Oil_Transit_Chokepoints" },
+      "geometry": { "type": "Point", "coordinates": [56.47, 26.5] }
+    }
+  ]
+}

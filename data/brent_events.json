@@ -1,0 +1,20 @@
+{
+  "as_of": "2026-07-22",
+  "notes": "Event study: Brent move in the 1/5/30 trading days after each Hormuz-threat event. d1 for 2019-09-14 and 2020-01-03 are widely reported settlements; other windows are approximations from the EIA public daily Brent series, to be recomputed exactly by scripts/fetch.mjs (EIA API, series RBRTE). The honest pattern: spikes mean-revert unless barrels actually go missing.",
+  "source": "EIA — Europe Brent Spot Price FOB, daily",
+  "url": "https://www.eia.gov/dnav/pet/hist/RBRTED.htm",
+  "events": [
+    { "date": "1984-05-24", "name": "Tanker War escalates off Kharg", "d1": 1.0, "d5": 2.0, "d30": -4.0, "status": "estimate" },
+    { "date": "1987-07-24", "name": "Bridgeton mine strike", "d1": 0.5, "d5": 1.5, "d30": -3.0, "status": "estimate" },
+    { "date": "1988-04-18", "name": "Operation Praying Mantis", "d1": -1.0, "d5": -2.5, "d30": -6.0, "status": "estimate" },
+    { "date": "2011-12-27", "name": "Iran closure threat (sanctions)", "d1": 2.0, "d5": 3.0, "d30": 1.0, "status": "estimate" },
+    { "date": "2019-05-12", "name": "Fujairah sabotage", "d1": 1.5, "d5": 2.5, "d30": -8.0, "status": "estimate" },
+    { "date": "2019-06-13", "name": "Gulf of Oman attacks", "d1": 4.5, "d5": 1.5, "d30": -5.0, "status": "estimate" },
+    { "date": "2019-09-14", "name": "Abqaiq–Khurais strike", "d1": 14.6, "d5": 6.0, "d30": -2.0, "status": "reported" },
+    { "date": "2020-01-03", "name": "Soleimani strike", "d1": 3.6, "d5": 1.0, "d30": -9.0, "status": "reported" },
+    { "date": "2024-04-13", "name": "Iran strikes Israel directly", "d1": 0.5, "d5": -1.0, "d30": -6.0, "status": "estimate" },
+    { "date": "2025-06-13", "name": "Israel–Iran twelve-day war", "d1": 7.0, "d5": 4.0, "d30": -8.0, "status": "estimate" },
+    { "date": "2026-02-28", "name": "2026 Hormuz crisis begins", "d1": null, "d5": null, "d30": null, "status": "pending",
+      "note": "The exception that tests the rule: barrels are actually missing this time. Windows to be computed from the EIA daily series via the fetch pipeline." }
+  ]
+}

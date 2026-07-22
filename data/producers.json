@@ -1,0 +1,57 @@
+{
+  "as_of": "2026-07-22",
+  "source": "EIA country analysis briefs; export volumes are approximate pre-crisis Gulf seaborne exports (crude + condensate). Status brief-baseline unless noted — refresh via scripts/fetch.mjs.",
+  "url": "https://www.eia.gov/international/analysis/",
+  "producers": [
+    {
+      "id": "sau", "name": "Saudi Arabia",
+      "gulf_exports_mbd": 6.3, "bypass_pipeline": "petroline",
+      "exposure": "partial",
+      "note": "Petroline can reroute up to its spare capacity to the Red Sea at Yanbu — the only large escape valve in the Gulf.",
+      "url": "https://www.eia.gov/international/analysis/country/SAU", "status": "brief-baseline"
+    },
+    {
+      "id": "irq", "name": "Iraq",
+      "gulf_exports_mbd": 3.3, "bypass_pipeline": null,
+      "exposure": "high",
+      "note": "Basra southern exports have no overland escape; the northern Iraq–Türkiye pipeline is a separate system and has been offline/limited.",
+      "url": "https://www.eia.gov/international/analysis/country/IRQ", "status": "brief-baseline"
+    },
+    {
+      "id": "are", "name": "United Arab Emirates",
+      "gulf_exports_mbd": 2.7, "bypass_pipeline": "adcop",
+      "exposure": "partial",
+      "note": "Habshan–Fujairah lands crude outside the strait, but routine use limits spare capacity.",
+      "url": "https://www.eia.gov/international/analysis/country/ARE", "status": "brief-baseline"
+    },
+    {
+      "id": "kwt", "name": "Kuwait",
+      "gulf_exports_mbd": 2.0, "bypass_pipeline": null,
+      "exposure": "total",
+      "note": "No overland bypass. Every exported barrel transits Hormuz.",
+      "url": "https://www.eia.gov/international/analysis/country/KWT", "status": "brief-baseline"
+    },
+    {
+      "id": "qat", "name": "Qatar",
+      "gulf_exports_mbd": 1.3, "bypass_pipeline": null,
+      "exposure": "total",
+      "lng_mtpa": 77,
+      "note": "Crude, condensate AND ~77 Mt/yr of LNG — about a fifth of global LNG trade — with zero bypass. Ras Laffan's entire outlet is the strait.",
+      "url": "https://www.eia.gov/international/analysis/country/QAT", "status": "brief-baseline"
+    },
+    {
+      "id": "irn", "name": "Iran",
+      "gulf_exports_mbd": 1.5, "bypass_pipeline": "jask",
+      "exposure": "high",
+      "note": "Goreh–Jask offers ~0.3 M b/d of intermittent bypass; most exports load at Kharg Island inside the Gulf.",
+      "url": "https://www.eia.gov/international/analysis/country/IRN", "status": "brief-baseline"
+    },
+    {
+      "id": "bhr", "name": "Bahrain",
+      "gulf_exports_mbd": 0.2, "bypass_pipeline": null,
+      "exposure": "high",
+      "note": "Small volumes, no bypass.",
+      "url": "https://www.eia.gov/international/analysis/country/BHR", "status": "brief-baseline"
+    }
+  ]
+}

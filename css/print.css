@@ -1,0 +1,27 @@
+/* One-page scenario brief — "Download brief" triggers print with this sheet */
+@media print {
+  body { overflow: visible; background: #fff; }
+  #app > *, #intro { display: none !important; }
+  #print-brief { display: block !important; }
+
+  #print-brief {
+    font-family: Georgia, "Times New Roman", serif;
+    color: #111;
+    padding: 0.2in 0.1in;
+  }
+  #print-brief header {
+    display: flex; justify-content: space-between; align-items: baseline;
+    border-bottom: 3px solid #06121F; padding-bottom: 8px; margin-bottom: 14px;
+  }
+  #print-brief .pb-mark { font-family: monospace; font-weight: 700; letter-spacing: 0.2em; font-size: 18px; }
+  #print-brief .pb-meta { font-size: 11px; color: #555; }
+  #print-brief h1 { font-size: 20px; margin: 0 0 4px; }
+  #print-brief .pb-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 14px 0; }
+  #print-brief .pb-stat { border: 1px solid #ccc; padding: 8px 10px; }
+  #print-brief .pb-stat .v { font-family: monospace; font-size: 22px; font-weight: 700; }
+  #print-brief .pb-stat .l { font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; color: #555; }
+  #print-brief table { width: 100%; border-collapse: collapse; font-size: 12px; margin: 10px 0; }
+  #print-brief th, #print-brief td { border-bottom: 1px solid #ddd; padding: 4px 6px; text-align: left; }
+  #print-brief .pb-foot { font-size: 10px; color: #666; margin-top: 16px; border-top: 1px solid #ccc; padding-top: 8px; }
+}
+#print-brief { display: none; }
