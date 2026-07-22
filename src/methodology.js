@@ -92,6 +92,7 @@ producer_i    : stranded_i = exports_i·d − min(own_pipeline_spare_i, exports_
         <li><strong>Incident record</strong> — <a href="https://www.congress.gov/crs-product/R45281" target="_blank" rel="noopener">CRS R45281</a>, US Navy histories, ACLED-adjacent press reporting; 2026 entries from current public reporting including <a href="https://en.wikipedia.org/wiki/2026_Strait_of_Hormuz_crisis" target="_blank" rel="noopener">the aggregated crisis record</a>.</li>
         <li><strong>Shadow-fleet patterns</strong> — public tracking by <a href="https://www.unitedagainstnucleariran.com/tanker-tracker" target="_blank" rel="noopener">UANI</a> and Windward commentary; pattern-level zones only. OFAC SDN screening lives in <a href="https://watchstander.analyticadss.com" target="_blank" rel="noopener">Watchstander</a>.</li>
         <li><strong>Basemap</strong> — <a href="https://carto.com/attributions" target="_blank" rel="noopener">CARTO dark matter</a> © OpenStreetMap contributors, rendered by <a href="https://maplibre.org" target="_blank" rel="noopener">MapLibre GL JS</a>. Pipeline routes and flow trunks are schematic.</li>
+        <li><strong>Intro geography</strong> — <a href="https://www.naturalearthdata.com/" target="_blank" rel="noopener">Natural Earth 1:50m</a> coastlines (public domain), projected to the intro figure at build time by <code>scripts/make-intro-geo.mjs</code>.</li>
       </ul>
     </section>
 

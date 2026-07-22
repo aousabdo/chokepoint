@@ -71,7 +71,7 @@ if (new URLSearchParams(location.search).has('brief')) {
 }
 
 if (shouldShowIntro()) {
-  showIntro(bootMap);
+  showIntro(bootMap, data.geo.introCoast);
 } else {
   bootMap();
 }

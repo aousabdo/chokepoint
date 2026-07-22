@@ -1,46 +1,83 @@
-/** The Narrows — scroll-driven intro. Skippable; remembered via ?intro=skip (no localStorage). */
+/** The Narrows — scroll-driven intro on REAL geography (Natural Earth 1:50m,
+ *  projected to SVG at build time by scripts/make-intro-geo.mjs). Skippable;
+ *  remembered via ?intro=skip (no localStorage). */
 
-const FIG = `
-<svg viewBox="0 0 640 300" aria-hidden="true">
+/** Build the figure from the bundled coastline + true-coordinate overlays. */
+function fig(coast) {
+  const { lng0, lat1, k, s } = coast.proj;
+  const X = (lng) => +((lng - lng0) * k).toFixed(1);
+  const Y = (lat) => +((lat1 - lat) * s).toFixed(1);
+  const P = (lng, lat) => `${X(lng)},${Y(lat)}`;
+
+  // Real anchors
+  const pinch = P(56.47, 26.5);                    // the narrows
+  const [px, py] = pinch.split(',').map(Number);
+
+  return `
+<svg viewBox="${coast.viewBox}" aria-hidden="true">
   <style>
-    .land { fill: #0B1F3A; stroke: rgba(30,58,82,0.8); stroke-width: 1; }
-    .lbl { fill: #9FB3C8; font: 11px monospace; letter-spacing: 0.15em; }
-    .flow { stroke: #38E1D6; stroke-width: 3; fill: none; stroke-linecap: round;
-            stroke-dasharray: 6 10; animation: dashmove 1.6s linear infinite; }
-    .lngflow { stroke: #D9B24A; }
+    .water { fill: #071626; }
+    .land { fill: #0B1F3A; stroke: rgba(30,58,82,0.9); stroke-width: 0.7; }
+    .lbl { fill: #9FB3C8; font: 11px ui-monospace, monospace; letter-spacing: 0.15em; }
+    .lbl.sm { font-size: 8px; letter-spacing: 0.12em; opacity: 0.8; }
+    .tdot { fill: #9FB3C8; opacity: 0.55; }
+    .tdot.gold { fill: #D9B24A; opacity: 0.9; }
+    .tdot.teal { fill: #2FB6A3; opacity: 0.9; }
+    .flow { stroke: #38E1D6; stroke-width: 2.6; fill: none; stroke-linecap: round;
+            stroke-dasharray: 5 9; animation: dashmove 1.6s linear infinite; }
+    .flow.west { stroke-width: 2; opacity: 0.85; }
+    .lngflow { stroke: #D9B24A; stroke-width: 2; }
     .pipe { stroke: #2FB6A3; stroke-width: 0; fill: none; stroke-linecap: round; transition: stroke-width 0.6s; }
-    .pool { fill: #E4572E; opacity: 0; transition: opacity 0.6s, r 0.6s; }
+    .pool { fill: #E4572E; opacity: 0; transition: opacity 0.6s; }
     .nm21 { opacity: 0; transition: opacity 0.5s; }
-    .nm21 text { fill: #F2A93B; font: 10px monospace; }
-    .nm21 line { stroke: #F2A93B; stroke-width: 1; }
-    @keyframes dashmove { to { stroke-dashoffset: -32; } }
+    .nm21 text { fill: #F2A93B; font: 10px ui-monospace, monospace; }
+    .nm21 line { stroke: #F2A93B; stroke-width: 1.2; }
+    @keyframes dashmove { to { stroke-dashoffset: -28; } }
     @media (prefers-reduced-motion: reduce) { .flow { animation: none; } }
     svg[data-step="0"] .nm21 { opacity: 1; }
-    svg[data-step="2"] .pipe, svg[data-step="3"] .pipe { stroke-width: 4; }
-    svg[data-step="3"] .pool, svg[data-step="4"] .pool { opacity: 0.55; }
-    svg[data-step="3"] .flow.through, svg[data-step="4"] .flow.through { opacity: 0.15; }
+    svg[data-step="2"] .pipe, svg[data-step="3"] .pipe, svg[data-step="4"] .pipe { stroke-width: 4; }
+    svg[data-step="3"] .pool, svg[data-step="4"] .pool { opacity: 0.5; }
+    svg[data-step="3"] .flow.through, svg[data-step="4"] .flow.through { opacity: 0.14; }
   </style>
-  <!-- Iran, top -->
-  <path class="land" d="M0,0 H640 V64 L560,70 L500,92 L452,96 L430,112 L400,96 L340,72 L240,84 L120,70 L0,52 Z"/>
-  <!-- Arabia with the Musandam spike, bottom -->
-  <path class="land" d="M0,300 V150 L60,140 L150,150 L240,168 L330,192 L392,206 L410,196 L424,146 L438,150 L446,204 L520,224 L640,240 V300 Z"/>
-  <text class="lbl" x="70" y="34">IRAN</text>
-  <text class="lbl" x="60" y="255">SAUDI ARABIA · UAE</text>
-  <text class="lbl" x="452" y="248">GULF OF OMAN →</text>
-  <!-- the 21nm bracket at the narrows -->
-  <g class="nm21">
-    <line x1="431" y1="116" x2="431" y2="142"/>
-    <text x="376" y="133">21 nm</text>
-  </g>
-  <!-- flows into and through the strait -->
-  <path class="flow through" d="M60,120 C 200,130 330,128 430,128 S 560,180 620,210"/>
-  <path class="flow lngflow through" d="M250,150 C 330,142 390,132 430,130" style="animation-delay:0.4s"/>
-  <!-- bypass pipes: Petroline west, ADCOP to Fujairah -->
-  <path class="pipe" d="M240,172 C 160,190 80,200 10,206"/>
-  <path class="pipe" d="M370,200 C 420,214 440,210 452,206"/>
+
+  <rect class="water" x="0" y="0" width="100%" height="100%"/>
+  <path class="land" d="${coast.land}"/>
+
+  <text class="lbl" x="${X(51.5)}" y="${Y(29.6)}">IRAN</text>
+  <text class="lbl" x="${X(46.6)}" y="${Y(24.4)}">SAUDI ARABIA</text>
+  <text class="lbl sm" x="${X(50.6)}" y="${Y(25.0)}">QATAR</text>
+  <text class="lbl sm" x="${X(53.6)}" y="${Y(23.5)}">UAE</text>
+  <text class="lbl sm" x="${X(57.4)}" y="${Y(23.3)}">OMAN</text>
+  <text class="lbl sm" x="${X(57.35)}" y="${Y(24.35)}">GULF OF OMAN →</text>
+
+  <!-- export terminals & bypass outlets, true positions -->
+  <circle class="tdot" cx="${X(48.8)}" cy="${Y(29.68)}" r="2.4"/>
+  <circle class="tdot" cx="${X(50.32)}" cy="${Y(29.23)}" r="2.4"/>
+  <circle class="tdot" cx="${X(50.16)}" cy="${Y(26.64)}" r="2.4"/>
+  <circle class="tdot gold" cx="${X(51.58)}" cy="${Y(25.91)}" r="2.6"/>
+  <circle class="tdot teal" cx="${X(56.35)}" cy="${Y(25.17)}" r="2.6"/>
+  <circle class="tdot teal" cx="${X(57.77)}" cy="${Y(25.64)}" r="2.6"/>
+
+  <!-- flows into and through the strait (real waypoints) -->
+  <path class="flow through" d="M${P(48.7, 29.5)} C${P(50.0, 28.2)} ${P(51.6, 27.4)} ${P(53.2, 26.9)} C${P(54.8, 26.5)} ${P(55.8, 26.45)} ${pinch} C${P(57.2, 25.9)} ${P(58.5, 25.1)} ${P(60.2, 24.2)}"/>
+  <path class="flow through west" d="M${P(50.16, 26.6)} C${P(52.0, 26.4)} ${P(54.5, 26.3)} ${pinch}" style="animation-delay:0.3s"/>
+  <path class="flow through lngflow" d="M${P(51.58, 25.91)} C${P(53.2, 25.7)} ${P(55.2, 26.0)} ${pinch}" style="animation-delay:0.6s"/>
+
+  <!-- bypass pipelines: Petroline west to the Red Sea, ADCOP to Fujairah, Goreh–Jask -->
+  <path class="pipe" d="M${P(49.67, 25.94)} C${P(48.0, 25.3)} ${P(46.5, 24.8)} 0,${Y(24.3)}"/>
+  <path class="pipe" d="M${P(53.61, 23.75)} C${P(54.8, 24.5)} ${P(55.8, 24.9)} ${P(56.35, 25.17)}"/>
+  <path class="pipe" style="stroke-width:0" d="M${P(50.53, 29.58)} C${P(53.0, 28.3)} ${P(56.0, 26.9)} ${P(57.77, 25.64)}"/>
+
   <!-- stranded pool at the narrows -->
-  <circle class="pool" cx="430" cy="128" r="26"/>
+  <circle class="pool" cx="${px}" cy="${py}" r="30"/>
+
+  <!-- the 21-nautical-mile bracket across the actual narrows -->
+  <g class="nm21">
+    <line x1="${px}" y1="${py - 13}" x2="${px}" y2="${py + 13}"/>
+    <text x="${px + 10}" y="${py - 14}">21 nm</text>
+  </g>
 </svg>`;
+}
 
 const STEPS = [
   {
@@ -66,11 +103,11 @@ const STEPS = [
   },
 ];
 
-export function showIntro(onEnter) {
+export function showIntro(onEnter, coast) {
   const el = document.getElementById('intro');
   el.innerHTML = `
     <button class="skip">Skip intro →</button>
-    <div class="sticky-fig">${FIG}</div>
+    <div class="sticky-fig">${fig(coast)}</div>
     ${STEPS.map((s, i) => `
       <section class="narrows-step" data-step="${i}">
         ${s.big ? `<div class="big ${s.cls}">${s.big.replace('<small>', '<small style="font-size:0.35em;color:var(--ink-dim)">')}</div>` : ''}
