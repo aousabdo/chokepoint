@@ -202,6 +202,25 @@ input[type="range"]::-moz-range-thumb {
 }
 .spr-real b { color: var(--ink); font-family: var(--font-mono); }
 
+/* ── Tier-2 calculators ──────────────────────────────────── */
+.readout.gold .value { color: var(--accent-gold); }
+.calc { display: flex; flex-direction: column; gap: 9px; margin: 8px 0 12px; }
+.calc label {
+  display: grid; grid-template-columns: 122px 1fr 96px;
+  align-items: center; gap: 12px;
+  font-size: 12px; color: var(--ink-dim);
+}
+.calc .val { color: var(--data-cyan); text-align: right; font-size: 12.5px; }
+.lng-row { grid-template-columns: 250px 1fr 110px; }
+@media (max-width: 860px) { .lng-row { grid-template-columns: 130px 1fr 90px; } }
+.verdict {
+  font-size: 13px; margin-top: 10px; padding: 8px 12px;
+  border-left: 3px solid; border-radius: 0 6px 6px 0;
+}
+.verdict.ok { border-color: var(--safe-teal); color: var(--safe-teal); background: rgba(47, 182, 163, 0.07); }
+.verdict.mid { border-color: var(--exposed-amber); color: var(--exposed-amber); background: rgba(242, 169, 59, 0.07); }
+.verdict.bad { border-color: var(--stranded-crim); color: var(--stranded-crim); background: rgba(228, 87, 46, 0.07); }
+
 /* ── Insurance implied odds ──────────────────────────────── */
 .implied-grid {
   display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px;

@@ -1,0 +1,52 @@
+{
+  "as_of": "2026-07-22",
+  "notes": "LNG through Hormuz has zero overland bypass — the oil model's escape-valve logic simply does not exist for gas, and there is no strategic LNG reserve anywhere. Shock model mirrors the oil one: multiplier ≈ 1 + (share of global LNG trade lost) ÷ ε_gas, banded and labeled illustrative, anchored to the 2021–22 European gas crisis.",
+  "figures": {
+    "hormuz_lng_mtpa": {
+      "value": 82.6,
+      "unit": "Mt/yr LNG through Hormuz (Qatar ~77, UAE Das Island ~5.6)",
+      "source": "EIA WOTC; QatarEnergy / ADNOC public disclosures",
+      "url": "https://www.eia.gov/international/analysis/special-topics/World_Oil_Transit_Chokepoints",
+      "retrieved": "2026-07-22", "status": "brief-baseline"
+    },
+    "global_lng_trade_mtpa": {
+      "value": 400,
+      "unit": "Mt/yr global LNG trade (2024 ≈ 401 Mt)",
+      "source": "GIIGNL annual report; IEA gas market reports",
+      "url": "https://giignl.org/", "retrieved": "2026-07-22", "status": "brief-baseline"
+    },
+    "bcfd_per_mtpa": {
+      "value": 0.1332,
+      "unit": "Bcf/d per Mt/yr (1 Mt LNG ≈ 48.6 Bcf)",
+      "source": "Standard conversion", "url": "", "retrieved": "2026-07-22", "status": "verified"
+    },
+    "eps_gas": {
+      "value": [0.04, 0.08],
+      "unit": "short-run gas demand elasticity band — tighter than oil; gas users have even fewer substitutes inside a season",
+      "source": "Model assumption — see Methodology", "url": "", "retrieved": "2026-07-22", "status": "illustrative"
+    },
+    "mult_cap": {
+      "value": 8,
+      "unit": "maximum modeled price multiplier",
+      "source": "Model bound — the 2022 crisis peaked near 10× before demand destruction", "url": "", "retrieved": "2026-07-22", "status": "illustrative"
+    }
+  },
+  "buyers": [
+    { "name": "Asia (China, India, Korea, Japan…)", "mtpa": 60, "status": "estimate" },
+    { "name": "Europe", "mtpa": 16, "status": "estimate" },
+    { "name": "Other", "mtpa": 6.6, "status": "estimate" }
+  ],
+  "buyers_source": "Approximate split of Qatari+UAE deliveries from GIIGNL / cargo-tracking commentary",
+  "buyers_url": "https://giignl.org/",
+  "anchor_2022": {
+    "text": "The empirical anchor: Russia's 2021–22 pipeline cuts removed roughly the gas-equivalent of 14% of globally traded LNG from Europe's supply — TTF peaked near 10× its pre-crisis level (≈€340/MWh in August 2022 vs ≈€35 in early 2021) before demand destruction bit.",
+    "source": "IEA gas market reports; public TTF price history",
+    "url": "https://www.iea.org/reports/gas-market-report-q1-2023",
+    "status": "verified"
+  },
+  "storage_note": {
+    "text": "There is no strategic reserve for gas. Europe's storage (~100 bcm, ~25% of annual demand) is a seasonal buffer measured in weeks of winter drawdown; Asian LNG buyers hold days, not months.",
+    "source": "IEA; GIE AGSI storage data",
+    "url": "https://agsi.gie.eu/", "status": "brief-baseline"
+  }
+}

@@ -116,6 +116,47 @@ export function sprRealism(strandedMbd, reservesMbbl, maxRateMbd) {
   };
 }
 
+/**
+ * LNG shock: the oil model minus the escape valve. lost = hormuz_lng · d
+ * (nothing reroutes — there is no gas Petroline and no strategic LNG reserve).
+ * Price multiplier ≈ 1 + (share of global LNG trade lost)/ε_gas, banded, capped.
+ */
+export function lngShock(d, lng) {
+  const clamped = Math.min(1, Math.max(0, d));
+  const lostMtpa = lng.figures.hormuz_lng_mtpa.value * clamped;
+  const shareTrade = lostMtpa / lng.figures.global_lng_trade_mtpa.value;
+  const [epsLo, epsHi] = lng.figures.eps_gas.value;
+  const cap = lng.figures.mult_cap.value;
+  return {
+    lostMtpa,
+    bcfd: lostMtpa * lng.figures.bcfd_per_mtpa.value,
+    shareTrade,
+    mult: { lo: Math.min(1 + shareTrade / epsHi, cap), hi: Math.min(1 + shareTrade / epsLo, cap) },
+    capped: 1 + shareTrade / epsLo > cap,
+  };
+}
+
+/**
+ * Voyage economics: does the transit clear once war-risk is priced in?
+ * insurance = hull · premium% per transit; compared against freight revenue.
+ */
+export function voyageEconomics({ hullM, cargoMbbl, freightPerBbl, premiumPct }) {
+  const insuranceM = hullM * (premiumPct / 100);
+  const freightM = cargoMbbl * freightPerBbl;
+  return {
+    insuranceM,
+    insPerBbl: cargoMbbl > 0 ? insuranceM / cargoMbbl : Infinity,
+    freightM,
+    share: freightM > 0 ? insuranceM / freightM : Infinity,
+  };
+}
+
+/** Floating storage: ships holding × average cargo, expressed against world demand. */
+export function floatingStorage(ships, avgCargoMbbl, globalMbd) {
+  const mbbl = ships * avgCargoMbbl;
+  return { mbbl, daysGlobal: globalMbd > 0 ? mbbl / globalMbd : 0 };
+}
+
 /** Bypass utilisation per pipeline at disruption d, for the map's escape-route animation. */
 export function bypassUse(d, totals, perPipelineSpare) {
   const { bypass } = stranded(d, totals);

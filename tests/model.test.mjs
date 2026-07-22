@@ -6,13 +6,14 @@ import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 import {
   stranded, strandedShare, shockBand, sprDays, producerExposure, bypassUse, scenario,
-  importerExposure, impliedLossOdds, sprRealism,
+  importerExposure, impliedLossOdds, sprRealism, lngShock, voyageEconomics, floatingStorage,
 } from '../src/model.js';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const config = JSON.parse(readFileSync(join(root, 'data/config.json'), 'utf8'));
 const producers = JSON.parse(readFileSync(join(root, 'data/producers.json'), 'utf8')).producers;
 const importers = JSON.parse(readFileSync(join(root, 'data/importers.json'), 'utf8')).importers;
+const lng = JSON.parse(readFileSync(join(root, 'data/lng.json'), 'utf8'));
 
 const THROUGHPUT = config.figures.hormuz_throughput_mbd.value; // 20.9
 const SPARE = config.bypass_profiles.eia.total_mbd;            // 2.6
@@ -155,6 +156,34 @@ test('implied loss odds: 4% of hull → 1-in-25; halved severity doubles the pro
   const o = impliedLossOdds(4);
   assert.ok(Math.abs(o.oneIn - 25) < 1e-9);
   assert.ok(Math.abs(impliedLossOdds(4, 0.5).p - o.p * 2) < 1e-12);
+});
+
+test('LNG shock: no bypass, so losses are linear in d; multiplier band ordered and capped', () => {
+  const zero = lngShock(0, lng);
+  assert.equal(zero.lostMtpa, 0);
+  assert.ok(Math.abs(zero.mult.lo - 1) < 1e-12 && Math.abs(zero.mult.hi - 1) < 1e-12);
+  const full = lngShock(1, lng);
+  assert.equal(full.lostMtpa, lng.figures.hormuz_lng_mtpa.value); // 82.6 — nothing escapes
+  assert.ok(full.shareTrade > 0.20 && full.shareTrade < 0.21);    // ≈ a fifth of global trade
+  assert.ok(full.mult.lo > 3.5 && full.mult.lo < full.mult.hi && full.mult.hi < 6.3);
+  const half = lngShock(0.5, lng);
+  assert.ok(Math.abs(half.lostMtpa * 2 - full.lostMtpa) < 1e-9);
+});
+
+test('voyage economics: hull × premium vs cargo × freight', () => {
+  const ve = voyageEconomics({ hullM: 150, cargoMbbl: 2, freightPerBbl: 4, premiumPct: 5 });
+  assert.ok(Math.abs(ve.insuranceM - 7.5) < 1e-12);
+  assert.ok(Math.abs(ve.insPerBbl - 3.75) < 1e-12);
+  assert.ok(Math.abs(ve.freightM - 8) < 1e-12);
+  assert.ok(ve.share > 0.9 && ve.share < 1);           // marginal: underwriter decides
+  const calm = voyageEconomics({ hullM: 120, cargoMbbl: 2, freightPerBbl: 4, premiumPct: 0.25 });
+  assert.ok(calm.share < 0.05);                        // pre-crisis: a rounding error
+});
+
+test('floating storage: ships × cargo against world demand', () => {
+  const fs = floatingStorage(150, 1.0, 103);
+  assert.equal(fs.mbbl, 150);
+  assert.ok(fs.daysGlobal > 1.4 && fs.daysGlobal < 1.5);
 });
 
 test('SPR realism: the tap binds, not the tank', () => {

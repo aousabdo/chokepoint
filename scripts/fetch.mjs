@@ -99,6 +99,25 @@ function validate() {
   }
   ok(`reopening.json — ${reop.phases.length} phases, all anchored and sourced`);
 
+  const lng = read('data/lng.json');
+  for (const [key, fig] of Object.entries(lng.figures)) {
+    if (fig.value == null || !fig.source || !fig.status) fail(`lng.figures.${key}: incomplete`);
+  }
+  const buyerSum = lng.buyers.reduce((t, b) => t + b.mtpa, 0);
+  if (Math.abs(buyerSum - lng.figures.hormuz_lng_mtpa.value) > 0.1) {
+    fail(`lng: buyer volumes (${buyerSum.toFixed(1)}) ≠ Hormuz LNG total (${lng.figures.hormuz_lng_mtpa.value})`);
+  }
+  if (!lng.anchor_2022?.url || !lng.anchor_2022?.status) fail('lng: 2022 empirical anchor unsourced');
+  ok(`lng.json — ${Object.keys(lng.figures).length} figures; buyer split sums to Hormuz LNG total`);
+
+  const voy = read('data/voyage.json');
+  for (const group of [voy.voyage, voy.floating]) {
+    for (const [key, fig] of Object.entries(group)) {
+      if (fig.value == null || !fig.source || !fig.status) fail(`voyage: ${key} incomplete`);
+    }
+  }
+  ok('voyage.json — calculator defaults sourced');
+
   const brent = read('data/brent_events.json');
   for (const e of brent.events) {
     if (!e.date || !e.name || !e.status) fail(`brent_events: ${e.date} incomplete`);

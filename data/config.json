@@ -61,6 +61,15 @@
       "retrieved": "2026-07-22",
       "status": "reported"
     },
+    "opec_spare_mbd": {
+      "value": 4.5,
+      "unit": "million barrels/day OPEC+ surplus crude production capacity",
+      "source": "EIA STEO — OPEC surplus production capacity. ~90% of it is Saudi and Emirati — physically inside the Gulf.",
+      "url": "https://www.eia.gov/outlooks/steo/",
+      "retrieved": "2026-07-22",
+      "status": "brief-baseline",
+      "note": "The classic fallacy: spare capacity that must transit the strait it is meant to offset counts for nothing during a closure — only bypass-connected spare does."
+    },
     "max_release_mbd": {
       "value": 1.3,
       "unit": "million barrels/day, maximum feasible coordinated release rate",

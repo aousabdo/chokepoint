@@ -1,7 +1,7 @@
 /** Insights dashboard: exposure boards (producer + importer), price-shock backtest + model,
  *  insurance ledger with implied odds, reopening runway, escalation ladder. */
 import { fmt, statusBadge, sourceLine } from './format.js';
-import { impliedLossOdds } from './model.js';
+import { impliedLossOdds, lngShock, voyageEconomics, floatingStorage } from './model.js';
 import { store } from './state.js';
 
 function exposureBoard(sc) {
@@ -211,6 +211,34 @@ export function initInsights(root, data) {
     </div>
 
     <div class="panel">
+      <h2>LNG shock — the cargo with no escape (at <span id="lng-d" class="num" style="color:var(--accent-gold)">0</span>% disruption)</h2>
+      <p class="chart-note" style="margin:0 0 10px">Oil has Petroline; gas has nothing. A fifth of the world's LNG exits
+      through Hormuz with <b style="color:var(--ink)">zero overland bypass and no strategic reserve behind it</b>.
+      ${data.lng.storage_note.text} ${statusBadge(data.lng.storage_note.status)}</p>
+      <div class="implied-grid" style="border-top:none;padding-top:0">
+        <div class="readout gold">
+          <div class="label">LNG offline</div>
+          <div class="value num" id="lng-lost">0 Mt/yr</div>
+          <div class="sub"><span id="lng-bcfd" class="num">0.0</span> Bcf/d of gas supply withdrawn</div>
+        </div>
+        <div class="readout amber">
+          <div class="label">Share of global LNG trade</div>
+          <div class="value num" id="lng-share">0%</div>
+          <div class="sub">of ~${data.lng.figures.global_lng_trade_mtpa.value} Mt/yr traded worldwide</div>
+        </div>
+        <div class="readout amber">
+          <div class="label">TTF/JKM multiplier band <span class="status illustrative">illustrative</span></div>
+          <div class="value num" id="lng-mult">×1.0–×1.0</div>
+          <div class="sub">1 + share ÷ ε_gas, ε ∈ [${data.lng.figures.eps_gas.value.join(', ')}], capped ×${data.lng.figures.mult_cap.value}</div>
+        </div>
+      </div>
+      <div id="lng-buyers" style="margin-top:4px"></div>
+      <p class="chart-note">${data.lng.anchor_2022.text} ${sourceLine(data.lng.anchor_2022.source, data.lng.anchor_2022.url)}
+      ${statusBadge(data.lng.anchor_2022.status)} · Hormuz LNG volume: ${sourceLine(data.lng.figures.hormuz_lng_mtpa.source, data.lng.figures.hormuz_lng_mtpa.url, data.lng.as_of)}
+      · buyer split: ${sourceLine(data.lng.buyers_source, data.lng.buyers_url)} ${statusBadge('estimate')}</p>
+    </div>
+
+    <div class="panel">
       <h2>War-risk insurance ledger — the single most honest number in the crisis</h2>
       <p class="chart-note" style="margin:0 0 8px">Premium per Gulf transit as % of hull value (log scale).
       From 0.01% plumbing fee to the number that decides whether a ship sails: for a $150M VLCC,
@@ -219,6 +247,46 @@ export function initInsights(root, data) {
       <p class="chart-note">${sourceLine('JWC listed-area circulars; Lloyd’s List, S&P Global and broker commentary', 'https://www.lloydslist.com/', data.insurance.as_of)} —
       points inside quoted ranges; range bars show the public low–high. Estimates marked in tooltips.</p>
       <div id="insurance-implied"></div>
+    </div>
+
+    <div class="grid-2">
+      <div class="panel">
+        <h2>Voyage economics — does the transit clear?</h2>
+        <p class="chart-note" style="margin:0 0 6px">The premium became the voyage decision. Set the terms; the
+        arithmetic answers. Cargo fixed at ${data.voyage.voyage.cargo_mbbl.value} M bbl (a laden VLCC).</p>
+        <div class="calc">
+          <label>Hull value<input type="range" id="v-hull" min="${data.voyage.voyage.hull_value_musd.range[0]}" max="${data.voyage.voyage.hull_value_musd.range[1]}" step="5"><span class="val num" id="v-hull-v"></span></label>
+          <label>Freight rate<input type="range" id="v-freight" min="${data.voyage.voyage.freight_per_bbl.range[0]}" max="${data.voyage.voyage.freight_per_bbl.range[1]}" step="0.5"><span class="val num" id="v-freight-v"></span></label>
+          <label>War-risk premium<input type="range" id="v-prem" min="0" max="10" step="0.25"><span class="val num" id="v-prem-v"></span></label>
+        </div>
+        <div id="v-out"></div>
+        <p class="chart-note">Defaults: hull ${sourceLine(data.voyage.voyage.hull_value_musd.source, data.voyage.voyage.hull_value_musd.url)} ${statusBadge(data.voyage.voyage.hull_value_musd.status)};
+        freight ${sourceLine(data.voyage.voyage.freight_per_bbl.source, data.voyage.voyage.freight_per_bbl.url)} ${statusBadge(data.voyage.voyage.freight_per_bbl.status)};
+        premium from the ledger's latest point. One-way transit — round trips can double the premium; crew war bonuses and P&amp;I surcharges excluded.</p>
+      </div>
+      <div>
+        <div class="panel">
+          <h2>Floating storage — the queue afloat</h2>
+          <div class="calc">
+            <label>Ships holding<input type="range" id="f-ships" min="0" max="${data.voyage.floating.ships.range[1]}" step="10"><span class="val num" id="f-ships-v"></span></label>
+            <label>Average cargo<input type="range" id="f-cargo" min="${data.voyage.floating.avg_cargo_mbbl.range[0]}" max="${data.voyage.floating.avg_cargo_mbbl.range[1]}" step="0.1"><span class="val num" id="f-cargo-v"></span></label>
+          </div>
+          <div id="f-out"></div>
+          <p class="chart-note">${sourceLine(data.voyage.floating.ships.source, data.voyage.floating.ships.url, data.voyage.as_of)}
+          ${statusBadge(data.voyage.floating.ships.status)} · fleet mix ${statusBadge(data.voyage.floating.avg_cargo_mbbl.status)}</p>
+        </div>
+        <div class="panel">
+          <h2>The spare-capacity fallacy</h2>
+          <div class="callout" style="margin:0">
+            <strong>~${data.config.figures.opec_spare_mbd.value} M b/d of OPEC+ spare capacity cannot save you.</strong>
+            About 90% of it is Saudi and Emirati — physically inside the Gulf. Spare barrels that must transit the
+            strait they're meant to offset count for nothing during a closure. The only spare that clears is
+            bypass-connected: the same ${data.config.bypass_profiles.eia.total_mbd} M b/d escape valve already in this model.
+            <div class="chart-note">${sourceLine(data.config.figures.opec_spare_mbd.source, data.config.figures.opec_spare_mbd.url, data.config.figures.opec_spare_mbd.retrieved)}
+            ${statusBadge(data.config.figures.opec_spare_mbd.status)}</div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <div class="panel">
@@ -263,6 +331,58 @@ export function initInsights(root, data) {
   const eps = document.getElementById('eps');
   eps.addEventListener('input', () => store.set({ e: parseInt(eps.value, 10) }));
 
+  // ── Voyage economics calculator (self-contained; premium defaults to the ledger's latest point) ──
+  const byId = (id) => document.getElementById(id);
+  const vHull = byId('v-hull'); const vFreight = byId('v-freight'); const vPrem = byId('v-prem');
+  vHull.value = data.voyage.voyage.hull_value_musd.value;
+  vFreight.value = data.voyage.voyage.freight_per_bbl.value;
+  vPrem.value = data.insurance.points[data.insurance.points.length - 1].pct;
+  const renderVoyage = () => {
+    const hullM = +vHull.value; const freightPerBbl = +vFreight.value; const premiumPct = +vPrem.value;
+    byId('v-hull-v').textContent = `$${hullM}M`;
+    byId('v-freight-v').textContent = `$${fmt(freightPerBbl)}/bbl`;
+    byId('v-prem-v').textContent = `${fmt(premiumPct, 2)}% of hull`;
+    const ve = voyageEconomics({ hullM, cargoMbbl: data.voyage.voyage.cargo_mbbl.value, freightPerBbl, premiumPct });
+    const verdict = ve.share < 0.5
+      ? ['ok', 'Clears — the premium is a cost, not a veto.']
+      : ve.share < 1
+        ? ['mid', 'Marginal — the underwriter, not the charterer, decides whether this ship sails.']
+        : ['bad', 'Uneconomic — freight cannot carry the premium. No sailing without premium rates or state cover.'];
+    byId('v-out').innerHTML = `
+      <div class="implied-grid" style="border-top:none;padding-top:0;margin-top:4px">
+        <div class="readout amber"><div class="label">War-risk cost, this transit</div>
+          <div class="value num">$${fmt(ve.insuranceM)}M</div><div class="sub num">$${fmt(ve.insPerBbl, 2)}/bbl added</div></div>
+        <div class="readout cyan"><div class="label">Freight revenue</div>
+          <div class="value num">$${fmt(ve.freightM)}M</div><div class="sub">${data.voyage.voyage.cargo_mbbl.value} M bbl × rate</div></div>
+        <div class="readout ${ve.share < 0.5 ? 'safe' : ve.share < 1 ? 'amber' : 'crit'}"><div class="label">Premium consumes</div>
+          <div class="value num">${fmt(ve.share * 100, 0)}%</div><div class="sub">of freight revenue</div></div>
+      </div>
+      <div class="verdict ${verdict[0]}">${verdict[1]}</div>`;
+  };
+  [vHull, vFreight, vPrem].forEach((el) => el.addEventListener('input', renderVoyage));
+  renderVoyage();
+
+  // ── Floating storage estimator ──
+  const fShips = byId('f-ships'); const fCargo = byId('f-cargo');
+  fShips.value = data.voyage.floating.ships.value;
+  fCargo.value = data.voyage.floating.avg_cargo_mbbl.value;
+  const usSpr = data.importers.find((m) => m.id === 'usa')?.stocks_mbbl ?? 400;
+  const renderFloating = () => {
+    const ships = +fShips.value; const cargo = +fCargo.value;
+    byId('f-ships-v').textContent = String(ships);
+    byId('f-cargo-v').textContent = `${fmt(cargo)} M bbl`;
+    const fs = floatingStorage(ships, cargo, data.config.figures.global_liquids_mbd.value);
+    byId('f-out').innerHTML = `
+      <div class="readout gold" style="margin-top:4px">
+        <div class="label">Oil waiting afloat</div>
+        <div class="value num">${fmt(fs.mbbl, 0)} <span style="font-size:13px">M bbl</span></div>
+        <div class="sub">${fmt(fs.daysGlobal, 1)} days of world demand · ≈${fmt((fs.mbbl / usSpr) * 100, 0)}% of the US SPR,
+        anchored in a war-risk zone</div>
+      </div>`;
+  };
+  [fShips, fCargo].forEach((el) => el.addEventListener('input', renderFloating));
+  renderFloating();
+
   /** Dynamic parts, called on every scenario change while visible. */
   return function update(sc, s) {
     document.getElementById('board-d').textContent = s.d;
@@ -270,6 +390,24 @@ export function initInsights(root, data) {
     document.getElementById('board').innerHTML = exposureBoard(sc);
     document.getElementById('imp-d').textContent = s.d;
     document.getElementById('imp-board').innerHTML = importerBoard(sc);
+
+    // LNG shock recomputes with the same slider — gas gets no bypass
+    const g = lngShock(sc.d, data.lng);
+    document.getElementById('lng-d').textContent = s.d;
+    document.getElementById('lng-lost').textContent = `${fmt(g.lostMtpa, 0)} Mt/yr`;
+    document.getElementById('lng-bcfd').textContent = fmt(g.bcfd);
+    document.getElementById('lng-share').textContent = `${fmt(g.shareTrade * 100)}%`;
+    document.getElementById('lng-mult').textContent = `×${fmt(g.mult.lo)}–×${fmt(g.mult.hi)}${g.capped ? '⌃' : ''}`;
+    document.getElementById('lng-buyers').innerHTML = data.lng.buyers.map((b) => {
+      const lost = b.mtpa * (s.d / 100);
+      const maxB = Math.max(...data.lng.buyers.map((x) => x.mtpa));
+      const w = (b.mtpa / maxB) * 100;
+      return `<div class="board-row lng-row">
+        <span class="name" style="font-weight:400">${b.name}</span>
+        <span class="bar"><span class="esc" style="width:${w * (1 - s.d / 100)}%"></span><span class="str" style="width:${w * (s.d / 100)}%;background:var(--accent-gold)"></span></span>
+        <span class="figure num" style="color:var(--accent-gold)">−${fmt(lost, 0)} Mt/yr</span>
+      </div>`;
+    }).join('');
     eps.value = s.e;
     document.getElementById('eps-label').textContent = (s.e / 100).toFixed(2);
 
