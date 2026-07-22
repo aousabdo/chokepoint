@@ -9,7 +9,12 @@ The site is static: refreshing data = edit JSON → validate → `git push` (Pag
 npm run fetch-data      # recomputes Brent event-study windows from the public daily series
                         # (EIA API if EIA_API_KEY is set; FRED mirror DCOILBRENTEU otherwise)
 npm test                # 26 model tests
+npm run smoke           # E2E: boots the real site headless, asserts rendered readouts
+                        # match the model — run before any demo or deploy
 ```
+
+Note: the service worker (sw.js) gives visitors full offline after first visit; normal data
+deploys self-heal via revalidation, but bump `VERSION` in sw.js on breaking asset changes.
 
 Then sweep the `reported` figures against current reporting and update values + `retrieved`:
 

@@ -80,3 +80,11 @@ if (shouldShowIntro()) {
 } else {
   bootMap();
 }
+
+// Offline/PWA: full offline after first visit (incl. range-served basemap).
+// Skipped on localhost so the no-store dev server stays authoritative;
+// ?sw=1 forces registration for local testing.
+if ('serviceWorker' in navigator
+  && (location.hostname !== 'localhost' || new URLSearchParams(location.search).has('sw'))) {
+  navigator.serviceWorker.register('sw.js').catch(() => { /* non-fatal */ });
+}

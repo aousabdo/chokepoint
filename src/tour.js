@@ -31,9 +31,30 @@ const STEPS = [
     body: 'Sweep 1980→today. Four decades of Hormuz threats on the map — the Tanker War, 2019, the twelve-day war, the 2026 crisis. History is the model\'s empirical anchor.',
   },
   {
-    sel: '#views button[data-view="insights"]',
-    title: 'The full analysis',
-    body: 'Insights holds the exposure board, the Brent event study, the war-risk insurance ledger and the escalation ladder. Methodology documents every equation and every source. "Download brief" prints the current scenario.',
+    sel: '#imp-board',
+    panel: true,
+    view: 'insights',
+    title: 'Who hurts first',
+    body: 'The flip side of the producer board: who buys what Hormuz carries, and how many days their strategic stocks cover the loss. Sorted shortest first — Asia holds weeks, the OECD holds a year. China\'s reserves are state-opaque and badged accordingly.',
+  },
+  {
+    sel: '#lng-buyers',
+    panel: true,
+    view: 'insights',
+    title: 'The cargo with no escape',
+    body: 'Oil has Petroline; gas has nothing. A fifth of the world\'s LNG exits through Hormuz with zero bypass and no strategic reserve behind it. The multiplier band is anchored to the 2021–22 European gas crisis.',
+  },
+  {
+    sel: '.cp-table',
+    panel: true,
+    view: 'insights',
+    title: 'Why Hormuz is different',
+    body: 'Every other major chokepoint has an escape — another sea lane, a parallel pipeline, or both. Suez closed for eight years and the world rerouted. Hormuz alone has no way out by sea — a fact the build enforces as a data invariant.',
+  },
+  {
+    sel: '#brief-btn',
+    title: 'Take it with you',
+    body: 'Download brief generates a five-page analyst report at your exact scenario — every figure sourced, every model equation stated. Methodology documents all of it, and Copy link shares this precise view.',
   },
 ];
 
@@ -50,7 +71,9 @@ function stepEls() {
 function place(i) {
   const step = STEPS[i];
   if (step.view) store.set({ v: step.view });
-  const target = document.querySelector(step.sel);
+  const el = document.querySelector(step.sel);
+  const target = step.panel ? (el?.closest('.panel') ?? el) : el;
+  target?.scrollIntoView({ block: 'center', behavior: 'instant' });
   const { hl, tip } = stepEls();
   const pad = 8;
   const r = target?.getBoundingClientRect();
