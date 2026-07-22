@@ -37,6 +37,8 @@ export function renderMethodology(root, data) {
         <li><span style="color:var(--safe-teal)">■</span> Teal lines — the three bypass pipelines. They <em>thicken</em> as the scenario pushes diverted barrels into them.</li>
         <li><span style="color:var(--stranded-crim)">■</span> The red pool at the narrows — stranded volume that has nowhere to go.</li>
         <li>Terminal dots are sized by export volume and colored by exposure (red = total, amber = high, teal = partial). Color is never the only encoding — every feature opens a sourced card with the figures in text.</li>
+        <li><strong>Click any terminal</strong> to light the flow trunk it rides (bypass outlets light their pipeline instead); the card names the trunk and its companion ports. Open water, Esc or the card's ✕ clears. Origin is shown on demand rather than as permanent route colors — that keeps the semantic palette and colorblind guarantees intact.</li>
+        <li>The shadow-fleet layer (off by default) shows <em>pattern-level</em> zones only — AIS-gap corridors, spoofing and STS areas from public reporting — never vessel positions.</li>
         <li>The strait's lane geometry is a <em>schematic</em> of the IMO traffic separation scheme — two 2-mile lanes in a ~21-nautical-mile-wide narrows. Not for navigation.</li>
       </ul>
     </section>
@@ -88,12 +90,18 @@ macro         : ΔCPI ≈ (ΔP%/10)·[0.2,0.4] pp · ΔGDP ≈ −(ΔP%/10)·[0.
           ${srcRow('Habshan–Fujairah (ADCOP)', { ...data.config.pipelines.adcop, value: data.config.pipelines.adcop.nameplate_mbd, unit: 'M b/d nameplate' })}
           ${srcRow('Goreh–Jask', { ...data.config.pipelines.jask, value: data.config.pipelines.jask.nameplate_mbd, unit: 'M b/d nameplate' })}
           ${srcRow('Releasable strategic reserves', f.spr_releasable_mbbl)}
+          ${srcRow('Max coordinated release rate', f.max_release_mbd)}
+          ${srcRow('OPEC+ spare capacity', f.opec_spare_mbd)}
           ${srcRow('Current reported disruption', f.current_reported_disruption)}
-          ${srcRow('Short-run elasticity band', f.eps_short_run)}
+          ${srcRow('Short-run elasticity band ε', f.eps_short_run)}
+          ${srcRow('Long-run elasticity ε∞', f.eps_longrun)}
+          ${srcRow('Elasticity ramp τ', f.tau_months)}
+          ${srcRow('CPI per +10% oil', f.cpi_per_10pct)}
+          ${srcRow('GDP per +10% oil', f.gdp_per_10pct)}
         </tbody>
       </table></div>
       <ul style="margin-top:10px">
-        <li><strong>Producer exports</strong> — <a href="https://www.eia.gov/international/analysis/" target="_blank" rel="noopener">EIA country analysis briefs</a> (approximate pre-crisis Gulf seaborne exports).</li>
+        <li><strong>Producer volumes</strong> — EIA WOTC 2024 through-Hormuz crude + condensate by origin (Saudi 38% ≈ 5.5 M b/d; Iraq ~22.5%; UAE ~13%; Iran 10.6%; Kuwait 10.1%; top five &gt;93%). Refined products transit the same strait but are not origin-attributed in the producer board.</li>
         <li><strong>Importer volumes</strong> — EIA WOTC Hormuz flows by destination (2024). Destination volumes must sum to total throughput — the build validator enforces it, which is what makes importer losses sum exactly to stranded barrels.</li>
         <li><strong>Strategic stocks per importer</strong> — <a href="https://www.iea.org/about/oil-security-and-emergency-response" target="_blank" rel="noopener">IEA</a> (Japan, Korea, Europe), <a href="https://www.isprlindia.com/" target="_blank" rel="noopener">ISPRL</a> (India), <a href="https://www.energy.gov/ceser/strategic-petroleum-reserve" target="_blank" rel="noopener">DOE</a> (US). China's reserves are state-opaque; the bundled figure is a public analyst estimate and is badged as such everywhere it appears.</li>
         <li><strong>Maximum release rate</strong> — the 2022 IEA coordinated actions (<a href="https://www.iea.org/news/iea-confirms-member-country-contributions-to-second-collective-action-to-release-oil-stocks-in-response-to-russia-s-invasion-of-ukraine" target="_blank" rel="noopener">240 M bbl over ~6 months</a>; US SPR drawdown peaked near 1 M b/d).</li>
@@ -106,7 +114,7 @@ macro         : ΔCPI ≈ (ΔP%/10)·[0.2,0.4] pp · ΔGDP ≈ −(ΔP%/10)·[0.
         <li><strong>War-risk insurance</strong> — JWC listed-area circulars; <a href="https://www.lloydslist.com/" target="_blank" rel="noopener">Lloyd's List</a>, <a href="https://www.spglobal.com/energy/en/news-research/latest-news/shipping/062326-war-cover-available-for-hormuz-trades-but-transit-challenges-remain-insurers" target="_blank" rel="noopener">S&amp;P Global</a> and broker commentary. Points are estimates inside publicly quoted ranges; marked as such.</li>
         <li><strong>Incident record</strong> — <a href="https://www.congress.gov/crs-product/R45281" target="_blank" rel="noopener">CRS R45281</a>, US Navy histories, ACLED-adjacent press reporting; 2026 entries from current public reporting including <a href="https://en.wikipedia.org/wiki/2026_Strait_of_Hormuz_crisis" target="_blank" rel="noopener">the aggregated crisis record</a>.</li>
         <li><strong>Shadow-fleet patterns</strong> — public tracking by <a href="https://www.unitedagainstnucleariran.com/tanker-tracker" target="_blank" rel="noopener">UANI</a> and Windward commentary; pattern-level zones only. OFAC SDN screening lives in <a href="https://watchstander.analyticadss.com" target="_blank" rel="noopener">Watchstander</a>.</li>
-        <li><strong>Basemap</strong> — <a href="https://carto.com/attributions" target="_blank" rel="noopener">CARTO dark matter</a> © OpenStreetMap contributors, rendered by <a href="https://maplibre.org" target="_blank" rel="noopener">MapLibre GL JS</a>. Pipeline routes and flow trunks are schematic.</li>
+        <li><strong>Basemap</strong> — an offline <a href="https://protomaps.com" target="_blank" rel="noopener">Protomaps</a> PMTiles extract of the Gulf (© <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors, ODbL), rendered by <a href="https://maplibre.org" target="_blank" rel="noopener">MapLibre GL JS</a> — the map makes no external requests. CARTO dark matter serves only as a fallback if the offline bundle is stripped. Pipeline routes and flow trunks are schematic.</li>
         <li><strong>Intro geography</strong> — <a href="https://www.naturalearthdata.com/" target="_blank" rel="noopener">Natural Earth 1:50m</a> coastlines (public domain), projected to the intro figure at build time by <code>scripts/make-intro-geo.mjs</code>.</li>
       </ul>
     </section>
@@ -118,7 +126,8 @@ macro         : ΔCPI ≈ (ΔP%/10)·[0.2,0.4] pp · ΔGDP ≈ −(ΔP%/10)·[0.
         <li>Insurance points are reconstructed from public commentary, not a broker feed. Ranges shown; single points are illustrative midpoints.</li>
         <li>2026-crisis figures are <span class="status reported">reported</span> — a live war zone's numbers move; this build is stamped ${data.config.as_of}.</li>
         <li>Per-pipeline allocation of EIA's 2.6 M b/d spare is Analytica's derived estimate (the total is EIA's).</li>
-        <li>Producer exports are pre-crisis baselines; the model asks "what if d% of normal flow is disrupted", not "what is flowing today".</li>
+        <li>Producer and importer volumes are pre-crisis baselines; the model asks "what if d% of normal flow is disrupted", not "what is flowing today".</li>
+        <li>Producer rows cover through-Hormuz crude + condensate (~15 M b/d of the 20.9 total); refined products are in the throughput and importer totals but not attributed to origin countries.</li>
         <li>No AIS feed is bundled — vessel-level detection belongs to Watchstander; here the shadow-fleet layer is pattern-level context.</li>
       </ul>
     </section>
@@ -147,10 +156,13 @@ macro         : ΔCPI ≈ (ΔP%/10)·[0.2,0.4] pp · ΔGDP ≈ −(ΔP%/10)·[0.
 
     <section>
       <h2>Build note</h2>
-      <p>Static, client-side, no backend, no login, no paid APIs. All model logic ships as documented,
-      unit-tested ES modules (<code>src/model.js</code>, <code>tests/</code>); all data ships as versioned JSON
-      under <code>/data</code> with per-figure <code>{source, url, retrieved, status}</code>. Rebuild the dataset
-      from scratch with <code>scripts/fetch.mjs</code>. Deploys to GitHub Pages behind Cloudflare.
+      <p>Static, client-side, no backend, no login, no telemetry, no paid APIs. All model logic ships as
+      documented, unit-tested ES modules (<code>src/model.js</code>, <code>tests/</code>); all data ships as
+      versioned JSON under <code>/data</code> with per-figure <code>{source, url, retrieved, status}</code>.
+      The basemap, fonts, map libraries and dataset are vendored — the site is fully self-contained and runs
+      from a copied directory with zero external requests. Rebuild the dataset from scratch with
+      <code>scripts/fetch.mjs</code>. Deploys to GitHub Pages behind Cloudflare.
+      Accessibility conformance (WCAG 2.1 AA) and the data-refresh runbook ship in the repository.
       Deep links encode the full view state in the URL hash. <em>Chokepoint ·
       <a href="https://analyticadss.com" target="_blank" rel="noopener">Analytica Data Science Solutions</a> ·
       built from 100% public data.</em></p>
