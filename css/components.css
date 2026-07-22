@@ -222,8 +222,6 @@ input[type="range"]::-moz-range-thumb {
 .verdict.bad { border-color: var(--stranded-crim); color: var(--stranded-crim); background: rgba(228, 87, 46, 0.07); }
 
 /* ── Tier-3: price path, macro, chokepoint comparison ────── */
-.grid-wide-left { grid-template-columns: 1.5fr 1fr; }
-@media (max-width: 860px) { .grid-wide-left { grid-template-columns: 1fr; } }
 .cp-table td { vertical-align: top; }
 .cp-hormuz td { background: rgba(228, 87, 46, 0.06); }
 .cp-none {

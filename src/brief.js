@@ -372,7 +372,7 @@ macro         : (ΔP%/10)·[coeffs], one-year</pre>
           vessel-behavior content is pattern-level.</p>
           <p style="margin-top:10px">Interactive version, all scenarios: <b>chokepoint.analyticadss.com</b><br>
           Scenario deep link: <span style="font-size:7.6px">${location.href}</span><br>
-          Generated ${new Date().toISOString().slice(0, 10)} · Chokepoint · Analytica Data Science Solutions</p>
+          Generated ${new Date().toISOString().slice(0, 10)} · Chokepoint · Analytica Data Science Solutions · analyticadss.com</p>
         </div>
       </div>
     </div>`;

@@ -129,7 +129,8 @@ macro         : ΔCPI ≈ (ΔP%/10)·[0.2,0.4] pp · ΔGDP ≈ −(ΔP%/10)·[0.
       unit-tested ES modules (<code>src/model.js</code>, <code>tests/</code>); all data ships as versioned JSON
       under <code>/data</code> with per-figure <code>{source, url, retrieved, status}</code>. Rebuild the dataset
       from scratch with <code>scripts/fetch.mjs</code>. Deploys to GitHub Pages behind Cloudflare.
-      Deep links encode the full view state in the URL hash. <em>Chokepoint · Analytica Data Science Solutions ·
+      Deep links encode the full view state in the URL hash. <em>Chokepoint ·
+      <a href="https://analyticadss.com" target="_blank" rel="noopener">Analytica Data Science Solutions</a> ·
       built from 100% public data.</em></p>
     </section>`;
 }

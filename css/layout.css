@@ -27,6 +27,8 @@
   color: var(--ink-dim);
   font-weight: 400;
 }
+.wordmark .by a { color: inherit; }
+.wordmark .by a:hover { color: var(--data-cyan); text-decoration: none; }
 #views { display: flex; gap: 4px; }
 #views button {
   background: none;
@@ -138,4 +140,5 @@ main > section[hidden] { display: none; }
   .grid-2 { grid-template-columns: 1fr; }
   #views button { padding: 6px 9px; font-size: 13px; }
   .top-right .chip { display: none; }
+  .wordmark .strait-tag { display: none; }
 }

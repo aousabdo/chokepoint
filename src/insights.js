@@ -83,7 +83,7 @@ function reopeningPanel(reopening) {
 }
 
 function pricePathChart(pts, share, epsLong) {
-  const W = 640, H = 250, L = 46, R = 14, T = 16, B = 28;
+  const W = 940, H = 250, L = 46, R = 14, T = 16, B = 28;
   const yMax = Math.max(0.4, pts[0].hi * 1.12);
   const x = (t) => L + (t / pts[pts.length - 1].t) * (W - L - R);
   const y = (v) => T + (1 - v / yMax) * (H - T - B);
@@ -249,6 +249,7 @@ export function initInsights(root, data) {
         remains an <span class="status estimate">estimate</span>.</p>
       </div>
 
+      <div>
       <div class="panel">
         <h2>Stylized shock model <span class="status illustrative">illustrative</span></h2>
         <div id="shock-panel"></div>
@@ -259,10 +260,19 @@ export function initInsights(root, data) {
         <p class="chart-note">ΔP/P ≈ stranded share ÷ ε, banded over ε ∈ [0.08, 0.15] and capped at +300%.
         Illustrative — real markets price expectations, OPEC spare capacity and SPR releases, not just today's barrels.</p>
       </div>
+      <div class="panel">
+        <h2>Macro pass-through <span class="status illustrative">illustrative</span></h2>
+        <p class="chart-note" style="margin:0 0 8px">Public rules of thumb: +10% oil ≈
+        +${data.config.figures.cpi_per_10pct.value.join('–')} pp on CPI and
+        −${data.config.figures.gdp_per_10pct.value.join('–')} pp on global GDP over a year, applied to the current shock band.</p>
+        <div id="macro-out"></div>
+        <p class="chart-note">${sourceLine(data.config.figures.cpi_per_10pct.source, data.config.figures.cpi_per_10pct.url, data.config.as_of)} —
+        linear rules break down at extreme shocks; treat the upper ends as directional.</p>
+      </div>
+      </div>
     </div>
 
-    <div class="grid-2 grid-wide-left">
-      <div class="panel">
+    <div class="panel">
         <h2>Dynamic price path — the spike decays; the siege premium stays (at <span id="pp-d" class="num" style="color:var(--data-cyan)">0</span>%)</h2>
         <p class="chart-note" style="margin:0 0 8px">Short-run inelasticity sets the spike; substitution and demand
         destruction raise elasticity over the following months. The band narrows — but converges to a
@@ -273,16 +283,6 @@ export function initInsights(root, data) {
         assumes the disruption persists across the horizon; expectations, SPR releases and GDP feedback excluded.
         ${sourceLine(data.config.figures.eps_longrun.source, data.config.figures.eps_longrun.url)}</p>
       </div>
-      <div class="panel">
-        <h2>Macro pass-through <span class="status illustrative">illustrative</span></h2>
-        <p class="chart-note" style="margin:0 0 8px">Public rules of thumb: +10% oil ≈
-        +${data.config.figures.cpi_per_10pct.value.join('–')} pp on CPI and
-        −${data.config.figures.gdp_per_10pct.value.join('–')} pp on global GDP over a year, applied to the current shock band.</p>
-        <div id="macro-out"></div>
-        <p class="chart-note">${sourceLine(data.config.figures.cpi_per_10pct.source, data.config.figures.cpi_per_10pct.url, data.config.as_of)} —
-        linear rules of thumb break down at extreme shocks; treat the upper ends as directional.</p>
-      </div>
-    </div>
 
     <div class="panel">
       <h2>LNG shock — the cargo with no escape (at <span id="lng-d" class="num" style="color:var(--accent-gold)">0</span>% disruption)</h2>
