@@ -1,5 +1,7 @@
-/** Insights dashboard: exposure board, price-shock backtest + model, insurance ledger, escalation ladder. */
+/** Insights dashboard: exposure boards (producer + importer), price-shock backtest + model,
+ *  insurance ledger with implied odds, reopening runway, escalation ladder. */
 import { fmt, statusBadge, sourceLine } from './format.js';
+import { impliedLossOdds } from './model.js';
 import { store } from './state.js';
 
 function exposureBoard(sc) {
@@ -17,6 +19,67 @@ function exposureBoard(sc) {
       <span class="tag ${p.exposure}">${p.exposure}</span>
     </div>`;
   }).join('');
+}
+
+function importerBoard(sc) {
+  const maxImp = Math.max(...sc.importers.map((m) => m.hormuz_mbd));
+  return sc.importers.map((m) => {
+    const w = (m.hormuz_mbd / maxImp) * 100;
+    const lossFrac = m.hormuz_mbd > 0 ? m.loss / m.hormuz_mbd : 0;
+    const d = m.daysCover;
+    const cls = d < 60 ? 'cover-low' : d < 180 ? 'cover-mid' : 'cover-ok';
+    const daysTxt = Number.isFinite(d) ? (d > 999 ? '999+' : fmt(d, 0)) : '∞';
+    return `<div class="board-row">
+      <span class="name">${m.name} ${m.stocks_status === 'estimate' ? statusBadge('estimate') : ''}</span>
+      <span class="bar" title="${fmt(m.hormuz_mbd)} M b/d via Hormuz — losing ${fmt(m.loss)} M b/d${m.demandShare != null ? ` (${fmt(m.demandShare * 100, 0)}% of its total oil demand)` : ''}. Stocks ${m.stocks_mbbl} M bbl — ${m.stocks_source}.">
+        <span class="esc" style="width:${w * (1 - lossFrac)}%"></span>
+        <span class="str" style="width:${w * lossFrac}%"></span>
+      </span>
+      <span class="figure num">−${fmt(m.loss)} M b/d</span>
+      <span class="cover ${cls} num" title="Strategic stocks ÷ lost supply rate">${daysTxt}d</span>
+    </div>`;
+  }).join('');
+}
+
+function insuranceImplied(insurance) {
+  const pts = insurance.points;
+  const last = pts[pts.length - 1];
+  const first = pts[0];
+  const best = impliedLossOdds(last.low);
+  const worst = impliedLossOdds(last.high);
+  const pre = impliedLossOdds(first.pct);
+  return `<div class="implied-grid">
+      <div class="readout amber">
+        <div class="label">Implied odds of hull loss, per transit</div>
+        <div class="value num" style="font-size:22px">1-in-${fmt(worst.oneIn, 0)} – 1-in-${fmt(best.oneIn, 0)}</div>
+        <div class="sub">from the ${last.date.slice(0, 7)} quote range (${last.low}–${last.high}% of hull)</div>
+      </div>
+      <div class="readout dim">
+        <div class="label">Same arithmetic, Dec 2018</div>
+        <div class="value num">~1-in-${fmt(pre.oneIn / 1000, 0)},000</div>
+        <div class="sub">the strait as priced plumbing</div>
+      </div>
+      <div class="readout cyan">
+        <div class="label">How to read it</div>
+        <div class="sub" style="margin-top:4px">premium ≈ probability × severity + loadings, so these are <b>upper bounds</b>
+        on what underwriters believe. At 50% average severity, double the 1-in-N.</div>
+      </div>
+    </div>`;
+}
+
+function reopeningPanel(reopening) {
+  const MAX = 560;
+  const pos = (days) => Math.sqrt(days / MAX) * 100;
+  const human = (lo, hi) => (hi < 60 ? `${Math.round(lo / 7)}–${Math.round(hi / 7)} weeks` : `${Math.round(lo / 30)}–${Math.round(hi / 30)} months`);
+  return reopening.phases.map((ph) => `
+    <div class="reop-row">
+      <div class="reop-head"><b>${ph.phase}</b><span class="num">${human(ph.low_days, ph.high_days)}</span></div>
+      <div class="reop-track"><span class="reop-band" style="left:${pos(ph.low_days)}%;width:${Math.max(2, pos(ph.high_days) - pos(ph.low_days))}%"></span></div>
+      <p>${ph.summary}</p>
+      <ul class="reop-anchors">${ph.anchors.map((a) =>
+        `<li>${a.text} — ${sourceLine(a.source, a.url)} ${statusBadge(a.status)}</li>`).join('')}</ul>
+    </div>`).join('') +
+    `<div class="reop-scale"><span>ceasefire</span><span>1 month</span><span>6 months</span><span>18 months →</span></div>`;
 }
 
 function eventStudy(brentEvents) {
@@ -112,6 +175,18 @@ export function initInsights(root, data) {
       </div>
     </div>
 
+    <div class="panel">
+      <h2>Importer exposure — who hurts first (at <span id="imp-d" class="num" style="color:var(--data-cyan)">0</span>% disruption)</h2>
+      <p class="chart-note" style="margin:0 0 8px">The flip side of the producer board: who <b style="color:var(--ink)">buys</b> what
+      Hormuz carries, and how many days their strategic stocks cover the loss. Bypass relief is shared pro-rata —
+      rerouted barrels are fungible, so a Petroline cargo landing at Yanbu still reaches its buyer.
+      Sorted by days of cover: shortest first.</p>
+      <div id="imp-board"></div>
+      <p class="chart-note">${sourceLine('EIA WOTC — Hormuz flows by destination (2024)', 'https://www.eia.gov/international/analysis/special-topics/World_Oil_Transit_Chokepoints', '2026-07-22')} ·
+      stocks per row from IEA / ISPRL / DOE / public analyst estimates — China's reserves are state-opaque and marked
+      <span class="status estimate">estimate</span>. Hover any bar for the sourcing.</p>
+    </div>
+
     <div class="grid-2">
       <div class="panel">
         <h2>Event study — Brent after Hormuz threats</h2>
@@ -143,6 +218,14 @@ export function initInsights(root, data) {
       <div id="insurance-chart"></div>
       <p class="chart-note">${sourceLine('JWC listed-area circulars; Lloyd’s List, S&P Global and broker commentary', 'https://www.lloydslist.com/', data.insurance.as_of)} —
       points inside quoted ranges; range bars show the public low–high. Estimates marked in tooltips.</p>
+      <div id="insurance-implied"></div>
+    </div>
+
+    <div class="panel">
+      <h2>Reopening runway — why the slider doesn't snap back</h2>
+      <p class="chart-note" style="margin:0 0 10px">Setting disruption to 0% models flows, not frictions.
+      Three things outlast every de-escalation, each anchored to the historical record:</p>
+      <div id="reopening"></div>
     </div>
 
     <div class="panel">
@@ -156,6 +239,8 @@ export function initInsights(root, data) {
 
   document.getElementById('event-study').innerHTML = eventStudy(data.brentEvents);
   document.getElementById('insurance-chart').innerHTML = insuranceChart(data.insurance);
+  document.getElementById('insurance-implied').innerHTML = insuranceImplied(data.insurance);
+  document.getElementById('reopening').innerHTML = reopeningPanel(data.reopening);
 
   let era = 'all';
   const ladderEl = document.getElementById('ladder');
@@ -183,6 +268,8 @@ export function initInsights(root, data) {
     document.getElementById('board-d').textContent = s.d;
     document.getElementById('board-profile').textContent = sc.profile.label;
     document.getElementById('board').innerHTML = exposureBoard(sc);
+    document.getElementById('imp-d').textContent = s.d;
+    document.getElementById('imp-board').innerHTML = importerBoard(sc);
     eps.value = s.e;
     document.getElementById('eps-label').textContent = (s.e / 100).toFixed(2);
 
@@ -201,6 +288,16 @@ export function initInsights(root, data) {
         <div class="value num">${Number.isFinite(sc.sprDays) ? fmt(sc.sprDays, 0) : '∞'} <span style="font-size:13px">days</span></div>
         <div class="sub">${data.config.figures.spr_releasable_mbbl.value} M bbl IEA-member public stocks ÷ ${fmt(sc.stranded)} M b/d stranded
         <span class="status estimate">estimate</span></div>
+      </div>
+      <div class="spr-real">
+        <div class="label" style="font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-dim)">
+          Release-rate reality check <span class="status reported">reported</span></div>
+        ${sc.stranded > 0.05
+          ? `Coordinated releases max out near <b>${fmt(data.config.figures.max_release_mbd.value)}</b> M b/d (2022 precedent) —
+             covering <b>${fmt(sc.sprReal.coverShare * 100, 0)}%</b> of the stranded rate. Net gap after a maximum release:
+             <b>${fmt(sc.sprReal.net)}</b> M b/d. At that rate stocks last <b>${fmt(sc.sprReal.daysAtRate, 0)}</b> days —
+             the tank outlasts the crisis; <b>the tap is the constraint</b>.`
+          : 'No stranded barrels to offset at this disruption level.'}
       </div>`;
   };
 }

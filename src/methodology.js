@@ -54,7 +54,10 @@ export function renderMethodology(root, data) {
 share         = stranded(d) / global_liquids_supply
 ΔP/P          ≈ share / ε        ε ∈ [${f.eps_short_run.value.join(', ')}]  (capped at +${f.shock_cap.value * 100}%)
 SPR_days      = releasable_reserves / stranded(d)
-producer_i    : stranded_i = exports_i·d − min(own_pipeline_spare_i, exports_i·d)</pre>
+SPR_offset    = min(max_release_rate, stranded(d))       — the tap binds, not the tank
+producer_i    : stranded_i = exports_i·d − min(own_pipeline_spare_i, exports_i·d)
+importer_i    : loss_i = imports_i·d · stranded/gross    — bypass pro-rata; barrels are fungible
+implied odds  : P(hull loss per transit) ≤ premium / severity   — upper bound; premiums include loadings</pre>
       <p>The price equation is <strong>illustrative by construction</strong>: short-run oil demand is famously
       inelastic, so small volume losses move price hard — but real markets price expectations, OPEC spare
       capacity, SPR releases and demand destruction. We show a band, not a point, and cap it. The SPR runway is
@@ -87,6 +90,10 @@ producer_i    : stranded_i = exports_i·d − min(own_pipeline_spare_i, exports_
       </table></div>
       <ul style="margin-top:10px">
         <li><strong>Producer exports</strong> — <a href="https://www.eia.gov/international/analysis/" target="_blank" rel="noopener">EIA country analysis briefs</a> (approximate pre-crisis Gulf seaborne exports).</li>
+        <li><strong>Importer volumes</strong> — EIA WOTC Hormuz flows by destination (2024). Destination volumes must sum to total throughput — the build validator enforces it, which is what makes importer losses sum exactly to stranded barrels.</li>
+        <li><strong>Strategic stocks per importer</strong> — <a href="https://www.iea.org/about/oil-security-and-emergency-response" target="_blank" rel="noopener">IEA</a> (Japan, Korea, Europe), <a href="https://www.isprlindia.com/" target="_blank" rel="noopener">ISPRL</a> (India), <a href="https://www.energy.gov/ceser/strategic-petroleum-reserve" target="_blank" rel="noopener">DOE</a> (US). China's reserves are state-opaque; the bundled figure is a public analyst estimate and is badged as such everywhere it appears.</li>
+        <li><strong>Maximum release rate</strong> — the 2022 IEA coordinated actions (<a href="https://www.iea.org/news/iea-confirms-member-country-contributions-to-second-collective-action-to-release-oil-stocks-in-response-to-russia-s-invasion-of-ukraine" target="_blank" rel="noopener">240 M bbl over ~6 months</a>; US SPR drawdown peaked near 1 M b/d).</li>
+        <li><strong>Reopening anchors</strong> — US Navy mine-countermeasure histories (1988, 1991), the EIA daily Brent series, and this site's own insurance ledger. Ranges are estimates and badged as such.</li>
         <li><strong>Brent history</strong> — <a href="${data.brentEvents.url}" target="_blank" rel="noopener">EIA Europe Brent spot, daily</a>; event windows recomputed exactly by <code>scripts/fetch.mjs</code> (free EIA API key).</li>
         <li><strong>War-risk insurance</strong> — JWC listed-area circulars; <a href="https://www.lloydslist.com/" target="_blank" rel="noopener">Lloyd's List</a>, <a href="https://www.spglobal.com/energy/en/news-research/latest-news/shipping/062326-war-cover-available-for-hormuz-trades-but-transit-challenges-remain-insurers" target="_blank" rel="noopener">S&amp;P Global</a> and broker commentary. Points are estimates inside publicly quoted ranges; marked as such.</li>
         <li><strong>Incident record</strong> — <a href="https://www.congress.gov/crs-product/R45281" target="_blank" rel="noopener">CRS R45281</a>, US Navy histories, ACLED-adjacent press reporting; 2026 entries from current public reporting including <a href="https://en.wikipedia.org/wiki/2026_Strait_of_Hormuz_crisis" target="_blank" rel="noopener">the aggregated crisis record</a>.</li>

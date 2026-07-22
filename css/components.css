@@ -186,6 +186,51 @@ input[type="range"]::-moz-range-thumb {
 .ladder-row .impacts span b { color: var(--ink); font-weight: 600; }
 .ladder-row .srcline { font-size: 11px; }
 
+/* ── Importer board: days-of-cover chip ──────────────────── */
+.cover {
+  font-family: var(--font-mono); font-variant-numeric: tabular-nums;
+  font-size: 13px; font-weight: 600; text-align: right;
+}
+.cover-low { color: var(--stranded-crim); }
+.cover-mid { color: var(--exposed-amber); }
+.cover-ok { color: var(--safe-teal); }
+
+/* ── SPR release realism ─────────────────────────────────── */
+.spr-real {
+  font-size: 12px; line-height: 1.55; color: var(--ink-dim);
+  border-top: 1px solid var(--line); margin-top: 10px; padding-top: 8px;
+}
+.spr-real b { color: var(--ink); font-family: var(--font-mono); }
+
+/* ── Insurance implied odds ──────────────────────────────── */
+.implied-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px;
+  margin-top: 12px; border-top: 1px solid var(--line); padding-top: 12px;
+}
+@media (max-width: 860px) { .implied-grid { grid-template-columns: 1fr; } }
+
+/* ── Reopening runway ────────────────────────────────────── */
+.reop-row { padding: 10px 0 12px; border-bottom: 1px solid var(--line); }
+.reop-head { display: flex; justify-content: space-between; align-items: baseline; font-size: 14px; }
+.reop-head .num { color: var(--accent-gold); font-size: 13px; }
+.reop-track {
+  position: relative; height: 10px; border-radius: 5px;
+  background: rgba(159, 179, 200, 0.08); margin: 7px 0 6px;
+}
+.reop-band {
+  position: absolute; top: 0; bottom: 0; border-radius: 5px;
+  background: linear-gradient(90deg, var(--exposed-amber), var(--stranded-crim));
+  opacity: 0.75;
+}
+.reop-row p { font-size: 12.5px; margin: 2px 0 5px; color: var(--ink-dim); }
+.reop-anchors { margin: 0; padding-left: 17px; font-size: 11.5px; color: var(--ink-dim); }
+.reop-anchors li { margin-bottom: 3px; }
+.reop-scale {
+  display: flex; justify-content: space-between;
+  font-family: var(--font-mono); font-size: 9px; color: var(--ink-dim);
+  margin-top: 8px; letter-spacing: 0.08em; text-transform: uppercase;
+}
+
 /* ── Status badges (data provenance) ─────────────────────── */
 .status { font-size: 9px; letter-spacing: 0.08em; text-transform: uppercase; border-radius: 3px; padding: 1px 5px; vertical-align: middle; }
 .status.verified { color: var(--safe-teal); border: 1px solid var(--safe-teal); }

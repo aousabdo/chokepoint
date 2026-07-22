@@ -7,7 +7,7 @@ async function json(path) {
 }
 
 export async function loadAll() {
-  const [config, producersDoc, eventsDoc, insurance, brentEvents, strait, pipelines, terminals, flows, shadow, introCoast] =
+  const [config, producersDoc, eventsDoc, insurance, brentEvents, strait, pipelines, terminals, flows, shadow, introCoast, importersDoc, reopening] =
     await Promise.all([
       json('data/config.json'),
       json('data/producers.json'),
@@ -20,6 +20,8 @@ export async function loadAll() {
       json('data/geo/flows.geojson'),
       json('data/geo/shadow.geojson'),
       json('data/geo/intro-coast.json'),
+      json('data/importers.json'),
+      json('data/reopening.json'),
     ]);
   return {
     config,
@@ -30,6 +32,9 @@ export async function loadAll() {
     eventsDoc,
     insurance,
     brentEvents,
+    importers: importersDoc.importers,
+    importersDoc,
+    reopening,
     geo: { strait, pipelines, terminals, flows, shadow, introCoast },
   };
 }

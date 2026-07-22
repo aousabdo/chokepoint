@@ -1,0 +1,32 @@
+{
+  "as_of": "2026-07-22",
+  "notes": "Reopening runway — how long each friction persists after de-escalation, anchored to the historical record in events.json and the insurance ledger. Ranges are estimates from public reporting; the point of the panel is that d→0 on the slider is not day zero in the market.",
+  "phases": [
+    {
+      "id": "price", "phase": "Price premium", "low_days": 14, "high_days": 45,
+      "summary": "Threat premiums mean-revert within weeks once barrels flow — unless barrels stay missing.",
+      "anchors": [
+        { "text": "Abqaiq 2019: +14.6% one-day spike fully round-tripped in under a month despite 5.7 M b/d offline", "source": "EIA daily Brent series", "url": "https://www.eia.gov/dnav/pet/hist/RBRTED.htm", "status": "verified" },
+        { "text": "Soleimani 2020: +3.6% unwound in about two weeks", "source": "EIA daily Brent series", "url": "https://www.eia.gov/dnav/pet/hist/RBRTED.htm", "status": "verified" },
+        { "text": "Twelve-day war 2025: −7% on the ceasefire headline alone", "source": "Press; EIA series", "url": "https://www.eia.gov/dnav/pet/hist/RBRTED.htm", "status": "verified" }
+      ]
+    },
+    {
+      "id": "insurance", "phase": "War-risk insurance", "low_days": 120, "high_days": 540,
+      "summary": "Underwriters normalize on renewal cycles and JWC reviews, not headlines — premiums stay multiples of the old baseline for months to years.",
+      "anchors": [
+        { "text": "After the 2019 spiral, Gulf rates held ~10× their April-2019 level well into 2021", "source": "Lloyd's List / broker commentary", "url": "https://www.lloydslist.com/", "status": "estimate" },
+        { "text": "The 'pre-crisis' 0.25% baseline of Feb 2026 was itself 5–25× the 2018 norm — the 2019 shock never fully unwound", "source": "This site's insurance ledger (S&P Global; Strauss Center)", "url": "https://www.spglobal.com/energy/en/news-research/latest-news/shipping/062326-war-cover-available-for-hormuz-trades-but-transit-challenges-remain-insurers", "status": "verified" }
+      ]
+    },
+    {
+      "id": "mines", "phase": "Mined corridor", "low_days": 90, "high_days": 280,
+      "summary": "A swept convoy corridor takes months; certified full clearance takes years. Mines outlast every ceasefire that laid them.",
+      "anchors": [
+        { "text": "1991 Gulf War: 1,200+ mines; coalition clearance operations ran for over two years", "source": "US Navy MCM histories", "url": "https://www.history.navy.mil/", "status": "verified" },
+        { "text": "1987–88: Earnest Will convoys ran under mine threat for months; Bridgeton struck a mine inside an escorted convoy", "source": "US Navy — Earnest Will histories", "url": "https://www.history.navy.mil/", "status": "verified" },
+        { "text": "Mid-2026: ~80 mines reported still blocking the central corridor — clearance had not begun in earnest as of this build", "source": "2026 crisis reporting", "url": "https://en.wikipedia.org/wiki/2026_Strait_of_Hormuz_crisis", "status": "reported" }
+      ]
+    }
+  ]
+}

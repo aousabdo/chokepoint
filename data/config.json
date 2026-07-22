@@ -61,6 +61,14 @@
       "retrieved": "2026-07-22",
       "status": "reported"
     },
+    "max_release_mbd": {
+      "value": 1.3,
+      "unit": "million barrels/day, maximum feasible coordinated release rate",
+      "source": "2022 IEA coordinated actions — 240 M bbl over ~6 months; US SPR drawdown peaked near 1 M b/d. The binding constraint on reserves is drawdown rate, not stock size.",
+      "url": "https://www.iea.org/news/iea-confirms-member-country-contributions-to-second-collective-action-to-release-oil-stocks-in-response-to-russia-s-invasion-of-ukraine",
+      "retrieved": "2026-07-22",
+      "status": "reported"
+    },
     "shock_cap": {
       "value": 3.0,
       "unit": "multiple (max modeled ΔP/P)",

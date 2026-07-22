@@ -76,6 +76,29 @@ function validate() {
   }
   ok(`insurance.json — ${ins.length} ledger points sourced`);
 
+  const importersDoc = read('data/importers.json');
+  const sumImports = importersDoc.importers.reduce((t, m) => t + m.hormuz_mbd, 0);
+  const throughput = config.figures.hormuz_throughput_mbd.value;
+  if (Math.abs(sumImports - throughput) > 0.05) {
+    fail(`importers: destination volumes (${sumImports.toFixed(1)}) ≠ Hormuz throughput (${throughput}) — importer losses must sum to stranded barrels`);
+  }
+  for (const m of importersDoc.importers) {
+    if (m.hormuz_mbd == null || m.stocks_mbbl == null || !m.stocks_source || !m.stocks_status || !m.status) {
+      fail(`importers: ${m.id ?? m.name} incomplete`);
+    }
+  }
+  ok(`importers.json — ${importersDoc.importers.length} importers; volumes sum to throughput`);
+
+  const reop = read('data/reopening.json');
+  for (const ph of reop.phases) {
+    if (!(ph.low_days < ph.high_days)) fail(`reopening: ${ph.id} range inverted`);
+    if (!ph.anchors?.length) fail(`reopening: ${ph.id} has no historical anchors`);
+    for (const a of ph.anchors ?? []) {
+      if (!a.text || !a.source || !a.url || !a.status) fail(`reopening: ${ph.id} anchor incomplete`);
+    }
+  }
+  ok(`reopening.json — ${reop.phases.length} phases, all anchored and sourced`);
+
   const brent = read('data/brent_events.json');
   for (const e of brent.events) {
     if (!e.date || !e.name || !e.status) fail(`brent_events: ${e.date} incomplete`);

@@ -18,7 +18,7 @@ let mapApi = null;
 let currentScenario = null;
 
 function compute(s) {
-  return scenario(s.d, data.config, data.producers, s.b, s.e / 100);
+  return scenario(s.d, data.config, data.producers, s.b, s.e / 100, data.importers);
 }
 
 function render(s) {

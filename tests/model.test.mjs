@@ -6,11 +6,13 @@ import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 import {
   stranded, strandedShare, shockBand, sprDays, producerExposure, bypassUse, scenario,
+  importerExposure, impliedLossOdds, sprRealism,
 } from '../src/model.js';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const config = JSON.parse(readFileSync(join(root, 'data/config.json'), 'utf8'));
 const producers = JSON.parse(readFileSync(join(root, 'data/producers.json'), 'utf8')).producers;
+const importers = JSON.parse(readFileSync(join(root, 'data/importers.json'), 'utf8')).importers;
 
 const THROUGHPUT = config.figures.hormuz_throughput_mbd.value; // 20.9
 const SPARE = config.bypass_profiles.eia.total_mbd;            // 2.6
@@ -110,10 +112,59 @@ test('expanded bypass profile strands less than the conservative one', () => {
 });
 
 test('scenario() returns a coherent bundle for the UI', () => {
-  const sc = scenario(70, config, producers, 'eia', 0.11);
+  const sc = scenario(70, config, producers, 'eia', 0.11, importers);
   assert.ok(sc.gross > sc.stranded);
   assert.ok(sc.share > 0 && sc.share < 1);
   assert.ok(Number.isFinite(sc.sprDays));
   assert.equal(sc.exposure.length, producers.length);
+  assert.equal(sc.importers.length, importers.length);
+  assert.ok(sc.sprReal.offset > 0);
   assert.ok(sc.shock.point > 0);
+});
+
+test('importer volumes sum to Hormuz throughput — the data invariant', () => {
+  const sum = importers.reduce((t, m) => t + m.hormuz_mbd, 0);
+  assert.ok(Math.abs(sum - THROUGHPUT) < 0.05);
+});
+
+test('importer losses sum exactly to total stranded barrels', () => {
+  for (const d of [0.25, 0.7, 1]) {
+    const s = stranded(d, totals);
+    const exp = importerExposure(d, importers, s);
+    const totalLoss = exp.reduce((t, m) => t + m.loss, 0);
+    assert.ok(Math.abs(totalLoss - s.stranded) < 1e-9);
+  }
+});
+
+test('importer exposure: zero disruption → zero loss, infinite cover', () => {
+  const exp = importerExposure(0, importers, stranded(0, totals));
+  for (const m of exp) {
+    assert.equal(m.loss, 0);
+    assert.equal(m.daysCover, Infinity);
+  }
+});
+
+test('importer exposure sorts shortest cover first; China ~85 days at full closure', () => {
+  const exp = importerExposure(1, importers, stranded(1, totals));
+  for (let i = 1; i < exp.length; i += 1) assert.ok(exp[i - 1].daysCover <= exp[i].daysCover);
+  const china = exp.find((m) => m.id === 'chn');
+  assert.ok(china.daysCover > 80 && china.daysCover < 90);
+});
+
+test('implied loss odds: 4% of hull → 1-in-25; halved severity doubles the probability', () => {
+  const o = impliedLossOdds(4);
+  assert.ok(Math.abs(o.oneIn - 25) < 1e-9);
+  assert.ok(Math.abs(impliedLossOdds(4, 0.5).p - o.p * 2) < 1e-12);
+});
+
+test('SPR realism: the tap binds, not the tank', () => {
+  const r = sprRealism(THROUGHPUT - SPARE, 1200, 1.3); // full closure, 18.3 stranded
+  assert.equal(r.offset, 1.3);
+  assert.ok(Math.abs(r.net - (THROUGHPUT - SPARE - 1.3)) < 1e-9);
+  assert.ok(r.coverShare < 0.08);
+  assert.ok(r.daysAtRate > 900);
+  // small disruption: releases can fully cover
+  const small = sprRealism(0.8, 1200, 1.3);
+  assert.equal(small.net, 0);
+  assert.equal(small.coverShare, 1);
 });
