@@ -166,10 +166,10 @@ export function downloadBrief(sc, s, data) {
   $('#print-brief').innerHTML = `
     <header>
       <div class="pb-mark">CHOKEPOINT</div>
-      <div class="pb-meta">Analytica Data Science Solutions · chokepoint.analyticadss.com · data as of ${cfg.as_of}</div>
+      <div class="pb-meta">Analytica Data Science Solutions · checkpoint.analyticadss.com · data as of ${cfg.as_of}</div>
     </header>
     <h1>Strait of Hormuz scenario brief — ${s.d}% disruption</h1>
-    <p>Bypass assumption: ${sc.profile.label}. All figures from public sources; model equations and per-figure citations at chokepoint.analyticadss.com (Methodology).</p>
+    <p>Bypass assumption: ${sc.profile.label}. All figures from public sources; model equations and per-figure citations at checkpoint.analyticadss.com (Methodology).</p>
     <div class="pb-grid">
       <div class="pb-stat"><div class="v">${fmt(sc.stranded)}</div><div class="l">Stranded, M b/d</div></div>
       <div class="pb-stat"><div class="v">${fmt(sc.share * 100)}%</div><div class="l">Of global supply</div></div>

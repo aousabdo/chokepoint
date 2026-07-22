@@ -1,3 +1,3 @@
 User-agent: *
 Allow: /
-Sitemap: https://chokepoint.analyticadss.com/sitemap.xml
+Sitemap: https://checkpoint.analyticadss.com/sitemap.xml

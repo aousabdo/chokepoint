@@ -4,7 +4,7 @@
 of what happens to the world's oil when the strait is disrupted: how much can bypass overland, who's
 exposed, what the price shock is, and what history says happens next.
 
-`chokepoint.analyticadss.com` · Analytica Data Science Solutions · sibling of Skywatch, Watchstander,
+`checkpoint.analyticadss.com` · Analytica Data Science Solutions · sibling of Skywatch, Watchstander,
 Drift, Crucible and Constellation.
 
 ## The product in one interaction
