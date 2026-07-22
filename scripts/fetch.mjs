@@ -147,18 +147,42 @@ function validate() {
   console.log('\nDataset valid — every figure carries {source, url, retrieved, status}.\n');
 }
 
-/* ── EIA Brent event-study recomputation (needs EIA_API_KEY) ── */
-async function refreshBrentWindows() {
+/* ── Brent event-study recomputation ──
+   Preferred source: EIA open-data API (free key). Keyless fallback: FRED's
+   public mirror of the *same* EIA series (DCOILBRENTEU) — identical numbers,
+   no key, still 100% public. The daily series starts 1987-05-20, so pre-1987
+   events cannot be daily-verified and keep their estimate status. */
+async function fetchBrentSeries() {
   const key = process.env.EIA_API_KEY;
-  if (!key) {
-    console.log('EIA_API_KEY not set — skipping Brent recomputation (event-study rows stay marked "estimate").');
+  if (key) {
+    console.log('Fetching EIA daily Brent (RBRTE)…');
+    const url = `https://api.eia.gov/v2/petroleum/pri/spt/data/?api_key=${key}&frequency=daily&data[0]=value&facets[series][]=RBRTE&sort[0][column]=period&sort[0][direction]=asc&length=100000`;
+    const res = await fetch(url);
+    if (!res.ok) throw new Error(`EIA API ${res.status}`);
+    const series = (await res.json()).response.data.map((r) => ({ date: r.period, value: +r.value }));
+    return { series, source: 'EIA — Europe Brent Spot Price FOB (RBRTE), daily', url: 'https://www.eia.gov/dnav/pet/hist/RBRTED.htm' };
+  }
+  console.log('EIA_API_KEY not set — using FRED\'s public mirror of the same EIA series (DCOILBRENTEU, keyless).');
+  const res = await fetch('https://fred.stlouisfed.org/graph/fredgraph.csv?id=DCOILBRENTEU');
+  if (!res.ok) throw new Error(`FRED ${res.status}`);
+  const series = (await res.text()).trim().split('\n').slice(1)
+    .map((line) => {
+      const [date, v] = line.split(',');
+      return { date: date.trim(), value: +v };
+    })
+    .filter((r) => Number.isFinite(r.value) && r.value > 0);
+  return { series, source: 'EIA Europe Brent spot (RBRTE) via FRED public mirror DCOILBRENTEU, daily', url: 'https://fred.stlouisfed.org/series/DCOILBRENTEU' };
+}
+
+async function refreshBrentWindows() {
+  let series, source, url;
+  try {
+    ({ series, source, url } = await fetchBrentSeries());
+  } catch (e) {
+    fail(`Brent series fetch failed: ${e.message}`);
     return;
   }
-  console.log('Fetching EIA daily Brent (RBRTE)…');
-  const url = `https://api.eia.gov/v2/petroleum/pri/spt/data/?api_key=${key}&frequency=daily&data[0]=value&facets[series][]=RBRTE&sort[0][column]=period&sort[0][direction]=asc&length=100000`;
-  const res = await fetch(url);
-  if (!res.ok) { fail(`EIA API ${res.status}`); return; }
-  const series = (await res.json()).response.data.map((r) => ({ date: r.period, value: +r.value }));
+  console.log(`  ${series.length} daily closes, ${series[0].date} → ${series[series.length - 1].date}`);
   const idxByDate = new Map(series.map((r, i) => [r.date, i]));
 
   const doc = read('data/brent_events.json');
@@ -173,15 +197,22 @@ async function refreshBrentWindows() {
       i = idxByDate.get(probe) ?? null;
       probe = new Date(new Date(probe).getTime() + 86400000).toISOString().slice(0, 10);
     }
-    if (i == null || i === 0) continue;
+    if (i == null || i === 0) {
+      console.log(`  · ${e.date} ${e.name}: outside the daily series — stays "${e.status}"`);
+      continue;
+    }
     const base = i - 1; // last close before the event
+    const old = { d1: e.d1, d5: e.d5, d30: e.d30 };
     e.d1 = win(base, 1); e.d5 = win(base, 5); e.d30 = win(base, 21); // 21 trading days ≈ 30 calendar
     e.status = 'verified';
+    console.log(`  ✓ ${e.date} ${e.name}: +1d ${old.d1 ?? '—'}→${e.d1} · +5d ${old.d5 ?? '—'}→${e.d5} · +30d ${old.d30 ?? '—'}→${e.d30}`);
   }
   doc.as_of = new Date().toISOString().slice(0, 10);
-  doc.notes = doc.notes.replace('to be recomputed exactly by scripts/fetch.mjs', 'recomputed from the EIA daily series');
+  doc.source = source;
+  doc.url = url;
+  doc.notes = 'Event study: Brent move in the 1/5/30 trading days after each Hormuz-threat event, computed from the public daily series named in `source`. Pre-1987 events predate the daily series and remain estimates, marked as such. The honest pattern: spikes mean-revert unless barrels actually go missing.';
   writeFileSync(join(ROOT, 'data/brent_events.json'), `${JSON.stringify(doc, null, 2)}\n`);
-  ok('brent_events.json recomputed from EIA daily series');
+  ok(`brent_events.json recomputed from: ${source}`);
 }
 
 if (!VALIDATE_ONLY) await refreshBrentWindows();

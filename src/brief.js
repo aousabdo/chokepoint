@@ -307,9 +307,10 @@ function page4(sc, s, data) {
         <thead><tr><th>Event</th><th class="r">Date</th><th class="r">+1d</th><th class="r">+5d</th><th class="r">+30d</th></tr></thead>
         <tbody>${esRows}</tbody>
       </table>
-      <p class="pb-tablenote">EIA daily Brent series; rows marked estimate pending exact recomputation by the fetch pipeline.
-      The pattern: threat spikes mean-revert within weeks — even Abqaiq, the largest single supply disruption in oil-market
-      history, round-tripped in a month — <b>unless barrels stay missing</b>. 2026 is the first test of that clause.</p>
+      <p class="pb-tablenote">${data.brentEvents.source}; windows computed by the fetch pipeline (pre-1987 rows predate the
+      daily series and remain estimates). The pattern: threat spikes mean-revert within weeks — even Abqaiq, the largest
+      single supply disruption in oil-market history, round-tripped in a month — <b>unless barrels stay missing</b>.
+      The 2026 row is the counterexample that proves the mechanism: +71% at 30 days and climbing.</p>
 
       <h2 class="pb-h2" style="margin-top:12px">Chokepoint anatomy — why Hormuz is different</h2>
       <table class="pb-x">

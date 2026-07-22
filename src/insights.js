@@ -241,10 +241,12 @@ export function initInsights(root, data) {
         <h2>Event study — Brent after Hormuz threats</h2>
         <p class="chart-note" style="margin:0 0 8px">Move in the 1/5/30 trading days after each event.
         History's verdict: <b style="color:var(--ink)">threat spikes mean-revert; only missing barrels persist</b>
-        (Abqaiq took 5.7 M b/d offline — and even it round-tripped in a month).</p>
+        (Abqaiq took 5.7 M b/d offline — even it round-tripped in a month). The 2026 row is the proof by
+        counterexample: <b style="color:var(--stranded-crim)">+71% at 30 days and climbing</b>.</p>
         <div id="event-study"></div>
         <p class="chart-note">${sourceLine(data.brentEvents.source, data.brentEvents.url, data.brentEvents.as_of)} ·
-        bars marked <span class="status estimate">estimate</span> pending exact recomputation by <code>scripts/fetch.mjs</code>.</p>
+        windows computed by <code>scripts/fetch.mjs</code>; the daily series starts May 1987, so the 1984 row
+        remains an <span class="status estimate">estimate</span>.</p>
       </div>
 
       <div class="panel">

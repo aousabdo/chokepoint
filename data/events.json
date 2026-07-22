@@ -99,7 +99,7 @@
     {
       "date": "2019-09-14", "era": "y2019", "title": "Abqaiq–Khurais strike",
       "summary": "Drones and cruise missiles knock out 5.7 M b/d of Saudi processing — the largest single supply disruption in oil-market history, bigger than 1973 or 1979.",
-      "flows": "−5.7 M b/d, ~5% of world supply, mostly restored in weeks", "price": "Brent +14.6% next session — largest one-day jump since 1991 — then fully mean-reverts within a month",
+      "flows": "−5.7 M b/d, ~5% of world supply, mostly restored in weeks", "price": "Brent +14.6% at next-day settlement (futures; +11.7% on the daily spot series) — largest jump since 1991 — then fully mean-reverts within a month",
       "lat": 25.94, "lng": 49.67,
       "source": "Saudi Aramco disclosures; EIA; press", "url": "https://www.eia.gov/todayinenergy/detail.php?id=41413", "status": "verified"
     },
@@ -145,7 +145,7 @@
     {
       "date": "2026-02-28", "era": "y2026", "title": "The 2026 crisis begins",
       "summary": "US and Israeli strikes on Iranian leadership and military targets. Iran's response makes 45 years of closure threats operational for the first time.",
-      "flows": "Immediate transit hesitancy; insurers pause quotes", "price": "Sharp spike (verify against EIA daily series via fetch pipeline)",
+      "flows": "Immediate transit hesitancy; insurers pause quotes", "price": "+8.3% day one, +34% in a week, +71% in a month (daily spot series) — the first Hormuz spike that did not mean-revert",
       "source": "Wikipedia — 2026 Strait of Hormuz crisis (and sources therein)", "url": "https://en.wikipedia.org/wiki/2026_Strait_of_Hormuz_crisis", "status": "reported"
     },
     {
