@@ -31,15 +31,24 @@ self.addEventListener('activate', (event) => {
   );
 });
 
+/* One-time, deduplicated background download of the full archive. Never sits
+ * in a tile request's critical path: cold-load tiles are served as native 206
+ * passthroughs at full speed; offline capability arrives quietly afterwards. */
+let archivePromise = null;
+function cacheArchive() {
+  archivePromise ??= (async () => {
+    const cache = await caches.open(`${VERSION}-pmtiles`);
+    if (await cache.match(PMTILES)) return;
+    const resp = await fetch(PMTILES); // plain GET → 200, whole archive, once
+    if (resp.ok && resp.status === 200) await cache.put(PMTILES, resp);
+  })().catch(() => { archivePromise = null; }); // retry on a later request
+  return archivePromise;
+}
+
 async function serveRange(request) {
   const cache = await caches.open(`${VERSION}-pmtiles`);
-  let full = await cache.match(PMTILES);
-  if (!full) {
-    const resp = await fetch(PMTILES); // plain GET → 200, whole archive, once
-    if (!resp.ok || resp.status !== 200) return fetch(request);
-    await cache.put(PMTILES, resp.clone());
-    full = resp;
-  }
+  const full = await cache.match(PMTILES);
+  if (!full) return fetch(request); // network 206 — fast path while the background copy lands
   const blob = await full.blob();
   const m = /bytes=(\d+)-(\d*)/.exec(request.headers.get('range') ?? '');
   if (!m) return new Response(blob);
@@ -80,6 +89,7 @@ self.addEventListener('fetch', (event) => {
   if (event.request.method !== 'GET' || url.origin !== location.origin) return;
   if (url.pathname.endsWith('basemap.pmtiles')) {
     event.respondWith(serveRange(event.request));
+    event.waitUntil(cacheArchive()); // keep the worker alive for the one-time download
     return;
   }
   event.respondWith(staleWhileRevalidate(event.request));
