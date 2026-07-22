@@ -3,9 +3,9 @@
   "configurations": [
     {
       "name": "chokepoint",
-      "runtimeExecutable": "sh",
-      "runtimeArgs": ["-c", "python3 -m http.server ${PORT:-5174}"],
-      "port": 5174,
+      "runtimeExecutable": "python3",
+      "runtimeArgs": ["scripts/dev.py"],
+      "port": 5199,
       "autoPort": true
     }
   ]

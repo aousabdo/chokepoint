@@ -55,11 +55,15 @@ document.getElementById('tour-btn').addEventListener('click', async () => {
   startTour();
 });
 
-// Esc dismisses the detail card (the tour handles its own Esc while open)
+// Esc or the card's ✕ dismisses the detail card and the route highlight
 addEventListener('keydown', (e) => {
   if (e.key === 'Escape' && !document.getElementById('tour')) {
     document.getElementById('detail-card').hidden = true;
+    mapApi?.clearHighlight();
   }
+});
+document.getElementById('detail-card').addEventListener('click', (e) => {
+  if (e.target.classList.contains('close')) mapApi?.clearHighlight();
 });
 
 store.subscribe(render);

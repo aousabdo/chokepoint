@@ -5,7 +5,7 @@
   "type": "module",
   "description": "Chokepoint — the Strait of Hormuz consequence engine. Static, client-side, 100% public data. Analytica Data Science Solutions.",
   "scripts": {
-    "dev": "python3 -m http.server 5173",
+    "dev": "python3 scripts/dev.py",
     "test": "node --test tests/*.test.mjs",
     "fetch-data": "node scripts/fetch.mjs",
     "og": "sh scripts/og.sh",

@@ -121,14 +121,18 @@ export function showDetail(props, layer, data) {
 
   if (layer === 'terminals') {
     const p = data.producers.find((x) => x.id === props.producer);
+    const trunk = props.trunk ? data.geo.flows.features.find((f) => f.properties.id === props.trunk)?.properties : null;
+    const pipe = props.pipeline ? data.config.pipelines[props.pipeline] : null;
     html = `${close}<h3>${props.name} · ${props.country}</h3>
       <dl class="kv">
         ${props.exports_mbd > 0 ? `<dt>Gulf exports</dt><dd>${fmt(props.exports_mbd)} M b/d</dd>` : ''}
         ${props.lng_mtpa ? `<dt>LNG</dt><dd>${props.lng_mtpa} Mt/yr</dd>` : ''}
         <dt>Exposure</dt><dd><span class="tag ${props.exposure}">${props.exposure}</span></dd>
+        ${trunk ? `<dt>Rides</dt><dd style="font-family:var(--font-ui)">${trunk.name} — ${trunk.ports}</dd>` : ''}
+        ${pipe ? `<dt>Fed by</dt><dd style="font-family:var(--font-ui)">${pipe.name} (${fmt(pipe.nameplate_mbd)} M b/d nameplate)</dd>` : ''}
       </dl>
       <p style="font-size:13px;margin:8px 0 0">${props.detail ?? p?.note ?? ''}</p>
-      <div class="src">${sourceLine(p ? 'EIA country analysis brief' : 'EIA', p?.url ?? data.producersDoc.url, data.producersDoc.as_of)} ${statusBadge(p?.status)}</div>`;
+      <div class="src">${sourceLine(p ? 'EIA country analysis brief' : 'EIA', p?.url ?? data.producersDoc.url, data.producersDoc.as_of)} ${statusBadge(p?.status)}${trunk || pipe ? ' · route lit on map — click open water to clear' : ''}</div>`;
   } else if (layer === 'pipelines') {
     const cfg = Object.values(data.config.pipelines).find((x) => x.name === props.name)
       ?? data.config.pipelines[props.id];

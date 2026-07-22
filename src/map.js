@@ -216,10 +216,22 @@ export async function initMap(container, data, { onFeature } = {}) {
     const CLICK_PRIORITY = ['incidents', 'terminals', 'pipelines', 'pinch-core', 'pinch-pool', 'shadow-zones'];
     map.on('click', (e) => {
       const feats = map.queryRenderedFeatures(e.point, { layers: CLICK_PRIORITY.filter((l) => map.getLayer(l)) });
-      if (!feats.length || !onFeature) return;
+      if (!feats.length) { api.clearHighlight(); return; } // open water clears the route highlight
+      if (!onFeature) return;
       feats.sort((a, b) => CLICK_PRIORITY.indexOf(a.layer.id) - CLICK_PRIORITY.indexOf(b.layer.id));
       const hit = feats[0];
-      onFeature(hit.properties, hit.layer.id === 'pinch-core' ? 'pinch-pool' : hit.layer.id);
+      const props = hit.properties;
+      // Origin-on-demand: a terminal lights the trunk it rides (bypass outlets
+      // light their pipeline) instead of spending permanent palette on origins.
+      if (hit.layer.id === 'terminals') {
+        if (props.trunk) api.setHighlight({ kind: 'trunk', id: props.trunk });
+        else if (props.pipeline) api.setHighlight({ kind: 'pipeline', id: props.pipeline });
+      } else if (hit.layer.id === 'pipelines') {
+        api.setHighlight({ kind: 'pipeline', id: props.id });
+      }
+      // Incident/pinch/shadow clicks leave any route highlight in place —
+      // only open water, Esc or the card's ✕ clears it.
+      onFeature(props, hit.layer.id === 'pinch-core' ? 'pinch-pool' : hit.layer.id);
     });
     map.on('mousemove', (e) => {
       const feats = map.queryRenderedFeatures(e.point, { layers: CLICK_PRIORITY.filter((l) => map.getLayer(l)) });
@@ -265,6 +277,7 @@ export async function initMap(container, data, { onFeature } = {}) {
     /** Reroute the picture: sc is the model's scenario() output. */
     updateScenario(sc) {
       if (!this.ready) { this._pending = sc; return; }
+      this._lastSc = sc;
       const d = sc.d;
       // Through-flows fade with disruption
       map.setPaintProperty('flows', 'line-opacity', Math.max(0.12, 0.78 * (1 - d)));
@@ -282,6 +295,33 @@ export async function initMap(container, data, { onFeature } = {}) {
       // Stranded volume pools red at the narrows
       map.setPaintProperty('pinch-pool', 'circle-radius', 6 + sc.stranded * 3.2);
       map.setPaintProperty('pinch-pool', 'circle-opacity', Math.min(0.55, 0.12 + sc.share * 2.2));
+      this._applyHighlight();
+    },
+
+    /** Route highlight: dim everything but the selected trunk/pipeline. Opacity-only
+     *  for pipelines — their width encodes utilisation and must not be distorted. */
+    _highlight: null,
+    _lastSc: null,
+    _applyHighlight() {
+      if (!this.ready || !this._highlight) return;
+      const { kind, id } = this._highlight;
+      if (kind === 'trunk') {
+        map.setPaintProperty('flows', 'line-opacity', ['case', ['==', ['get', 'id'], id], 0.95, 0.06]);
+        map.setPaintProperty('flows', 'line-width', ['case', ['==', ['get', 'id'], id], 5.5,
+          ['interpolate', ['linear'], ['get', 'volume_mbd'], 1, 1.6, 10, 4.5]]);
+      } else {
+        map.setPaintProperty('pipelines', 'line-opacity', ['case', ['==', ['get', 'id'], id], 1, 0.12]);
+      }
+    },
+    setHighlight(h) {
+      this._highlight = h;
+      if (this._lastSc) this.updateScenario(this._lastSc);
+      else this._applyHighlight();
+    },
+    clearHighlight() {
+      if (!this._highlight) return;
+      this._highlight = null;
+      if (this._lastSc) this.updateScenario(this._lastSc);
     },
 
     setYear(y) {
