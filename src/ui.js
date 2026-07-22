@@ -159,34 +159,106 @@ export function showDetail(props, layer, data) {
   card.hidden = false;
 }
 
-/** One-page printable brief for the current scenario. */
-export function downloadBrief(sc, s, data) {
+/** Build the one-page scenario brief (print.css styles it; ?brief=1 pre-populates for PDF export). */
+const PRESET_NAMES = { 0: 'Open', 15: 'Harassment', 40: 'Partial closure', 70: 'Current reported', 100: 'Full closure' };
+
+export function buildBrief(sc, s, data) {
   const cfg = data.config;
-  const top = sc.exposure.filter((p) => p.stranded > 0.005).slice(0, 6);
-  $('#print-brief').innerHTML = `
-    <header>
-      <div class="pb-mark">CHOKEPOINT</div>
-      <div class="pb-meta">Analytica Data Science Solutions · chokepoint.analyticadss.com · data as of ${cfg.as_of}</div>
-    </header>
-    <h1>Strait of Hormuz scenario brief — ${s.d}% disruption</h1>
-    <p>Bypass assumption: ${sc.profile.label}. All figures from public sources; model equations and per-figure citations at chokepoint.analyticadss.com (Methodology).</p>
-    <div class="pb-grid">
-      <div class="pb-stat"><div class="v">${fmt(sc.stranded)}</div><div class="l">Stranded, M b/d</div></div>
-      <div class="pb-stat"><div class="v">${fmt(sc.share * 100)}%</div><div class="l">Of global supply</div></div>
-      <div class="pb-stat"><div class="v">+${fmt(sc.shock.lo * 100, 0)}–${fmt(sc.shock.hi * 100, 0)}%</div><div class="l">Brent shock (illustrative)</div></div>
-      <div class="pb-stat"><div class="v">${Number.isFinite(sc.sprDays) ? fmt(sc.sprDays, 0) : '∞'}</div><div class="l">SPR runway, days</div></div>
+  const T = cfg.figures.hormuz_throughput_mbd.value;
+  const flowing = Math.max(0, T - sc.gross);
+  const seg = (v) => Math.max(0.5, (v / T) * 100);
+  const preset = PRESET_NAMES[s.d] ? ` — “${PRESET_NAMES[s.d]}”` : '';
+  const ins = data.insurance.points[data.insurance.points.length - 1];
+  const insPre = data.insurance.points.find((p) => p.label === 'Pre-crisis baseline');
+  const maxExports = Math.max(...sc.exposure.map((p) => p.gulf_exports_mbd));
+
+  const rows = sc.exposure.map((p) => {
+    const w = (p.gulf_exports_mbd / maxExports) * 100;
+    const strFrac = p.gulf_exports_mbd > 0 ? p.stranded / p.gulf_exports_mbd : 0;
+    return `<tr>
+      <td class="name">${p.name}</td>
+      <td class="r num">${fmt(p.gulf_exports_mbd)}</td>
+      <td style="width:26%"><span class="pb-xbar">
+        <span class="e" style="width:${w * (1 - strFrac)}%"></span>
+        <span class="s" style="width:${w * strFrac}%"></span></span></td>
+      <td class="r num" style="color:#C7431F">−${fmt(p.stranded)}</td>
+      <td class="r"><span class="pb-tag ${p.exposure}">${p.exposure}</span></td>
+    </tr>`;
+  }).join('');
+
+  document.getElementById('print-brief').innerHTML = `
+    <div class="pb-mast">
+      <div class="wm">CHOKEPOINT<small>STRAIT OF HORMUZ SCENARIO BRIEF · ANALYTICA DATA SCIENCE SOLUTIONS</small></div>
+      <div class="meta">data as of <b>${cfg.as_of}</b><br>chokepoint.analyticadss.com · 100% public data</div>
     </div>
-    <p><b>Gross vs. net:</b> headlines quote ${fmt(sc.gross)} M b/d disrupted; overland bypass
-    (Petroline, Habshan–Fujairah, Goreh–Jask) can absorb ${fmt(sc.bypass)} M b/d, leaving
-    ${fmt(sc.stranded)} M b/d actually stranded.</p>
-    <table>
-      <thead><tr><th>Producer</th><th>Gulf exports (M b/d)</th><th>Stranded (M b/d)</th><th>Exposure</th></tr></thead>
-      <tbody>${top.map((p) => `<tr><td>${p.name}</td><td>${fmt(p.gulf_exports_mbd)}</td><td>${fmt(p.stranded)}</td><td>${p.exposure}</td></tr>`).join('')}</tbody>
-    </table>
-    <p style="font-size:11px">Price shock is illustrative: ΔP/P ≈ stranded share ÷ ε, ε ∈ [0.08, 0.15], capped.
-    Real markets price expectations, OPEC spare capacity and SPR releases. Baselines: Hormuz throughput
-    ${cfg.figures.hormuz_throughput_mbd.value} M b/d (EIA, H1 2025); spare bypass ${sc.profile.total_mbd} M b/d (${sc.profile.status}).</p>
-    <div class="pb-foot">Decision-support analysis from 100% public data — not navigational or targeting information.
-    Generated ${new Date().toISOString().slice(0, 10)} · deep link: ${location.href}</div>`;
+    <div class="pb-body">
+      <h1 class="pb-title">Hormuz disruption: <span class="pct num">${s.d}%</span>${preset}</h1>
+      <p class="pb-sub">Bypass assumption: ${sc.profile.label}. Every figure carries {source, url, retrieved, status} in the published dataset.</p>
+
+      <div class="pb-tiles">
+        <div class="pb-tile crim"><div class="v num">${fmt(sc.stranded)} <small>M b/d</small></div><div class="l">Stranded — nowhere to go</div></div>
+        <div class="pb-tile"><div class="v num">${fmt(sc.gross)} <small>M b/d</small></div><div class="l">Gross disrupted — the headline number</div></div>
+        <div class="pb-tile teal"><div class="v num">${fmt(sc.bypass)}<small>/${fmt(sc.profile.total_mbd)}</small></div><div class="l">Bypass absorbing, M b/d</div></div>
+        <div class="pb-tile amber"><div class="v num">+${fmt(sc.shock.lo * 100, 0)}–${fmt(sc.shock.hi * 100, 0)}<small>%</small></div><div class="l">Brent shock band — illustrative${sc.shock.capped ? ' · capped' : ''}</div></div>
+        <div class="pb-tile cyan"><div class="v num">${Number.isFinite(sc.sprDays) ? fmt(sc.sprDays, 0) : '∞'} <small>days</small></div><div class="l">Strategic-reserve runway</div></div>
+      </div>
+
+      <div class="pb-flow">
+        <div class="pb-flowbar">
+          <span class="un" style="width:${seg(flowing)}%"></span><span class="by" style="width:${seg(sc.bypass)}%"></span><span class="st" style="width:${seg(sc.stranded)}%"></span>
+        </div>
+        <div class="pb-flowlab">
+          <span class="pb-dot first" style="background:#C9D4DE"></span>Still transiting <b class="num">${fmt(flowing)}</b>
+          <span class="pb-dot" style="background:#1E8C7C"></span>Rerouted overland <b class="num">${fmt(sc.bypass)}</b>
+          <span class="pb-dot" style="background:#C7431F"></span>Stranded <b class="num">${fmt(sc.stranded)}</b>
+          &nbsp;— of <b class="num">${fmt(T)}</b> M b/d pre-crisis Hormuz throughput (EIA, H1 2025) · stranded = <b class="num">${fmt(sc.share * 100)}%</b> of world supply
+        </div>
+      </div>
+
+      <div class="pb-cols">
+        <div>
+          <table class="pb-x">
+            <thead><tr><th>Producer</th><th class="r">Exports</th><th>Still moving vs stranded</th><th class="r">Stranded</th><th class="r">Exposure</th></tr></thead>
+            <tbody>${rows}</tbody>
+          </table>
+          <p class="pb-tablenote">Gulf seaborne exports, M b/d, pre-crisis baselines (EIA country analysis briefs).
+          Per producer: stranded = exports·d − min(own pipeline spare, exports·d). Only Saudi Arabia (Petroline → Yanbu),
+          the UAE (ADCOP → Fujairah) and Iran (Goreh–Jask) own an overland escape.</p>
+          <div class="pb-callout pb-block"><b>The number nobody states cleanly:</b> Qatar's ~77 Mt/yr of LNG —
+          about a fifth of the world's LNG trade — has zero overland bypass. Petroline can save Saudi barrels;
+          nothing can save Qatari cargoes.</div>
+        </div>
+        <div class="pb-note">
+          <h3>How to read this</h3>
+          <p><b>Gross vs. net is the whole argument.</b> Headlines quote gross throughput disrupted; the honest
+          damage number subtracts spare overland bypass — capacity that exists <b>and isn't already full</b>.
+          EIA's conservative spare figure is 2.6 M b/d; post-2025 Petroline-expansion commentary supports up to
+          5.5, so it ships as a switchable assumption, not a footnote.</p>
+          <pre>stranded(d) = T·d − min(spare, T·d)
+ΔP/P ≈ share ÷ ε,  ε ∈ [0.08, 0.15], capped
+SPR_days = reserves ÷ stranded(d)</pre>
+          <p>The price band is <b>illustrative by construction</b> — real markets price expectations, OPEC spare
+          capacity and SPR releases. History's verdict from 45 years of Hormuz threats: spikes mean-revert
+          unless barrels are physically missing.</p>
+          <h3>War-risk context</h3>
+          <p>Hull war-risk cover for a Gulf transit: <b class="num">${ins.low}–${ins.high}%</b> of vessel value
+          (${ins.date.slice(0, 7)}) vs <b class="num">${insPre ? insPre.pct : 0.25}%</b> pre-crisis — for a $150M
+          VLCC, <b>$${fmt(ins.low * 1.5, 1)}M–$${fmt(ins.high * 1.5, 1)}M per voyage</b>, when cover is offered
+          at all. (JWC circulars; Lloyd's List / S&amp;P Global commentary.)</p>
+        </div>
+      </div>
+    </div>
+    <div class="pb-foot">
+      <b>Sources &amp; provenance.</b> EIA World Oil Transit Chokepoints (retrieved ${cfg.as_of}) · EIA country
+      analysis briefs · IEA oil security · JWC listed-area circulars, Lloyd's List and S&amp;P Global commentary ·
+      2026-crisis public reporting. Statuses (verified / reported / estimate / illustrative) are carried per figure
+      and surfaced at <b>chokepoint.analyticadss.com</b> — full equations and coverage gaps under Methodology.
+      Decision-support from 100% public data; not navigational or targeting information.
+      Scenario deep link: ${location.href} · generated ${new Date().toISOString().slice(0, 10)}.
+    </div>`;
+}
+
+export function downloadBrief(sc, s, data) {
+  buildBrief(sc, s, data);
   window.print();
 }

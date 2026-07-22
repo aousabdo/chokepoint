@@ -1,27 +1,142 @@
-/* One-page scenario brief — "Download brief" triggers print with this sheet */
+/* Scenario brief — a designed one-pager, not a webpage printout.
+   Populated by buildBrief() (src/ui.js); ?brief=1 pre-populates it for
+   headless PDF generation. @page margin 0 suppresses browser headers/footers
+   and lets the masthead bleed; interior spacing comes from element padding. */
+
+#print-brief { display: none; }
+
 @media print {
-  body { overflow: visible; background: #fff; }
-  #app > *, #intro { display: none !important; }
-  #print-brief { display: block !important; }
+  @page { size: letter; margin: 0; }
+
+  html, body {
+    background: #fff !important;
+    color: #101820 !important;
+    height: auto !important;
+    overflow: visible !important;
+    font-family: -apple-system, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  }
+  #app, #intro, #tour { display: none !important; }
 
   #print-brief {
-    font-family: Georgia, "Times New Roman", serif;
-    color: #111;
-    padding: 0.2in 0.1in;
+    display: block !important;
+    color: #101820;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
   }
-  #print-brief header {
-    display: flex; justify-content: space-between; align-items: baseline;
-    border-bottom: 3px solid #06121F; padding-bottom: 8px; margin-bottom: 14px;
+  #print-brief .num {
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    font-variant-numeric: tabular-nums;
   }
-  #print-brief .pb-mark { font-family: monospace; font-weight: 700; letter-spacing: 0.2em; font-size: 18px; }
-  #print-brief .pb-meta { font-size: 11px; color: #555; }
-  #print-brief h1 { font-size: 20px; margin: 0 0 4px; }
-  #print-brief .pb-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 14px 0; }
-  #print-brief .pb-stat { border: 1px solid #ccc; padding: 8px 10px; }
-  #print-brief .pb-stat .v { font-family: monospace; font-size: 22px; font-weight: 700; }
-  #print-brief .pb-stat .l { font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; color: #555; }
-  #print-brief table { width: 100%; border-collapse: collapse; font-size: 12px; margin: 10px 0; }
-  #print-brief th, #print-brief td { border-bottom: 1px solid #ddd; padding: 4px 6px; text-align: left; }
-  #print-brief .pb-foot { font-size: 10px; color: #666; margin-top: 16px; border-top: 1px solid #ccc; padding-top: 8px; }
+
+  /* ── Masthead: full-bleed navy band ── */
+  .pb-mast {
+    background: #06121F;
+    color: #E6EEF6;
+    padding: 0.4in 0.55in 0.26in;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+  .pb-mast .wm {
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    font-size: 21px; font-weight: 700; letter-spacing: 0.28em;
+  }
+  .pb-mast .wm small {
+    display: block; font-size: 8.5px; font-weight: 400;
+    letter-spacing: 0.18em; color: #9FB3C8; margin-top: 5px;
+  }
+  .pb-mast .meta { text-align: right; font-size: 9px; color: #9FB3C8; line-height: 1.55; }
+  .pb-mast .meta b { color: #38E1D6; font-weight: 600; }
+
+  .pb-body { padding: 0.24in 0.55in 0; }
+
+  /* ── Scenario title ── */
+  .pb-title { font-size: 19px; font-weight: 700; margin: 0; letter-spacing: -0.01em; }
+  .pb-title .pct { color: #C7431F; }
+  .pb-sub { font-size: 9.5px; color: #5A6B7A; margin: 4px 0 0; }
+
+  /* ── Stat tiles ── */
+  .pb-tiles {
+    display: grid; grid-template-columns: repeat(5, 1fr);
+    gap: 12px; margin: 15px 0 0;
+  }
+  .pb-tile { border-top: 2.6px solid #101820; padding-top: 6px; }
+  .pb-tile .v { font-size: 19px; font-weight: 700; line-height: 1.1; }
+  .pb-tile .v small { font-size: 9px; font-weight: 600; color: #5A6B7A; letter-spacing: 0; }
+  .pb-tile .l {
+    font-size: 7.6px; letter-spacing: 0.13em; text-transform: uppercase;
+    color: #5A6B7A; margin-top: 3px; line-height: 1.4;
+  }
+  .pb-tile.crim { border-top-color: #C7431F; } .pb-tile.crim .v { color: #C7431F; }
+  .pb-tile.teal { border-top-color: #1E8C7C; } .pb-tile.teal .v { color: #1E8C7C; }
+  .pb-tile.amber { border-top-color: #B97A14; } .pb-tile.amber .v { color: #B97A14; }
+  .pb-tile.cyan { border-top-color: #0E7C8C; } .pb-tile.cyan .v { color: #0E7C8C; }
+
+  /* ── Throughput waterfall ── */
+  .pb-flow { margin: 15px 0 0; page-break-inside: avoid; }
+  .pb-flowbar {
+    display: flex; height: 0.22in; border-radius: 3px; overflow: hidden;
+  }
+  .pb-flowbar .un { background: #C9D4DE; }
+  .pb-flowbar .by { background: #1E8C7C; }
+  .pb-flowbar .st { background: #C7431F; }
+  .pb-flowlab { font-size: 8.6px; color: #42525F; margin-top: 4px; }
+  .pb-flowlab b { color: #101820; }
+  .pb-dot { display: inline-block; width: 7px; height: 7px; border-radius: 2px; margin: 0 3px 0 10px; vertical-align: -1px; }
+  .pb-flowlab .first { margin-left: 0; }
+
+  /* ── Two columns: exposure table + reading notes ── */
+  .pb-cols { display: grid; grid-template-columns: 1.42fr 1fr; gap: 0.3in; margin-top: 16px; }
+
+  table.pb-x { width: 100%; border-collapse: collapse; font-size: 9.4px; }
+  .pb-x th {
+    text-align: left; font-size: 7.6px; letter-spacing: 0.11em; text-transform: uppercase;
+    color: #5A6B7A; border-bottom: 1.5px solid #101820; padding: 3px 4px 4px;
+  }
+  .pb-x th.r, .pb-x td.r { text-align: right; }
+  .pb-x td { border-bottom: 0.6px solid #D5DDE4; padding: 5px 4px; vertical-align: middle; }
+  .pb-x td.name { font-weight: 600; }
+  .pb-xbar {
+    height: 7px; border-radius: 2px; overflow: hidden; display: flex;
+    background: #EDF1F5; width: 100%;
+  }
+  .pb-xbar .e { background: #1E8C7C; }
+  .pb-xbar .s { background: #C7431F; }
+  .pb-tag {
+    font-size: 6.8px; letter-spacing: 0.08em; text-transform: uppercase;
+    border: 0.9px solid; border-radius: 2.5px; padding: 1px 4px; white-space: nowrap;
+  }
+  .pb-tag.total { color: #C7431F; }
+  .pb-tag.high { color: #B97A14; }
+  .pb-tag.partial { color: #1E8C7C; }
+  .pb-tablenote { font-size: 7.8px; color: #5A6B7A; margin-top: 5px; line-height: 1.5; }
+
+  .pb-note h3 {
+    font-size: 8px; letter-spacing: 0.14em; text-transform: uppercase;
+    color: #5A6B7A; margin: 0 0 6px; border-bottom: 1.5px solid #101820; padding-bottom: 3px;
+  }
+  .pb-note h3 + * { margin-top: 0; }
+  .pb-note p { font-size: 9px; line-height: 1.55; margin: 0 0 8px; color: #2B3742; }
+  .pb-note p b { color: #101820; }
+  .pb-note pre {
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    font-size: 7.4px; line-height: 1.6;
+    background: #F2F5F8; border-left: 2.6px solid #06121F;
+    padding: 7px 9px; margin: 0 0 10px; white-space: pre;
+  }
+  .pb-callout {
+    border-left: 2.6px solid #B97A14; background: #FBF6EA;
+    padding: 7px 9px; font-size: 8.8px; line-height: 1.5; margin: 0 0 10px;
+  }
+  .pb-callout b { color: #8A5A0D; }
+  .pb-block { margin-top: 12px; page-break-inside: avoid; }
+
+  /* ── Footer ── */
+  .pb-foot {
+    margin: 0.18in 0.55in 0;
+    border-top: 1.6px solid #101820;
+    padding: 7px 0 0.3in;
+    font-size: 7.5px; color: #5A6B7A; line-height: 1.6;
+  }
+  .pb-foot b { color: #101820; }
 }
-#print-brief { display: none; }

@@ -2,7 +2,7 @@
 import { loadAll } from './data.js';
 import { scenario } from './model.js';
 import { store } from './state.js';
-import { initShell, syncControls, renderReadouts, showDetail, downloadBrief } from './ui.js';
+import { initShell, syncControls, renderReadouts, showDetail, downloadBrief, buildBrief } from './ui.js';
 import { initInsights } from './insights.js';
 import { renderMethodology } from './methodology.js';
 import { showIntro, shouldShowIntro } from './intro.js';
@@ -63,6 +63,12 @@ addEventListener('keydown', (e) => {
 
 store.subscribe(render);
 render(s0);
+
+// ?brief=1 pre-populates the print brief so `chrome --headless --print-to-pdf`
+// (or the user hitting ⌘P on a shared link) exports it without clicking anything.
+if (new URLSearchParams(location.search).has('brief')) {
+  buildBrief(currentScenario, store.get(), data);
+}
 
 if (shouldShowIntro()) {
   showIntro(bootMap);
