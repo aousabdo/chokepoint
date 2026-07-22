@@ -72,6 +72,21 @@
   .pb-tile.amber { border-top-color: #B97A14; } .pb-tile.amber .v { color: #B97A14; }
   .pb-tile.cyan { border-top-color: #0E7C8C; } .pb-tile.cyan .v { color: #0E7C8C; }
 
+  /* Second-order readouts: smaller tile row */
+  .pb-tiles2 { grid-template-columns: repeat(4, 1fr); margin-top: 12px; }
+  .pb-tiles2 .pb-tile { border-top-width: 2px; padding-top: 5px; }
+  .pb-tiles2 .v { font-size: 15px; }
+  .pb-tiles2 .l { font-size: 7px; }
+
+  /* Importer days-of-cover strip */
+  .pb-cover {
+    font-size: 8.6px; line-height: 1.6; color: #2B3742;
+    background: #F2F5F8; border-left: 2.6px solid #0E7C8C;
+    padding: 6px 9px;
+  }
+  .pb-cover .num { font-size: 10px; }
+  .pb-cover small { color: #B97A14; font-size: 7px; }
+
   /* ── Throughput waterfall ── */
   .pb-flow { margin: 15px 0 0; page-break-inside: avoid; }
   .pb-flowbar {

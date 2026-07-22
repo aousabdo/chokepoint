@@ -13,8 +13,8 @@
   .mark small { display: block; font-size: 13px; letter-spacing: 0.2em; color: var(--ink-dim); margin-top: 6px; }
   .headline { font-size: 44px; font-weight: 600; max-width: 20ch; margin: 36px 0 0; line-height: 1.2; }
   .dial { padding: 0 64px 56px; }
-  .row { display: flex; gap: 56px; margin-bottom: 34px; }
-  .stat .v { font-family: var(--font-mono); font-size: 56px; font-weight: 700; }
+  .row { display: flex; gap: 44px; margin-bottom: 34px; }
+  .stat .v { font-family: var(--font-mono); font-size: 52px; font-weight: 700; white-space: nowrap; }
   .stat .l { font-size: 14px; text-transform: uppercase; letter-spacing: 0.14em; color: var(--ink-dim); }
   .crim { color: var(--stranded-crim); } .teal { color: var(--safe-teal); } .amber { color: var(--exposed-amber); }
   .track { height: 14px; border-radius: 7px; position: relative;
@@ -24,6 +24,11 @@
   .cap { display: flex; justify-content: space-between; font-family: var(--font-mono);
          font-size: 14px; color: var(--ink-dim); margin-top: 12px; }
   .cap b { color: var(--data-cyan); }
+  .substrip { font-family: var(--font-mono); font-size: 13.5px; letter-spacing: 0.02em;
+              color: var(--ink-dim); margin-top: 20px; padding-top: 14px;
+              border-top: 1px solid rgba(30, 58, 82, 0.55); }
+  .headline { margin-top: 28px; font-size: 42px; }
+  .top { padding-top: 48px; }
 </style>
 </head>
 <body>
@@ -36,10 +41,11 @@
       <div class="stat"><div class="v crim">12.0</div><div class="l">M b/d stranded</div></div>
       <div class="stat"><div class="v teal">2.6</div><div class="l">Escaping overland</div></div>
       <div class="stat"><div class="v amber">+78–146%</div><div class="l">Brent shock band</div></div>
-      <div class="stat"><div class="v" style="color:var(--data-cyan)">100</div><div class="l">Days of reserves</div></div>
+      <div class="stat"><div class="v" style="color:var(--data-cyan)">24</div><div class="l">Days — thinnest cover</div></div>
     </div>
     <div class="track"><div class="thumb"></div></div>
     <div class="cap"><span>HORMUZ DISRUPTION</span><b>70% — current reported</b><span>FULL CLOSURE</span></div>
+    <div class="substrip">LNG shock ×2.8–4.6 · siege premium +33% · hull-loss odds 1-in-13 · the only chokepoint with no way out by sea</div>
   </div>
 </body>
 </html>

@@ -1,5 +1,6 @@
 /** Shell UI: readouts, scenario controls, layer toggles, time scrubber, detail card. */
 import { countUp, fmt, bandText, statusBadge, sourceLine } from './format.js';
+import { lngShock, impliedLossOdds } from './model.js';
 import { LAYER_GROUPS } from './map.js';
 import { store } from './state.js';
 
@@ -172,6 +173,17 @@ export function buildBrief(sc, s, data) {
   const insPre = data.insurance.points.find((p) => p.label === 'Pre-crisis baseline');
   const maxExports = Math.max(...sc.exposure.map((p) => p.gulf_exports_mbd));
 
+  // Tier 1–3 headline derivatives
+  const lg = lngShock(sc.d, data.lng);
+  const oddsWorst = impliedLossOdds(ins.high);
+  const oddsBest = impliedLossOdds(ins.low);
+  const siege = Math.min(sc.share / cfg.figures.eps_longrun.value, cfg.figures.shock_cap.value);
+  const coverRows = sc.importers.filter((m) => Number.isFinite(m.daysCover)).slice(0, 5);
+  const coverStrip = coverRows.length
+    ? coverRows.map((m) => `${m.name.replace(' (China, India, Korea, Japan…)', '')}
+        <b class="num">${m.daysCover > 999 ? '999+' : fmt(m.daysCover, 0)}</b>${m.stocks_status === 'estimate' ? '<small>est.</small>' : ''}`).join(' · ')
+    : 'no import losses at this disruption level';
+
   const rows = sc.exposure.map((p) => {
     const w = (p.gulf_exports_mbd / maxExports) * 100;
     const strFrac = p.gulf_exports_mbd > 0 ? p.stranded / p.gulf_exports_mbd : 0;
@@ -203,6 +215,13 @@ export function buildBrief(sc, s, data) {
         <div class="pb-tile cyan"><div class="v num">${Number.isFinite(sc.sprDays) ? fmt(sc.sprDays, 0) : '∞'} <small>days</small></div><div class="l">Strategic-reserve runway</div></div>
       </div>
 
+      <div class="pb-tiles pb-tiles2">
+        <div class="pb-tile amber"><div class="v num">+${fmt(siege * 100, 0)}<small>%</small></div><div class="l">Siege premium, 12–24 mo — persistent while barrels stay missing</div></div>
+        <div class="pb-tile cyan"><div class="v num">${fmt(sc.sprReal.net)} <small>M b/d</small></div><div class="l">Net gap after max SPR release — the tap binds at ${fmt(cfg.figures.max_release_mbd.value)} M b/d</div></div>
+        <div class="pb-tile" style="border-top-color:#8A5A0D"><div class="v num" style="color:#8A5A0D">${fmt(lg.lostMtpa, 0)} <small>Mt/yr</small></div><div class="l">LNG offline, zero bypass — gas multiplier ×${fmt(lg.mult.lo)}–×${fmt(lg.mult.hi)} (illustr.)</div></div>
+        <div class="pb-tile crim"><div class="v num">1-in-${fmt(oddsWorst.oneIn, 0)}<small>–${fmt(oddsBest.oneIn, 0)}</small></div><div class="l">Implied hull-loss odds per transit, from current quotes</div></div>
+      </div>
+
       <div class="pb-flow">
         <div class="pb-flowbar">
           <span class="un" style="width:${seg(flowing)}%"></span><span class="by" style="width:${seg(sc.bypass)}%"></span><span class="st" style="width:${seg(sc.stranded)}%"></span>
@@ -224,6 +243,8 @@ export function buildBrief(sc, s, data) {
           <p class="pb-tablenote">Gulf seaborne exports, M b/d, pre-crisis baselines (EIA country analysis briefs).
           Per producer: stranded = exports·d − min(own pipeline spare, exports·d). Only Saudi Arabia (Petroline → Yanbu),
           the UAE (ADCOP → Fujairah) and Iran (Goreh–Jask) own an overland escape.</p>
+          <div class="pb-cover pb-block"><b>Days of strategic cover</b> (importer stocks ÷ lost supply, shortest first):
+          ${coverStrip}. China's reserves are state-opaque — public estimates only.</div>
           <div class="pb-callout pb-block"><b>The number nobody states cleanly:</b> Qatar's ~77 Mt/yr of LNG —
           about a fifth of the world's LNG trade — has zero overland bypass. Petroline can save Saudi barrels;
           nothing can save Qatari cargoes.</div>
@@ -249,7 +270,9 @@ SPR_days = reserves ÷ stranded(d)</pre>
       </div>
     </div>
     <div class="pb-foot">
-      <b>Sources &amp; provenance.</b> EIA World Oil Transit Chokepoints (retrieved ${cfg.as_of}) · EIA country
+      <b>Why Hormuz is different:</b> the only major oil chokepoint with no sea alternative — Suez closed for
+      eight years and the world rerouted around the Cape; here the ships have nowhere else to go.
+      <br><b>Sources &amp; provenance.</b> EIA World Oil Transit Chokepoints (retrieved ${cfg.as_of}) · EIA country
       analysis briefs · IEA oil security · JWC listed-area circulars, Lloyd's List and S&amp;P Global commentary ·
       2026-crisis public reporting. Statuses (verified / reported / estimate / illustrative) are carried per figure
       and surfaced at <b>chokepoint.analyticadss.com</b> — full equations and coverage gaps under Methodology.
