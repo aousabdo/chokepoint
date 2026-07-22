@@ -24,10 +24,7 @@
   <meta property="og:image:height" content="630">
   <meta property="og:image:alt" content="Chokepoint scenario dial at 70% Hormuz disruption: 12.0 million barrels/day stranded, 2.6 escaping overland, +78–146% modeled Brent shock band">
 
-  <link rel="preconnect" href="https://basemaps.cartocdn.com" crossorigin>
-  <link rel="preconnect" href="https://tiles.basemaps.cartocdn.com" crossorigin>
-  <link rel="preconnect" href="https://unpkg.com" crossorigin>
-  <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css">
+  <link rel="stylesheet" href="vendor/maplibre-gl.css">
   <link rel="stylesheet" href="css/tokens.css">
   <link rel="stylesheet" href="css/base.css">
   <link rel="stylesheet" href="css/layout.css">
@@ -37,6 +34,7 @@
 <body>
 <div id="app">
   <header id="topbar">
+    <h1 class="sr-only">Chokepoint — the Strait of Hormuz consequence engine</h1>
     <div class="wordmark">CHOKEPOINT<span class="by"><a href="https://analyticadss.com" target="_blank" rel="noopener" title="Analytica Data Science Solutions">ANALYTICA DATA SCIENCE SOLUTIONS</a><span class="strait-tag"> · STRAIT OF HORMUZ</span></span></div>
     <nav id="views" aria-label="Surfaces">
       <button data-view="map" aria-current="true">Map</button>
@@ -55,7 +53,7 @@
     <section id="view-map" aria-label="Operator map">
       <div id="map" role="application" aria-label="Map of the Persian Gulf, Strait of Hormuz, bypass pipelines and incidents"></div>
 
-      <aside id="rail-left" class="rail" aria-label="Layers and time">
+      <div id="rail-left" class="rail" role="region" aria-label="Layers and time">
         <div class="panel">
           <h2>Layers</h2>
           <div id="layer-toggles"></div>
@@ -69,14 +67,14 @@
           </div>
           <p class="chart-note">Sweeps the incident record. Incident markers show events up to the selected year.</p>
         </div>
-      </aside>
+      </div>
 
-      <aside id="rail-right" class="rail" aria-label="Live readouts">
+      <div id="rail-right" class="rail" role="region" aria-label="Live readouts">
         <div class="panel" aria-live="polite" aria-atomic="false">
           <h2>Scenario readout</h2>
           <div class="readout crit">
             <div class="label">Stranded oil</div>
-            <div class="value"><span id="r-stranded" class="num">0.0</span> <span style="font-size:13px">M b/d</span></div>
+            <div class="value"><span id="r-stranded" class="num">0.0</span> <span class="unit">M b/d</span></div>
             <div class="sub"><span id="r-share" class="num">0.0</span>% of global liquids supply</div>
           </div>
           <div class="readout dim">
@@ -85,17 +83,17 @@
           </div>
           <div class="readout safe">
             <div class="label">Bypass absorbing</div>
-            <div class="value"><span id="r-bypass" class="num">0.0</span> <span style="font-size:13px">/ <span id="r-bypass-max">2.6</span> M b/d</span></div>
+            <div class="value"><span id="r-bypass" class="num">0.0</span> <span class="unit">/ <span id="r-bypass-max">2.6</span> M b/d</span></div>
             <div class="sub">Overland escape via Petroline · Fujairah · Jask</div>
           </div>
           <div class="readout amber">
             <div class="label">Brent shock band <span class="status illustrative">illustrative</span></div>
-            <div class="value"><span id="r-shock" class="num">+0–0</span><span style="font-size:13px">%</span></div>
+            <div class="value"><span id="r-shock" class="num">+0–0</span><span class="unit">%</span></div>
             <div class="sub">Short-run elasticity ε 0.08–0.15 · capped</div>
           </div>
           <div class="readout cyan">
             <div class="label">Strategic-reserve runway</div>
-            <div class="value"><span id="r-spr" class="num">∞</span> <span style="font-size:13px">days</span></div>
+            <div class="value"><span id="r-spr" class="num">∞</span> <span class="unit">days</span></div>
             <div class="sub">IEA-member public stocks ÷ stranded rate</div>
           </div>
         </div>
@@ -103,7 +101,7 @@
           <h2>Most exposed</h2>
           <div id="r-exposed" class="chips"></div>
         </div>
-      </aside>
+      </div>
 
       <div id="detail-card" role="dialog" aria-label="Feature details" hidden></div>
       <button id="rail-left-toggle" class="panel" style="position:absolute;left:12px;top:12px;z-index:19;display:none">Layers</button>
@@ -150,7 +148,8 @@
 <div id="intro" hidden></div>
 <div id="print-brief"></div>
 
-<script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js" defer></script>
+<script src="vendor/maplibre-gl.js" defer></script>
+<script src="vendor/pmtiles.js" defer></script>
 <script type="module" src="src/main.js"></script>
 </body>
 </html>

@@ -9,6 +9,7 @@
   --data-cyan:     #38E1D6;
   --exposed-amber: #F2A93B;
   --stranded-crim: #E4572E;
+  --stranded-crim-text: #F0785A; /* ≥4.5:1 on panel glass — for small crimson text */
   --safe-teal:     #2FB6A3;
   --accent-gold:   #D9B24A;
 

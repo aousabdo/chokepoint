@@ -460,7 +460,7 @@ export function initInsights(root, data) {
     byId('f-out').innerHTML = `
       <div class="readout gold" style="margin-top:4px">
         <div class="label">Oil waiting afloat</div>
-        <div class="value num">${fmt(fs.mbbl, 0)} <span style="font-size:13px">M bbl</span></div>
+        <div class="value num">${fmt(fs.mbbl, 0)} <span class="unit">M bbl</span></div>
         <div class="sub">${fmt(fs.daysGlobal, 1)} days of world demand · ≈${fmt((fs.mbbl / usSpr) * 100, 0)}% of the US SPR,
         anchored in a war-risk zone</div>
       </div>`;
@@ -498,11 +498,11 @@ export function initInsights(root, data) {
     document.getElementById('macro-out').innerHTML = `
       <div class="readout amber">
         <div class="label">Consumer prices, one-year horizon</div>
-        <div class="value num">+${fmt(macro.cpi.lo)}–${fmt(macro.cpi.hi)} <span style="font-size:13px">pp CPI</span></div>
+        <div class="value num">+${fmt(macro.cpi.lo)}–${fmt(macro.cpi.hi)} <span class="unit">pp CPI</span></div>
       </div>
       <div class="readout crit" style="margin-top:8px">
         <div class="label">Global growth, sustained shock</div>
-        <div class="value num">−${fmt(macro.gdp.lo)}–${fmt(macro.gdp.hi)} <span style="font-size:13px">pp GDP</span></div>
+        <div class="value num">−${fmt(macro.gdp.lo)}–${fmt(macro.gdp.hi)} <span class="unit">pp GDP</span></div>
         <div class="sub">for context: a 2-pp global drag ≈ a typical recession's demand loss</div>
       </div>`;
 
@@ -538,7 +538,7 @@ export function initInsights(root, data) {
         <span class="pt" style="left:${px(sc.shock.point ?? 0)}%"></span></div>
       <div class="readout cyan" style="margin-top:10px">
         <div class="label">Strategic-reserve runway</div>
-        <div class="value num">${Number.isFinite(sc.sprDays) ? fmt(sc.sprDays, 0) : '∞'} <span style="font-size:13px">days</span></div>
+        <div class="value num">${Number.isFinite(sc.sprDays) ? fmt(sc.sprDays, 0) : '∞'} <span class="unit">days</span></div>
         <div class="sub">${data.config.figures.spr_releasable_mbbl.value} M bbl IEA-member public stocks ÷ ${fmt(sc.stranded)} M b/d stranded
         <span class="status estimate">estimate</span></div>
       </div>

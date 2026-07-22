@@ -61,13 +61,27 @@ primary-source check). If a figure is an estimate, it says so — that reproduci
 `og.png` (1200×630, referenced by the meta tags) is generated from `og.html` with headless Chrome:
 `npm run og` (requires a static server running; pass a URL to override).
 
-## Basemap resilience
+## Fully self-contained basemap
 
-The Carto style is vendored at `vendor/carto-dark-matter.style.json` (remote URL as fallback) and
-must be passed to MapLibre **as a URL, not a parsed object**: object styles load via a
-requestAnimationFrame-deferred path, and rAF never fires in a backgrounded tab — a user opening the
-site in a background tab would foreground it to a style that never parsed. For the same reason,
+The map runs **entirely from this repository**: a Protomaps PMTiles extract of the Gulf
+(`vendor/basemap.pmtiles`, OpenStreetMap data, open license, z0–10), the Protomaps black style,
+Noto glyphs, sprites, and vendored MapLibre + pmtiles libraries. Zero external requests — the whole
+site works from a copied directory in disconnected environments. Fallback chain if the PMTiles file
+is stripped: vendored Carto style → remote Carto (note: Carto's free basemaps carry usage terms;
+the offline Protomaps path is the licensed-for-anything default). Regenerate the extract with
+`pmtiles extract` (see REFRESH.md).
+
+Styles must be passed to MapLibre **as URLs, not parsed objects**: object styles load via a
+requestAnimationFrame-deferred path, and rAF never fires in a backgrounded tab. For the same reason,
 layer setup keys off `styledata` (network-callback driven), never the rAF-gated `load` event.
+
+## Government-readiness
+
+- **ACCESSIBILITY.md** — WCAG 2.1 AA conformance statement (axe-core: 0 violations; keyboard, motion,
+  color redundancy, known canvas limitations documented).
+- **REFRESH.md** — data-refresh runbook: daily crisis sweep, quarterly baselines, validator invariants.
+- **docs/CAPABILITY.md** — capability statement; **briefs/** — pre-generated analyst briefs at
+  40/70/100% (linked from the Methodology panel).
 
 ## Intended use
 

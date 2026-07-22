@@ -6,15 +6,19 @@
  */
 import { reducedMotion } from './format.js';
 
-// The basemap style is vendored (curl → vendor/) so first paint doesn't depend
-// on a third-party fetch. It MUST be passed to MapLibre as a URL, not a parsed
-// object: style objects load via a requestAnimationFrame-deferred path, and rAF
-// never fires in a backgrounded/hidden tab — the style would sit unparsed until
-// the tab is foregrounded. URL styles parse in the network callback instead.
-// (Same root cause as the layer-setup rule below: never gate on rAF-driven
-// readiness signals like the 'load' event.)
-const STYLE_LOCAL = 'vendor/carto-dark-matter.style.json';
-const STYLE_REMOTE = 'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json';
+// Basemap resolution, fully offline first: a Protomaps PMTiles extract of the
+// Gulf plus a vendored style/fonts/sprites (OSM data, open license) — the whole
+// map runs from this repo with zero external requests. Fallbacks: vendored
+// Carto style (remote tiles), then Carto's remote style. Styles MUST be passed
+// to MapLibre as URLs, not parsed objects: style objects load via a
+// requestAnimationFrame-deferred path, and rAF never fires in a backgrounded
+// tab — the style would sit unparsed until foregrounded. URL styles parse in
+// the network callback instead. (Same root cause as the layer-setup rule
+// below: never gate on rAF-driven readiness signals like the 'load' event.)
+const STYLE_OFFLINE = 'vendor/basemap-style.json';
+const PMTILES_FILE = 'vendor/basemap.pmtiles';
+const STYLE_CARTO_LOCAL = 'vendor/carto-dark-matter.style.json';
+const STYLE_CARTO_REMOTE = 'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json';
 
 const COLORS = {
   cyan: '#38E1D6',
@@ -42,11 +46,24 @@ export const LAYER_GROUPS = [
 ];
 
 export async function initMap(container, data, { onFeature } = {}) {
-  let style = STYLE_REMOTE;
+  let style = STYLE_CARTO_REMOTE;
+  let offline = false;
   try {
-    const res = await fetch(STYLE_LOCAL, { method: 'HEAD' });
-    if (res.ok) style = STYLE_LOCAL; // pass the URL — see note above
-  } catch { /* fall back to the remote style URL */ }
+    if (typeof pmtiles !== 'undefined') {
+      const res = await fetch(PMTILES_FILE, { method: 'HEAD' });
+      if (res.ok) {
+        maplibregl.addProtocol('pmtiles', new pmtiles.Protocol().tile);
+        style = STYLE_OFFLINE;
+        offline = true;
+      }
+    }
+    if (!offline) {
+      const res = await fetch(STYLE_CARTO_LOCAL, { method: 'HEAD' });
+      if (res.ok) style = STYLE_CARTO_LOCAL;
+    }
+  } catch { /* fall through to the remote style URL */ }
+  // Overlay labels must use a font the active glyph endpoint can serve.
+  const overlayFont = offline ? 'Noto Sans Medium' : 'Montserrat Regular';
 
   // On phones the bottom sheet covers the lower map — bias the fit upward.
   const mobile = matchMedia('(max-width: 860px)').matches;
@@ -106,7 +123,7 @@ export async function initMap(container, data, { onFeature } = {}) {
       id: 'shadow-labels', type: 'symbol', source: 'shadow',
       layout: {
         'text-field': ['get', 'pattern'],
-        'text-font': ['Montserrat Regular'],
+        'text-font': [overlayFont],
         'text-size': 9.5,
       },
       paint: { 'text-color': COLORS.amber, 'text-halo-color': '#06121F', 'text-halo-width': 1.2, 'text-opacity': 0.85 },
@@ -148,7 +165,7 @@ export async function initMap(container, data, { onFeature } = {}) {
       layout: {
         'symbol-placement': 'line-center',
         'text-field': ['get', 'name'],
-        'text-font': ['Montserrat Regular'],
+        'text-font': [overlayFont],
         'text-size': 10,
         'text-offset': [0, 1],
       },
@@ -191,7 +208,7 @@ export async function initMap(container, data, { onFeature } = {}) {
       minzoom: 5.2,
       layout: {
         'text-field': ['get', 'name'],
-        'text-font': ['Montserrat Regular'],
+        'text-font': [overlayFont],
         'text-size': 10.5,
         'text-offset': [0, 1.1],
         'text-anchor': 'top',

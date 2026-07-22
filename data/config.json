@@ -12,7 +12,7 @@
       "note": "Pre-crisis baseline. Roughly 20% of global petroleum liquids consumption and ~25–30% of seaborne crude."
     },
     "hormuz_share_global_consumption": {
-      "value": 0.20,
+      "value": 0.2,
       "unit": "share",
       "source": "EIA — World Oil Transit Chokepoints",
       "url": "https://www.eia.gov/international/analysis/special-topics/World_Oil_Transit_Chokepoints",
@@ -22,13 +22,13 @@
     "hormuz_share_seaborne_crude": {
       "value": 0.27,
       "unit": "share",
-      "source": "EIA / UNCTAD seaborne-trade estimates (~25–30%)",
+      "source": "EIA WOTC — ~25–30% of seaborne crude (H1 2025 update commentary)",
       "url": "https://www.eia.gov/international/analysis/special-topics/World_Oil_Transit_Chokepoints",
       "retrieved": "2026-07-22",
-      "status": "brief-baseline"
+      "status": "verified"
     },
     "lng_share_global": {
-      "value": 0.20,
+      "value": 0.2,
       "unit": "share of global LNG trade",
       "source": "IEA — Strait of Hormuz (oil security)",
       "url": "https://www.iea.org/about/oil-security-and-emergency-response/strait-of-hormuz",
@@ -37,12 +37,13 @@
       "note": "Essentially all Qatari (plus UAE volumes). No overland bypass exists for LNG."
     },
     "global_liquids_mbd": {
-      "value": 103.0,
+      "value": 104.0,
       "unit": "million barrels/day",
-      "source": "EIA — Short-Term Energy Outlook, world petroleum and other liquids supply",
+      "source": "EIA — Short-Term Energy Outlook, world petroleum and other liquids supply (2026 projections, pre-disruption basis; 2026 STEOs project ~104–106 M b/d)",
       "url": "https://www.eia.gov/outlooks/steo/",
       "retrieved": "2026-07-22",
-      "status": "brief-baseline"
+      "status": "verified",
+      "note": "Denominator uses the pre-disruption supply basis — the model asks what share of a normal world the stranded barrels are."
     },
     "spr_releasable_mbbl": {
       "value": 1200,
@@ -54,7 +55,7 @@
       "note": "Order-of-magnitude runway figure. Actual drawdown rates are capped well below the stranded rate; the runway is a stock/flow ratio, not a release plan."
     },
     "current_reported_disruption": {
-      "value": 0.70,
+      "value": 0.7,
       "unit": "share",
       "source": "2026 crisis reporting — tanker transits through Hormuz down ~70%; 150+ ships holding outside the strait (mid-July 2026)",
       "url": "https://en.wikipedia.org/wiki/2026_Strait_of_Hormuz_crisis",
@@ -95,7 +96,10 @@
       "status": "illustrative"
     },
     "cpi_per_10pct": {
-      "value": [0.2, 0.4],
+      "value": [
+        0.2,
+        0.4
+      ],
       "unit": "pp added to CPI per +10% oil price, one-year horizon",
       "source": "IMF WEO analyses; Federal Reserve staff rules of thumb",
       "url": "https://www.imf.org/en/Publications/WEO",
@@ -103,7 +107,10 @@
       "status": "illustrative"
     },
     "gdp_per_10pct": {
-      "value": [0.1, 0.2],
+      "value": [
+        0.1,
+        0.2
+      ],
       "unit": "pp global GDP drag per +10% oil price, sustained",
       "source": "IMF WEO analyses; OECD interlink rules of thumb",
       "url": "https://www.imf.org/en/Publications/WEO",
@@ -119,7 +126,10 @@
       "status": "illustrative"
     },
     "eps_short_run": {
-      "value": [0.08, 0.15],
+      "value": [
+        0.08,
+        0.15
+      ],
       "unit": "short-run price elasticity band",
       "source": "Literature range for short-run oil demand elasticity; see Methodology",
       "url": "",
@@ -172,7 +182,11 @@
     "eia": {
       "label": "Conservative — EIA spare bypass",
       "total_mbd": 2.6,
-      "per_pipeline_mbd": { "petroline": 1.5, "adcop": 0.8, "jask": 0.3 },
+      "per_pipeline_mbd": {
+        "petroline": 1.5,
+        "adcop": 0.8,
+        "jask": 0.3
+      },
       "source": "EIA WOTC — ~2.6 M b/d of unused bypass capacity. Per-pipeline allocation is Analytica's derived estimate summing to the EIA total.",
       "url": "https://www.eia.gov/international/analysis/special-topics/World_Oil_Transit_Chokepoints",
       "retrieved": "2026-07-22",
@@ -181,7 +195,11 @@
     "expanded": {
       "label": "Expanded — post-2025 Petroline expansion",
       "total_mbd": 5.5,
-      "per_pipeline_mbd": { "petroline": 4.4, "adcop": 0.8, "jask": 0.3 },
+      "per_pipeline_mbd": {
+        "petroline": 4.4,
+        "adcop": 0.8,
+        "jask": 0.3
+      },
       "source": "Upper bound of public commentary (3.5–5.5 M b/d) after Aramco's claimed 7 M b/d Petroline capacity; sustained flows at that level are untested.",
       "url": "https://dc.fortune.com/2026/03/28/saudi-arabia-east-west-oil-pipeline-strait-hormuz-bypass-7-million-barrels-yanbu-red-sea",
       "retrieved": "2026-07-22",

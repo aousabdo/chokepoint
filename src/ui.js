@@ -161,5 +161,6 @@ export function showDetail(props, layer, data) {
 
   card.innerHTML = `<div class="panel">${html}</div>`;
   card.hidden = false;
+  card.querySelector('.close')?.focus(); // keyboard users land on the dismiss control
 }
 

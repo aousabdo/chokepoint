@@ -124,6 +124,28 @@ macro         : ΔCPI ≈ (ΔP%/10)·[0.2,0.4] pp · ΔGDP ≈ −(ΔP%/10)·[0.
     </section>
 
     <section>
+      <h2>Scenario briefs</h2>
+      <p>Pre-generated five-page analyst briefs at the canonical scenarios:
+      <a href="briefs/chokepoint-brief-40.pdf">40% — partial closure</a> ·
+      <a href="briefs/chokepoint-brief-70.pdf">70% — current reported</a> ·
+      <a href="briefs/chokepoint-brief-100.pdf">100% — full closure</a>.
+      Or press <strong>Download brief</strong> anywhere on the site to generate one at your exact scenario.</p>
+    </section>
+
+    <section>
+      <h2>About Analytica Data Science Solutions</h2>
+      <p>Chokepoint is built by <a href="https://analyticadss.com" target="_blank" rel="noopener">Analytica
+      Data Science Solutions</a> — decision-support and data-analysis platforms for government and commercial
+      clients. It is part of a family of public-data intelligence platforms sharing this design system and
+      provenance discipline, including <a href="https://watchstander.analyticadss.com" target="_blank" rel="noopener">Watchstander</a>
+      (maritime domain awareness) and Skywatch. The platform is fully self-contained — static, client-side,
+      no accounts, no telemetry, vendored basemap and data — and runs complete from a copied directory in
+      restricted or disconnected environments. Accessibility conformance and the data-refresh runbook ship
+      in the repository (ACCESSIBILITY.md, REFRESH.md). Engagements: via
+      <a href="https://analyticadss.com" target="_blank" rel="noopener">analyticadss.com</a>.</p>
+    </section>
+
+    <section>
       <h2>Build note</h2>
       <p>Static, client-side, no backend, no login, no paid APIs. All model logic ships as documented,
       unit-tested ES modules (<code>src/model.js</code>, <code>tests/</code>); all data ships as versioned JSON

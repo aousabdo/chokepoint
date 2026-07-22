@@ -1,63 +1,95 @@
 {
   "as_of": "2026-07-22",
-  "source": "EIA — World Oil Transit Chokepoints, Hormuz flows by destination (2024 baseline). Volumes sum to total Hormuz throughput — the validator enforces it. Strategic-stock figures per row carry their own source and status; China's are state-opaque and marked estimate.",
+  "source": "EIA — World Oil Transit Chokepoints, Hormuz flows by destination (2024; ~84% to Asia, China+India ~44% of crude). Volumes sum to total Hormuz throughput — the validator enforces it.",
   "url": "https://www.eia.gov/international/analysis/special-topics/World_Oil_Transit_Chokepoints",
   "notes": "Model: an importer's loss at disruption d = hormuz_mbd × d × (stranded/gross) — bypass relief is distributed pro-rata across buyers because rerouted barrels are fungible (Petroline crude landing at Yanbu still reaches its buyer). days_cover = stocks ÷ loss.",
   "importers": [
     {
-      "id": "chn", "name": "China", "hormuz_mbd": 5.4, "demand_mbd": 16.4,
+      "id": "chn",
+      "name": "China",
+      "hormuz_mbd": 5.4,
+      "demand_mbd": 16.4,
       "stocks_mbbl": 400,
       "stocks_source": "Public analyst estimates — government SPR only; state-opaque, satellite-derived ranges 280–1,000 incl. commercial",
-      "stocks_url": "https://www.reuters.com/markets/commodities/", "stocks_status": "estimate",
-      "status": "brief-baseline"
+      "stocks_url": "https://www.reuters.com/markets/commodities/",
+      "stocks_status": "estimate",
+      "status": "verified"
     },
     {
-      "id": "ind", "name": "India", "hormuz_mbd": 2.1, "demand_mbd": 5.6,
+      "id": "ind",
+      "name": "India",
+      "hormuz_mbd": 2.1,
+      "demand_mbd": 5.6,
       "stocks_mbbl": 39,
       "stocks_source": "ISPRL phase-I caverns (5.33 MMT ≈ 39 M bbl); phase-II expansion pending",
-      "stocks_url": "https://www.isprlindia.com/", "stocks_status": "verified",
-      "status": "brief-baseline"
+      "stocks_url": "https://www.isprlindia.com/",
+      "stocks_status": "verified",
+      "status": "verified"
     },
     {
-      "id": "kor", "name": "South Korea", "hormuz_mbd": 1.7, "demand_mbd": 2.8,
+      "id": "kor",
+      "name": "South Korea",
+      "hormuz_mbd": 1.7,
+      "demand_mbd": 2.8,
       "stocks_mbbl": 240,
       "stocks_source": "KNOC strategic + IEA-obligated industry stocks",
-      "stocks_url": "https://www.iea.org/countries/korea", "stocks_status": "brief-baseline",
-      "status": "brief-baseline"
+      "stocks_url": "https://www.iea.org/countries/korea",
+      "stocks_status": "brief-baseline",
+      "status": "verified"
     },
     {
-      "id": "jpn", "name": "Japan", "hormuz_mbd": 1.6, "demand_mbd": 3.3,
+      "id": "jpn",
+      "name": "Japan",
+      "hormuz_mbd": 1.6,
+      "demand_mbd": 3.3,
       "stocks_mbbl": 470,
       "stocks_source": "METI national + private obligated stocks (~230 days of net imports, IEA)",
-      "stocks_url": "https://www.iea.org/countries/japan", "stocks_status": "brief-baseline",
-      "status": "brief-baseline"
+      "stocks_url": "https://www.iea.org/countries/japan",
+      "stocks_status": "brief-baseline",
+      "status": "verified"
     },
     {
-      "id": "oas", "name": "Other Asia & Pacific", "hormuz_mbd": 6.5, "demand_mbd": 9.0,
+      "id": "oas",
+      "name": "Other Asia & Pacific",
+      "hormuz_mbd": 6.5,
+      "demand_mbd": 9.0,
       "stocks_mbbl": 90,
       "stocks_source": "Aggregate of smaller strategic programs (Thailand, Taiwan, etc.)",
-      "stocks_url": "https://www.iea.org/", "stocks_status": "estimate",
+      "stocks_url": "https://www.iea.org/",
+      "stocks_status": "estimate",
       "status": "brief-baseline"
     },
     {
-      "id": "eur", "name": "Europe (OECD)", "hormuz_mbd": 2.8, "demand_mbd": 13.4,
+      "id": "eur",
+      "name": "Europe (OECD)",
+      "hormuz_mbd": 2.8,
+      "demand_mbd": 13.4,
       "stocks_mbbl": 570,
       "stocks_source": "IEA-member obligated public + industry stocks attributable to Europe",
-      "stocks_url": "https://www.iea.org/about/oil-security-and-emergency-response", "stocks_status": "brief-baseline",
+      "stocks_url": "https://www.iea.org/about/oil-security-and-emergency-response",
+      "stocks_status": "brief-baseline",
       "status": "brief-baseline"
     },
     {
-      "id": "usa", "name": "United States", "hormuz_mbd": 0.4, "demand_mbd": 20.3,
+      "id": "usa",
+      "name": "United States",
+      "hormuz_mbd": 0.4,
+      "demand_mbd": 20.3,
       "stocks_mbbl": 403,
       "stocks_source": "DOE Strategic Petroleum Reserve",
-      "stocks_url": "https://www.energy.gov/ceser/strategic-petroleum-reserve", "stocks_status": "verified",
+      "stocks_url": "https://www.energy.gov/ceser/strategic-petroleum-reserve",
+      "stocks_status": "verified",
       "status": "brief-baseline"
     },
     {
-      "id": "row", "name": "Rest of world", "hormuz_mbd": 0.4, "demand_mbd": null,
+      "id": "row",
+      "name": "Rest of world",
+      "hormuz_mbd": 0.4,
+      "demand_mbd": null,
       "stocks_mbbl": 50,
       "stocks_source": "Aggregate estimate",
-      "stocks_url": "https://www.iea.org/", "stocks_status": "estimate",
+      "stocks_url": "https://www.iea.org/",
+      "stocks_status": "estimate",
       "status": "estimate"
     }
   ]

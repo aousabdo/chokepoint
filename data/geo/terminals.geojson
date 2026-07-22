@@ -2,29 +2,210 @@
   "type": "FeatureCollection",
   "note": "Major export terminals and bypass outlets. exports_mbd approximate (EIA country briefs); see data/producers.json for sourcing. trunk/pipeline properties drive the click-to-highlight route interaction.",
   "features": [
-    { "type": "Feature", "properties": { "id": "ras-tanura", "name": "Ras Tanura", "country": "Saudi Arabia", "producer": "sau", "kind": "crude", "exports_mbd": 6.0, "exposure": "partial", "trunk": "trunk-west" },
-      "geometry": { "type": "Point", "coordinates": [50.16, 26.64] } },
-    { "type": "Feature", "properties": { "id": "abot", "name": "Al-Basrah Oil Terminal", "country": "Iraq", "producer": "irq", "kind": "crude", "exports_mbd": 3.3, "exposure": "high", "trunk": "trunk-north" },
-      "geometry": { "type": "Point", "coordinates": [48.8, 29.68] } },
-    { "type": "Feature", "properties": { "id": "mina-ahmadi", "name": "Mina al-Ahmadi", "country": "Kuwait", "producer": "kwt", "kind": "crude", "exports_mbd": 2.0, "exposure": "total", "trunk": "trunk-north" },
-      "geometry": { "type": "Point", "coordinates": [48.17, 29.06] } },
-    { "type": "Feature", "properties": { "id": "ras-laffan", "name": "Ras Laffan", "country": "Qatar", "producer": "qat", "kind": "lng", "exports_mbd": 1.3, "lng_mtpa": 77, "exposure": "total", "trunk": "trunk-lng",
-      "detail": "≈77 Mt/yr of LNG — about a fifth of global LNG trade — with zero bypass." },
-      "geometry": { "type": "Point", "coordinates": [51.58, 25.91] } },
-    { "type": "Feature", "properties": { "id": "das-island", "name": "Das Island", "country": "UAE", "producer": "are", "kind": "crude", "exports_mbd": 1.3, "exposure": "partial", "trunk": "trunk-west" },
-      "geometry": { "type": "Point", "coordinates": [52.87, 25.15] } },
-    { "type": "Feature", "properties": { "id": "jebel-dhanna", "name": "Jebel Dhanna", "country": "UAE", "producer": "are", "kind": "crude", "exports_mbd": 1.4, "exposure": "partial", "trunk": "trunk-west" },
-      "geometry": { "type": "Point", "coordinates": [52.6, 24.19] } },
-    { "type": "Feature", "properties": { "id": "kharg", "name": "Kharg Island", "country": "Iran", "producer": "irn", "kind": "crude", "exports_mbd": 1.5, "exposure": "high", "trunk": "trunk-north" },
-      "geometry": { "type": "Point", "coordinates": [50.32, 29.23] } },
-    { "type": "Feature", "properties": { "id": "fujairah", "name": "Fujairah", "country": "UAE", "producer": "are", "kind": "bypass-outlet", "exports_mbd": 0, "exposure": "partial", "pipeline": "adcop",
-      "detail": "ADCOP's outlet on the Gulf of Oman — crude lands outside the strait." },
-      "geometry": { "type": "Point", "coordinates": [56.35, 25.17] } },
-    { "type": "Feature", "properties": { "id": "yanbu", "name": "Yanbu", "country": "Saudi Arabia", "producer": "sau", "kind": "bypass-outlet", "exports_mbd": 0, "exposure": "partial", "pipeline": "petroline",
-      "detail": "Petroline's Red Sea outlet — the Gulf's only large escape valve." },
-      "geometry": { "type": "Point", "coordinates": [38.06, 24.08] } },
-    { "type": "Feature", "properties": { "id": "jask-t", "name": "Jask", "country": "Iran", "producer": "irn", "kind": "bypass-outlet", "exports_mbd": 0, "exposure": "high", "pipeline": "jask",
-      "detail": "Goreh–Jask outlet east of the strait; limited, intermittent." },
-      "geometry": { "type": "Point", "coordinates": [57.77, 25.64] } }
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "ras-tanura",
+        "name": "Ras Tanura",
+        "country": "Saudi Arabia",
+        "producer": "sau",
+        "kind": "crude",
+        "exports_mbd": 5.5,
+        "exposure": "partial",
+        "trunk": "trunk-west"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          50.16,
+          26.64
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "abot",
+        "name": "Al-Basrah Oil Terminal",
+        "country": "Iraq",
+        "producer": "irq",
+        "kind": "crude",
+        "exports_mbd": 3.2,
+        "exposure": "high",
+        "trunk": "trunk-north"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          48.8,
+          29.68
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "mina-ahmadi",
+        "name": "Mina al-Ahmadi",
+        "country": "Kuwait",
+        "producer": "kwt",
+        "kind": "crude",
+        "exports_mbd": 1.45,
+        "exposure": "total",
+        "trunk": "trunk-north"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          48.17,
+          29.06
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "ras-laffan",
+        "name": "Ras Laffan",
+        "country": "Qatar",
+        "producer": "qat",
+        "kind": "lng",
+        "exports_mbd": 1.3,
+        "lng_mtpa": 77,
+        "exposure": "total",
+        "trunk": "trunk-lng",
+        "detail": "≈77 Mt/yr of LNG — about a fifth of global LNG trade — with zero bypass."
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          51.58,
+          25.91
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "das-island",
+        "name": "Das Island",
+        "country": "UAE",
+        "producer": "are",
+        "kind": "crude",
+        "exports_mbd": 0.9,
+        "exposure": "partial",
+        "trunk": "trunk-west"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          52.87,
+          25.15
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "jebel-dhanna",
+        "name": "Jebel Dhanna",
+        "country": "UAE",
+        "producer": "are",
+        "kind": "crude",
+        "exports_mbd": 1.0,
+        "exposure": "partial",
+        "trunk": "trunk-west"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          52.6,
+          24.19
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "kharg",
+        "name": "Kharg Island",
+        "country": "Iran",
+        "producer": "irn",
+        "kind": "crude",
+        "exports_mbd": 1.5,
+        "exposure": "high",
+        "trunk": "trunk-north"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          50.32,
+          29.23
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "fujairah",
+        "name": "Fujairah",
+        "country": "UAE",
+        "producer": "are",
+        "kind": "bypass-outlet",
+        "exports_mbd": 0,
+        "exposure": "partial",
+        "pipeline": "adcop",
+        "detail": "ADCOP's outlet on the Gulf of Oman — crude lands outside the strait."
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          56.35,
+          25.17
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "yanbu",
+        "name": "Yanbu",
+        "country": "Saudi Arabia",
+        "producer": "sau",
+        "kind": "bypass-outlet",
+        "exports_mbd": 0,
+        "exposure": "partial",
+        "pipeline": "petroline",
+        "detail": "Petroline's Red Sea outlet — the Gulf's only large escape valve."
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          38.06,
+          24.08
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "jask-t",
+        "name": "Jask",
+        "country": "Iran",
+        "producer": "irn",
+        "kind": "bypass-outlet",
+        "exports_mbd": 0,
+        "exposure": "high",
+        "pipeline": "jask",
+        "detail": "Goreh–Jask outlet east of the strait; limited, intermittent."
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          57.77,
+          25.64
+        ]
+      }
+    }
   ]
 }
