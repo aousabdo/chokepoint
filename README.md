@@ -32,8 +32,10 @@ src/insights.js       exposure board · event study · insurance ledger · escal
 src/methodology.js    Skywatch-depth methodology, generated from the data so it can't drift
 src/intro.js          "The Narrows" scrollytelling intro (?intro=skip to suppress)
 src/state.js          URL-hash deep links — every view is shareable
+src/tour.js           guided spotlight tour of the console
 data/*.json           versioned dataset; every figure carries {source, url, retrieved, status}
 data/geo/*.geojson    schematic strait lanes, pipelines, terminals, flows, shadow zones
+vendor/               vendored basemap style (see Basemap resilience)
 scripts/fetch.mjs     reproducible data pipeline + validator (build fails on unsourced figures)
 tests/model.test.mjs  model unit tests (node --test)
 ```
@@ -56,8 +58,16 @@ primary-source check). If a figure is an estimate, it says so — that reproduci
 
 ## OG card
 
-`og.html` is the 1200×630 source. Render it in a browser at exactly 1200×630 and screenshot to
-`og.png` at the repo root (referenced by the meta tags).
+`og.png` (1200×630, referenced by the meta tags) is generated from `og.html` with headless Chrome:
+`npm run og` (requires a static server running; pass a URL to override).
+
+## Basemap resilience
+
+The Carto style is vendored at `vendor/carto-dark-matter.style.json` (remote URL as fallback) and
+must be passed to MapLibre **as a URL, not a parsed object**: object styles load via a
+requestAnimationFrame-deferred path, and rAF never fires in a backgrounded tab — a user opening the
+site in a background tab would foreground it to a style that never parsed. For the same reason,
+layer setup keys off `styledata` (network-callback driven), never the rAF-gated `load` event.
 
 ## Intended use
 

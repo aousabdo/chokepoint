@@ -6,7 +6,15 @@
  */
 import { reducedMotion } from './format.js';
 
-const STYLE_URL = 'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json';
+// The basemap style is vendored (curl → vendor/) so first paint doesn't depend
+// on a third-party fetch. It MUST be passed to MapLibre as a URL, not a parsed
+// object: style objects load via a requestAnimationFrame-deferred path, and rAF
+// never fires in a backgrounded/hidden tab — the style would sit unparsed until
+// the tab is foregrounded. URL styles parse in the network callback instead.
+// (Same root cause as the layer-setup rule below: never gate on rAF-driven
+// readiness signals like the 'load' event.)
+const STYLE_LOCAL = 'vendor/carto-dark-matter.style.json';
+const STYLE_REMOTE = 'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json';
 
 const COLORS = {
   cyan: '#38E1D6',
@@ -33,12 +41,24 @@ export const LAYER_GROUPS = [
   { id: 'shadow', label: 'Shadow-fleet patterns', swatch: COLORS.amber, layers: ['shadow-zones', 'shadow-outline', 'shadow-labels'] },
 ];
 
-export function initMap(container, data, { onFeature } = {}) {
+export async function initMap(container, data, { onFeature } = {}) {
+  let style = STYLE_REMOTE;
+  try {
+    const res = await fetch(STYLE_LOCAL, { method: 'HEAD' });
+    if (res.ok) style = STYLE_LOCAL; // pass the URL — see note above
+  } catch { /* fall back to the remote style URL */ }
+
+  // On phones the bottom sheet covers the lower map — bias the fit upward.
+  const mobile = matchMedia('(max-width: 860px)').matches;
   const map = new maplibregl.Map({
     container,
-    style: STYLE_URL,
+    style,
     bounds: [[45.5, 22.0], [61.5, 30.5]],
-    fitBoundsOptions: { padding: 30 },
+    fitBoundsOptions: {
+      padding: mobile
+        ? { top: 16, left: 16, right: 16, bottom: Math.round(innerHeight * 0.38) }
+        : 30,
+    },
     minZoom: 3.5,
     maxZoom: 10,
     attributionControl: { compact: true },
@@ -60,9 +80,11 @@ export function initMap(container, data, { onFeature } = {}) {
 
   let dashTimer = null;
 
-  // Don't gate on the 'load' event: it waits for sprite/glyph fetches which can
-  // hang behind strict proxies. Layers only need the parsed style — set up as
-  // soon as that exists and retry on the next styledata tick if it doesn't yet.
+  // Don't gate on the 'load' event: it only fires after render frames, and a
+  // backgrounded tab gets no requestAnimationFrame ticks — users who open the
+  // site in a background tab would get a basemap with every overlay missing.
+  // Layers only need the parsed style; 'styledata' fires from the style's
+  // network callback, so set up there and retry until the style accepts layers.
   const setupLayers = () => {
     map.addSource('flows', { type: 'geojson', data: data.geo.flows });
     map.addSource('pipelines', { type: 'geojson', data: data.geo.pipelines });

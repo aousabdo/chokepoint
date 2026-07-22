@@ -252,6 +252,30 @@ input[type="range"]::-moz-range-thumb {
   border-color: var(--data-cyan); color: var(--data-cyan);
 }
 
+/* ── Guided tour ─────────────────────────────────────────── */
+#tour { position: fixed; inset: 0; z-index: 90; }
+#tour .tour-hl {
+  position: fixed;
+  border-radius: 10px;
+  border: 1.5px solid var(--data-cyan);
+  box-shadow: 0 0 0 9999px rgba(6, 18, 31, 0.72), 0 0 18px rgba(56, 225, 214, 0.45);
+  pointer-events: none;
+  transition: all 0.3s ease;
+}
+#tour .tour-tip {
+  position: fixed;
+  width: min(360px, calc(100vw - 20px));
+  margin: 0;
+  transition: all 0.3s ease;
+}
+#tour .tour-tip h3 { margin: 0 0 6px; font-size: 15px; color: var(--data-cyan); }
+#tour .tour-tip p { margin: 0 0 10px; font-size: 13px; color: var(--ink-dim); }
+#tour .tour-row { display: flex; gap: 6px; align-items: center; }
+#tour .tour-n { font-size: 11px; color: var(--ink-dim); }
+@media (prefers-reduced-motion: reduce) {
+  #tour .tour-hl, #tour .tour-tip { transition: none; }
+}
+
 /* MapLibre chrome adjustments */
 .maplibregl-ctrl-attrib { background: rgba(6, 18, 31, 0.7) !important; font-size: 10px; }
 .maplibregl-ctrl-attrib a { color: var(--ink-dim) !important; }

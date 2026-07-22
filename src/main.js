@@ -38,7 +38,7 @@ function render(s) {
 async function bootMap() {
   if (mapApi) return;
   const { initMap } = await import('./map.js');
-  mapApi = initMap('map', data, {
+  mapApi = await initMap('map', data, {
     onFeature: (props, layer) => showDetail(props, layer, data),
   });
   render(store.get());
@@ -46,6 +46,19 @@ async function bootMap() {
 
 document.getElementById('brief-btn').addEventListener('click', () => {
   downloadBrief(currentScenario, store.get(), data);
+});
+
+document.getElementById('tour-btn').addEventListener('click', async () => {
+  await bootMap(); // the tour spotlights map-rail elements
+  const { startTour } = await import('./tour.js');
+  startTour();
+});
+
+// Esc dismisses the detail card (the tour handles its own Esc while open)
+addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && !document.getElementById('tour')) {
+    document.getElementById('detail-card').hidden = true;
+  }
 });
 
 store.subscribe(render);
