@@ -1,5 +1,5 @@
 {
-  "as_of": "2026-07-22",
+  "as_of": "2026-07-23",
   "notes": "Reopening runway — how long each friction persists after de-escalation, anchored to the historical record in events.json and the insurance ledger. Ranges are estimates from public reporting; the point of the panel is that d→0 on the slider is not day zero in the market.",
   "phases": [
     {
@@ -25,7 +25,8 @@
       "anchors": [
         { "text": "1991 Gulf War: 1,200+ mines; coalition clearance operations ran for over two years", "source": "US Navy MCM histories", "url": "https://www.history.navy.mil/", "status": "verified" },
         { "text": "1987–88: Earnest Will convoys ran under mine threat for months; Bridgeton struck a mine inside an escorted convoy", "source": "US Navy — Earnest Will histories", "url": "https://www.history.navy.mil/", "status": "verified" },
-        { "text": "Mid-2026: ~80 mines reported still blocking the central corridor — clearance had not begun in earnest as of this build", "source": "2026 crisis reporting", "url": "https://en.wikipedia.org/wiki/2026_Strait_of_Hormuz_crisis", "status": "reported" }
+        { "text": "Mid-2026: ~80 mines reported still blocking the central corridor — clearance had not begun in earnest as of this build", "source": "2026 crisis reporting", "url": "https://en.wikipedia.org/wiki/2026_Strait_of_Hormuz_crisis", "status": "reported" },
+        { "text": "Late Jul 2026: a UK/France-led multinational mission (RFA Lyme Bay as mother ship, plus Germany, the Netherlands, Belgium, Norway) began limited de-mining in Omani waters in early July, but the 7 Jul resumption of attacks set the mission back — the ~80-mine estimate for the main channel stands unchanged", "source": "gCaptain — Hormuz Strikes Threaten Progress on Europe's De-mining Mission", "url": "https://gcaptain.com/hormuz-strikes-threaten-progress-on-europes-de-mining-mission/", "status": "reported" }
       ]
     }
   ]

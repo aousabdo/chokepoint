@@ -354,6 +354,30 @@
       "source": "UANI shipping update; USNI News; press",
       "url": "https://www.unitedagainstnucleariran.com/analysis/iran-shipping-update-july-17-2026",
       "status": "reported"
+    },
+    {
+      "date": "2026-07-20",
+      "era": "y2026",
+      "title": "Houthis declare a Red Sea blockade of Saudi Arabia",
+      "summary": "Yemen's Iran-aligned Houthis announce a naval blockade of Saudi Arabia — retaliation, they say, for a Saudi strike on Sanaa airport — opening a new front beyond Hormuz that threatens the Red Sea leg shipping must use to reach the kingdom's own ports and, by extension, the corridor the Petroline bypass pipeline feeds at Yanbu. Two Saudi-bound/outbound tankers reverse course within a day; no confirmed volume loss yet.",
+      "flows": "No confirmed barrel loss yet; contests the Red Sea leg of the Hormuz bypass route itself rather than Hormuz throughput directly",
+      "price": "Brent +2.0% to $91.01/bbl on 21 Jul — a five-week high — on the combined US–Iran strikes and Houthi blockade threat",
+      "source": "Al Jazeera; Bloomberg; CNBC/Reuters",
+      "url": "https://www.aljazeera.com/news/2026/7/20/yemens-houthis-declare-naval-blockade-of-saudi-arabia-what-to-know",
+      "status": "reported"
+    },
+    {
+      "date": "2026-07-21",
+      "era": "y2026",
+      "title": "Tanker abandoned off Oman; IRGC claims strikes on the southern bypass route",
+      "summary": "A tanker off the Omani coast is attacked and abandoned by its crew during a tenth consecutive night of CENTCOM strikes on Iran. Iran's IRGC says two more tankers catch fire attempting the 'unsafe southern route' — the shadow corridor ships had been using to skirt the mined central channel; UKMTO has not corroborated the claim. Lloyd's List Intelligence counts 53 total vessel transits for 13–19 Jul versus 157 the week before, a 66% weekly drop (tankers 39 vs 85).",
+      "flows": "Weekly transits down 66% w/w (53 vs 157); tanker transits 39 vs 85 the prior week",
+      "price": "Part of the same 21 Jul Brent move (+2.0% to $91.01, five-week high)",
+      "lat": 23.6,
+      "lng": 58.9,
+      "source": "Al Jazeera; Lloyd's List Intelligence brief, 21 Jul 2026",
+      "url": "https://www.aljazeera.com/news/2026/7/21/hormuz-tankers-on-fire-as-us-iran-continue-attacks-whats-the-latest",
+      "status": "reported"
     }
   ]
 }
