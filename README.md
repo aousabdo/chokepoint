@@ -81,7 +81,7 @@ layer setup keys off `styledata` (network-callback driven), never the rAF-gated 
   color redundancy, known canvas limitations documented).
 - **REFRESH.md** — data-refresh runbook: daily crisis sweep, quarterly baselines, validator invariants.
 - **docs/CAPABILITY.md** — capability statement; **briefs/** — pre-generated analyst briefs at
-  40/70/100% (linked from the Methodology panel).
+  40/90/100% (linked from the Methodology panel).
 
 ## Intended use
 

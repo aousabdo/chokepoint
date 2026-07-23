@@ -321,6 +321,17 @@
       "status": "estimate"
     },
     {
+      "date": "2026-07-07",
+      "era": "y2026",
+      "title": "Attacks resume; the ceasefire MoU collapses",
+      "summary": "Iranian attacks on commercial vessels transiting the strait resume, collapsing the US–Iran memorandum of understanding and reigniting the crisis after weeks of escorted calm.",
+      "flows": "Risk appetite evaporates; transits begin their slide toward 17% of pre-crisis volume",
+      "price": "Premium quotes widen; high-risk tonnage struggles for cover",
+      "source": "Al Jazeera; USNI News",
+      "url": "https://www.aljazeera.com/news/2026/7/7/ships-attacked-in-the-strait-of-hormuz-what-that-means-for-ongoing-talks",
+      "status": "reported"
+    },
+    {
       "date": "2026-07-12",
       "era": "y2026",
       "title": "Closure re-declared; blockade reinstated",
@@ -329,6 +340,19 @@
       "price": "Premiums hold at 1–7.5% of hull; quotes withdrawn for high-risk tonnage",
       "source": "Lloyd's List Intelligence Hormuz brief, 21 Jul 2026; crisis reporting",
       "url": "https://www.lloydslistintelligence.com/resources/blog/strait-of-hormuz-brief-21-july-2026",
+      "status": "reported"
+    },
+    {
+      "date": "2026-07-17",
+      "era": "y2026",
+      "title": "Talara seized off Khor Fakkan — and released",
+      "summary": "The Marshall Islands-flagged product tanker Talara is seized ~20 nm off Khor Fakkan and diverted to Bandar Abbas; Iran releases it days later, all 21 crew safe. The seizure playbook, running inside a blockade.",
+      "flows": "440 vessels anchored or stopped in the region by 20 Jul",
+      "price": "Quotes withdrawn for high-risk tonnage",
+      "lat": 25.5,
+      "lng": 56.7,
+      "source": "UANI shipping update; USNI News; press",
+      "url": "https://www.unitedagainstnucleariran.com/analysis/iran-shipping-update-july-17-2026",
       "status": "reported"
     }
   ]

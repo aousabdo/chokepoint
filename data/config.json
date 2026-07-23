@@ -60,7 +60,8 @@
       "source": "2026 crisis reporting — non-Iranian transits down ~90% (108 → 25/week, inbound to 8 vessels) after Iran re-declared closure 12 Jul and the US blockade was reinstated",
       "url": "https://www.lloydslistintelligence.com/resources/blog/strait-of-hormuz-brief-21-july-2026",
       "retrieved": "2026-07-23",
-      "status": "reported"
+      "status": "reported",
+      "note": "Corroborated across trackers: commercial transit ≈17% of pre-crisis volume (15 vs ~88 vessels/day, 19 Jul); non-Iranian transits 108 → 25/week."
     },
     "opec_spare_mbd": {
       "value": 4.5,

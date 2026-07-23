@@ -1,33 +1,58 @@
 {
-  "as_of": "2026-07-22",
+  "as_of": "2026-07-23",
   "notes": "Defaults for the voyage-economics calculator and the floating-storage estimator. All user-adjustable in the UI; these are the sourced starting points.",
   "voyage": {
     "hull_value_musd": {
-      "value": 120, "range": [60, 200],
+      "value": 120,
+      "range": [
+        60,
+        200
+      ],
       "source": "Modern VLCC secondhand values — public sale-and-purchase broker commentary",
-      "url": "https://www.lloydslist.com/", "status": "estimate"
+      "url": "https://www.lloydslist.com/",
+      "status": "estimate"
     },
     "cargo_mbbl": {
-      "value": 2.0, "range": [0.5, 2.2],
+      "value": 2.0,
+      "range": [
+        0.5,
+        2.2
+      ],
       "source": "Standard VLCC cargo ≈ 2.0 M bbl",
-      "url": "https://www.eia.gov/todayinenergy/detail.php?id=17991", "status": "verified"
+      "url": "https://www.eia.gov/todayinenergy/detail.php?id=17991",
+      "status": "verified"
     },
     "freight_per_bbl": {
-      "value": 4.0, "range": [1, 15],
+      "value": 4.0,
+      "range": [
+        1,
+        15
+      ],
       "source": "Baltic TD3C (MEG→China) equivalents, public commentary; crisis chartering has spiked rates 3×+",
-      "url": "https://www.balticexchange.com/", "status": "estimate"
+      "url": "https://www.balticexchange.com/",
+      "status": "estimate"
     }
   },
   "floating": {
     "ships": {
-      "value": 150, "range": [0, 400],
-      "source": "150+ ships reported holding outside the strait, mid-July 2026",
-      "url": "https://en.wikipedia.org/wiki/2026_Strait_of_Hormuz_crisis", "status": "reported"
+      "value": 440,
+      "range": [
+        0,
+        600
+      ],
+      "source": "440 vessels recorded anchored or stopped in the region (20 Jul 2026, regional tracker; USNI reporting)",
+      "url": "https://news.usni.org/2026/07/17/u-s-disables-ship-a-day-into-blockade-strait-of-hormuz-transits-hit-low-as-risk-appetite-falls",
+      "status": "reported"
     },
     "avg_cargo_mbbl": {
-      "value": 1.0, "range": [0.5, 2.0],
+      "value": 1.0,
+      "range": [
+        0.5,
+        2.0
+      ],
       "source": "Fleet-mix estimate (VLCC 2.0 / Suezmax 1.0 / Aframax 0.7 M bbl)",
-      "url": "https://www.eia.gov/todayinenergy/detail.php?id=17991", "status": "estimate"
+      "url": "https://www.eia.gov/todayinenergy/detail.php?id=17991",
+      "status": "estimate"
     }
   }
 }
