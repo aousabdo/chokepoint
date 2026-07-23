@@ -4,7 +4,7 @@
 import { fmt } from './format.js';
 import { lngShock, impliedLossOdds, voyageEconomics, pricePath } from './model.js';
 
-const PRESET_NAMES = { 0: 'Open', 15: 'Harassment', 40: 'Partial closure', 70: 'Current reported', 100: 'Full closure' };
+const PRESET_NAMES = { 0: 'Open', 15: 'Harassment', 40: 'Partial closure', 90: 'Current reported', 100: 'Full closure' };
 const C = { ink: '#101820', dim: '#5A6B7A', grid: '#D5DDE4', crim: '#C7431F', amber: '#B97A14', teal: '#1E8C7C', cyan: '#0E7C8C', gold: '#8A5A0D' };
 
 const badge = (s) => (s ? `<span class="pb-badge s-${s}">${s}</span>` : '');

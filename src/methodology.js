@@ -136,7 +136,7 @@ macro         : ΔCPI ≈ (ΔP%/10)·[0.2,0.4] pp · ΔGDP ≈ −(ΔP%/10)·[0.
       <h2>Scenario briefs</h2>
       <p>Pre-generated five-page analyst briefs at the canonical scenarios:
       <a href="briefs/chokepoint-brief-40.pdf">40% — partial closure</a> ·
-      <a href="briefs/chokepoint-brief-70.pdf">70% — current reported</a> ·
+      <a href="briefs/chokepoint-brief-90.pdf">90% — current reported</a> ·
       <a href="briefs/chokepoint-brief-100.pdf">100% — full closure</a>.
       Or press <strong>Download brief</strong> anywhere on the site to generate one at your exact scenario.</p>
     </section>

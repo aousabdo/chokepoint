@@ -1,5 +1,5 @@
 {
-  "as_of": "2026-07-22",
+  "as_of": "2026-07-23",
   "notes": "Event study: Brent move in the 1/5/30 trading days after each Hormuz-threat event, computed from the public daily series named in `source`. Pre-1987 events predate the daily series and remain estimates, marked as such. The honest pattern: spikes mean-revert unless barrels actually go missing.",
   "source": "EIA Europe Brent spot (RBRTE) via FRED public mirror DCOILBRENTEU, daily",
   "url": "https://fred.stlouisfed.org/series/DCOILBRENTEU",

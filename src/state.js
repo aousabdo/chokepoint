@@ -6,7 +6,7 @@
 
 const DEFAULTS = {
   v: 'map',            // view: map | insights | methodology
-  d: 70,               // disruption %, defaults to the reported current ~70% transit drop
+  d: 90,               // disruption %, defaults to the reported current ~90% transit drop
   b: 'eia',            // bypass profile: eia | expanded
   y: 2026,             // time-scrubber year
   e: 11,               // ε ×100 for the point estimate

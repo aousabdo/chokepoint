@@ -1,5 +1,5 @@
 {
-  "as_of": "2026-07-22",
+  "as_of": "2026-07-23",
   "notes": "Model baselines. Every figure carries {value, source, url, retrieved, status}. status: verified = checked against the named public source at build time; reported = public reporting on the live 2026 crisis; estimate = derived or approximate, marked as such in the UI; brief-baseline = from the Analytica build brief pending a fresh primary-source check. Rebuild with scripts/fetch.mjs.",
   "figures": {
     "hormuz_throughput_mbd": {
@@ -55,11 +55,11 @@
       "note": "Order-of-magnitude runway figure. Actual drawdown rates are capped well below the stranded rate; the runway is a stock/flow ratio, not a release plan."
     },
     "current_reported_disruption": {
-      "value": 0.7,
+      "value": 0.9,
       "unit": "share",
-      "source": "2026 crisis reporting — tanker transits through Hormuz down ~70%; 150+ ships holding outside the strait (mid-July 2026)",
-      "url": "https://en.wikipedia.org/wiki/2026_Strait_of_Hormuz_crisis",
-      "retrieved": "2026-07-22",
+      "source": "2026 crisis reporting — non-Iranian transits down ~90% (108 → 25/week, inbound to 8 vessels) after Iran re-declared closure 12 Jul and the US blockade was reinstated",
+      "url": "https://www.lloydslistintelligence.com/resources/blog/strait-of-hormuz-brief-21-july-2026",
+      "retrieved": "2026-07-23",
       "status": "reported"
     },
     "opec_spare_mbd": {
@@ -146,9 +146,9 @@
       "nameplate_mbd": 5.0,
       "expanded_claim_mbd": 7.0,
       "in_use_mbd": 2.0,
-      "source": "EIA WOTC; Aramco expansion reporting (7 M b/d claimed Mar 2025, sustained flows untested; ~2 M b/d in use early 2026)",
+      "source": "EIA WOTC; Aramco expansion reporting. Crisis observation: Yanbu loadings averaging ~3.75 M b/d (Lloyd's List Intelligence, Jul 2026) — activated spare ≈1.75 M b/d, slightly ABOVE the EIA-conservative 1.5 allocation.",
       "url": "https://www.eia.gov/international/analysis/special-topics/World_Oil_Transit_Chokepoints",
-      "retrieved": "2026-07-22",
+      "retrieved": "2026-07-23",
       "status": "verified"
     },
     "adcop": {
