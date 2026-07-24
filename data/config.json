@@ -1,5 +1,5 @@
 {
-  "as_of": "2026-07-23",
+  "as_of": "2026-07-24",
   "notes": "Model baselines. Every figure carries {value, source, url, retrieved, status}. status: verified = checked against the named public source at build time; reported = public reporting on the live 2026 crisis; estimate = derived or approximate, marked as such in the UI; brief-baseline = from the Analytica build brief pending a fresh primary-source check. Rebuild with scripts/fetch.mjs.",
   "figures": {
     "hormuz_throughput_mbd": {

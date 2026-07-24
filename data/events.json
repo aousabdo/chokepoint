@@ -1,5 +1,5 @@
 {
-  "as_of": "2026-07-23",
+  "as_of": "2026-07-24",
   "notes": "Escalation ladder, 1980 → present. Incident coordinates are approximate (pattern-level, historical/reported — never a live targeting aid; see Methodology, Intended use). status: verified = long-settled historical record; reported = current-crisis public reporting; estimate = approximate figure.",
   "eras": [
     {
@@ -377,6 +377,28 @@
       "lng": 58.9,
       "source": "Al Jazeera; Lloyd's List Intelligence brief, 21 Jul 2026",
       "url": "https://www.aljazeera.com/news/2026/7/21/hormuz-tankers-on-fire-as-us-iran-continue-attacks-whats-the-latest",
+      "status": "reported"
+    },
+    {
+      "date": "2026-07-22",
+      "era": "y2026",
+      "title": "Trump declares the ceasefire 'over', threatens a bridge or power plant per ship hit",
+      "summary": "Trump says the informal ceasefire is over and vows the US will destroy one Iranian bridge or power plant — including near or in Tehran — every time Iran hits a ship in the Strait of Hormuz; CENTCOM runs a 12th consecutive night of strikes on Iran. Rubio says several countries have expressed interest in joining efforts to protect Hormuz shipping, but legal and political hurdles have so far blocked formal commitments.",
+      "flows": "No new confirmed transit data; threat escalation raises risk premium on any resumption",
+      "price": "Sets up the 23 Jul move to $100/bbl",
+      "source": "Axios; Fox News; CNN",
+      "url": "https://www.axios.com/2026/07/22/trump-iran-bridges-power-plants-hormuz",
+      "status": "reported"
+    },
+    {
+      "date": "2026-07-23",
+      "era": "y2026",
+      "title": "Brent tops $100 as Houthis hit Saudi tankers and a mined-route crossing burns",
+      "summary": "Yemen's Houthis strike two Saudi tankers, Encelia and Layla, in the Red Sea, enforcing their blockade threat (Encelia afire at the bow, crew safe); five Saudi tankers reverse course. Separately, Iran's IRGC says one of three tankers attempting the mined southern Hormuz route caught fire after an explosion and the other two turned back. CENTCOM completes a 13th consecutive night of strikes on Iran.",
+      "flows": "Compounds the near-halt in Hormuz traffic and reduced Iranian exports; the Red Sea leg of the Hormuz bypass route is now itself contested",
+      "price": "Brent +7% to $100.69/bbl settle — highest close since 22 May, first time above $100 since May",
+      "source": "The National; CNBC; Business Standard; NYT (via Just Security)",
+      "url": "https://www.thenationalnews.com/business/energy/2026/07/23/oil-hits-100-for-the-first-time-since-may-after-houthi-attacks-on-saudi-ships-in-red-sea/",
       "status": "reported"
     }
   ]
